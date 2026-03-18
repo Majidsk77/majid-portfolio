@@ -1,0 +1,168 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-serif: var(--font-dm-serif);
+  --font-sans: var(--font-dm-sans);
+}
+
+/* ── CSS custom properties ───────────────────────────────────────────────────
+   Kept outside any layer so they're always available to utilities/components. */
+:root {
+  --bg: #f7f5f0;
+  --text: #111110;
+  --muted: #6b6b67;
+  --faint: #a8a8a3;
+  --border: rgba(17, 17, 16, 0.10);
+}
+
+/* ── Base resets ─────────────────────────────────────────────────────────────
+   Placed inside @layer base so that Tailwind utility classes (in @layer
+   utilities) always win. Unlayered CSS beats layered CSS in the cascade,
+   so the old `* { margin:0; padding:0 }` was silently overriding everything. */
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-weight: 300;
+  }
+
+  /* WCAG 2.2 focus-visible — keyboard nav outline */
+  :focus-visible {
+    outline: 2px solid var(--text);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+}
+
+/* ── Animations ──────────────────────────────────────────────────────────────
+   @keyframes and their trigger classes sit outside layers — they have no
+   property conflicts with utility classes. */
+
+@keyframes orbFloat {
+  0%, 100% { transform: translate(0px, 0px) scale(1) rotate(0deg); }
+  33%       { transform: translate(30px, -20px) scale(1.05) rotate(120deg); }
+  66%       { transform: translate(-20px, 15px) scale(0.97) rotate(240deg); }
+}
+
+.orb {
+  animation: orbFloat 12s ease-in-out infinite;
+}
+
+@keyframes loaderPulse {
+  0%, 100% { transform: scale(1);   opacity: 0.55; }
+  50%       { transform: scale(1.07); opacity: 0.7;  }
+}
+
+.loader-orb {
+  animation: loaderPulse 2s ease-in-out infinite;
+}
+
+@keyframes bounceY {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(8px); }
+}
+
+.bounce-indicator {
+  animation: bounceY 2s ease-in-out infinite;
+}
+
+/* ── Case study typography ───────────────────────────────────────────────────
+   In @layer components so that utility classes can still override these when
+   needed (utilities > components > base in the Tailwind v4 layer order). */
+@layer components {
+  .cs-heading {
+    font-family: var(--font-dm-serif), "DM Serif Display", serif;
+    font-style: italic;
+    font-size: 26px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin-top: 48px;
+    margin-bottom: 20px;
+    color: var(--text);
+  }
+
+  @media (min-width: 768px) {
+    .cs-heading {
+      font-size: 32px;
+      margin-top: 80px;
+      margin-bottom: 24px;
+    }
+  }
+
+  .cs-body {
+    font-size: 17px;
+    font-weight: 300;
+    line-height: 1.8;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+
+  .cs-full-bleed {
+    margin-left: -24px;
+    margin-right: -24px;
+    margin-top: 32px;
+    margin-bottom: 32px;
+  }
+
+  @media (min-width: 768px) {
+    .cs-full-bleed {
+      margin-left: -48px;
+      margin-right: -48px;
+      margin-top: 48px;
+      margin-bottom: 48px;
+    }
+  }
+
+  .cs-caption {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 12px;
+    font-weight: 300;
+  }
+
+  .cs-divider {
+    border-top: 1px solid var(--border);
+    margin-top: 64px;
+    margin-bottom: 64px;
+  }
+
+  .cs-callout {
+    border-left: 2px solid rgba(0, 0, 0, 0.2);
+    padding-left: 24px;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    font-family: var(--font-dm-serif), "DM Serif Display", serif;
+    font-style: italic;
+    font-size: 18px;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+
+  .cs-stat-value {
+    font-family: var(--font-dm-serif), "DM Serif Display", serif;
+    font-size: 44px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+
+  @media (min-width: 768px) {
+    .cs-stat-value {
+      font-size: 64px;
+    }
+  }
+
+  .cs-stat-label {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 8px;
+  }
+}
