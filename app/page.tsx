@@ -214,37 +214,6 @@ export default function HomePage() {
             Creating strategic interactive experiences.
           </motion.p>
 
-          {/* Metadata line */}
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.52 }}
-            className="text-[11px] text-[var(--faint)] tracking-[0.07em] mt-4"
-          >
-            Amsterdam · Product Design · Interaction Design · Digital Products
-          </motion.p>
-
-          {/* CTAs */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.65 }}
-            className="flex items-center justify-center gap-4 mt-9 flex-wrap"
-          >
-            <Link
-              href="/#work"
-              className="inline-flex items-center px-6 py-2.5 rounded-full bg-[var(--text)] text-[var(--bg)] text-[11px] uppercase tracking-[0.1em] hover:opacity-75 transition-opacity duration-200"
-            >
-              View selected work
-            </Link>
-            <a
-              href="mailto:majidsajid@outlook.com"
-              className="text-[11px] uppercase tracking-[0.1em] text-[var(--muted)] hover:text-[var(--text)] transition-colors duration-200 underline underline-offset-4"
-            >
-              Get in touch
-            </a>
-          </motion.div>
-
         </div>
 
         {/* Bottom fade — softens the orb into the next section */}
