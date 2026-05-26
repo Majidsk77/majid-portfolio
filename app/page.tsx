@@ -43,7 +43,7 @@ function AnimatedWord() {
 const projects = [
   {
     index: '01',
-    tag: 'Design Systems',
+    tag: 'Design Systems · Spatial Design',
     name: 'Google Boba',
     desc: "A scalable design system and template library for Boba screens across Google's global event spaces, bridging Material 3 with the demands of physical-digital environments.",
     client: 'Google',
@@ -55,7 +55,7 @@ const projects = [
     index: '02',
     tag: 'UX Design · Product Design',
     name: 'IMC Prosperity',
-    desc: "A space-themed trading game platform for IMC's annual global student competition, designing an immersive experience for nearly 20,000 competing teams.",
+    desc: "A space-themed trading game for IMC's annual global student competition — 30,703 players across 117 countries.",
     client: 'IMC',
     year: '2025–26',
     image: 'prosperity-outpost.png',
@@ -276,12 +276,15 @@ export default function HomePage() {
               <em><AnimatedWord /> designer.</em>
             </h2>
 
+            <span className="text-[11px] uppercase tracking-[0.1em] text-[var(--faint)]">
+              Product Design · Interaction Design · Design Systems
+            </span>
+
             <p className="text-[16px] text-[var(--muted)] leading-[1.75] font-light max-w-[420px]">
-              I'm interested in what digital experiences could be, not just what
-              they are. Exploring new ideas, shaping them into something
-              tangible, and making them feel intuitive and engaging to use.
-              Especially curious about how emerging technologies can open up
-              entirely new kinds of interactions.
+              I care about what digital experiences could be — not just what
+              they are. Making complex things feel clear, intentional, and
+              satisfying to use. Especially curious about how emerging
+              technology opens up entirely new kinds of interaction.
             </p>
 
             <div className="flex items-center gap-6">
