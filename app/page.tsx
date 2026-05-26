@@ -65,7 +65,7 @@ const projects = [
     index: '03',
     tag: 'UX Design · Discovery',
     name: 'Exact .com',
-    desc: "Redesigning Exact's marketing platform from information-heavy pages to a story-driven experience, built around multiple audience types and a new brand direction.",
+    desc: "UX strategy and design for Exact's full website overhaul — 17 templates across 4 audience types, from discovery through handover.",
     client: 'Exact',
     year: '2025',
     image: 'exact-hero.png',

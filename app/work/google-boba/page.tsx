@@ -72,6 +72,93 @@ function ImageGrid({
   )
 }
 
+function OverviewGrid() {
+  const rows: { label: string; value: string }[] = [
+    { label: 'Role', value: 'Design Systems Designer' },
+    {
+      label: 'Responsibilities',
+      value:
+        'System Architecture · Token Design · Component Library · Material 3 Adaptation · Spatial UX · Design QA',
+    },
+  ]
+  const outcomes = [
+    'Shipped — Paris and Munich, February 2026',
+    'v1.0 design system foundation released',
+    'Global rollout in progress throughout 2026',
+    'System foundation for all future Boba deployments',
+  ]
+  return (
+    <div
+      className="my-12 rounded-[3px] overflow-hidden"
+      style={{ border: '1px solid var(--border)' }}
+    >
+      {rows.map((row) => (
+        <div
+          key={row.label}
+          className="grid gap-4 px-5 py-4"
+          style={{
+            gridTemplateColumns: '110px 1fr',
+            borderBottom: '1px solid var(--border)',
+          }}
+        >
+          <span className="text-[11px] uppercase tracking-[0.08em] text-[var(--faint)] pt-[2px] shrink-0">
+            {row.label}
+          </span>
+          <span className="text-[13px] text-[var(--muted)] font-light leading-[1.7]">
+            {row.value}
+          </span>
+        </div>
+      ))}
+      <div
+        className="grid gap-4 px-5 py-4"
+        style={{ gridTemplateColumns: '110px 1fr' }}
+      >
+        <span className="text-[11px] uppercase tracking-[0.08em] text-[var(--faint)] pt-[2px] shrink-0">
+          Outcome
+        </span>
+        <ul
+          style={{
+            listStyle: 'none',
+            padding: 0,
+            margin: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '4px',
+          }}
+        >
+          {outcomes.map((o) => (
+            <li
+              key={o}
+              className="text-[13px] text-[var(--muted)] font-light leading-[1.7] flex gap-2"
+            >
+              <span style={{ color: 'var(--faint)', userSelect: 'none', flexShrink: 0 }}>
+                —
+              </span>
+              <span>{o}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  )
+}
+
+function DecisionBlock({ title, body }: { title: string; body: string }) {
+  return (
+    <div
+      className="grid grid-cols-1 md:grid-cols-[220px_1fr] gap-2 md:gap-10 py-7"
+      style={{ borderTop: '1px solid var(--border)' }}
+    >
+      <h3 className="text-[13px] font-normal text-[var(--text)] leading-[1.5] tracking-[-0.005em] md:pt-[3px]">
+        {title}
+      </h3>
+      <p className="text-[15px] text-[var(--muted)] font-light leading-[1.75] mt-1 md:mt-0">
+        {body}
+      </p>
+    </div>
+  )
+}
+
 /* ── Page ──────────────────────────────────────── */
 
 export default function GoogleBobaPage() {
@@ -82,6 +169,7 @@ export default function GoogleBobaPage() {
       tags={['Design Systems', 'Spatial Design', 'Google']}
       client="Google"
       year="2026"
+      role="Design Systems Designer"
       heroImage="boba-hero.png"
       heroAlt="Google Boba kiosk screen — 'Discover how we're making AI accessible'"
       nextProject={{ label: 'IMC Prosperity', href: '/work/imc-prosperity' }}
@@ -91,38 +179,42 @@ export default function GoogleBobaPage() {
       <h2 className="cs-heading">Launched. Paris, Munich. Rolling out globally.</h2>
 
       <p className="cs-body">
-        The Google Boba design system launched across event spaces in Paris and
-        Munich in February 2026, marking the first release of a scalable
-        foundation built to carry Google's design principles into physical environments.
-        Stakeholder reception was positive, and the system has set the foundation
-        for rollout in additional cities throughout 2026.
+        The Google Boba design system launched across event spaces in Paris and Munich in
+        February 2026 — the first release of a scalable foundation built to carry Google&apos;s
+        design principles into physical interactive environments. As the Design Systems
+        Designer on the project, I owned the system architecture: tokens, components, and
+        spatial variants that now underpin every Boba screen across Google&apos;s global
+        event spaces.
       </p>
 
       <StatRow
         stats={[
           { value: '2', label: 'cities at launch' },
           { value: 'v1.0', label: 'first foundation release' },
+          { value: '2026', label: 'global rollout ongoing' },
         ]}
       />
+
+      <OverviewGrid />
 
       <div className="cs-divider" />
 
       {/* ── PROBLEM ─────────────────────────────────── */}
-      <h2 className="cs-heading">Standard tools weren't built for this.</h2>
+      <h2 className="cs-heading">Standard tools weren&apos;t built for this.</h2>
 
       <p className="cs-body">
-        Google's event spaces use interactive Boba screens: large-format
-        touchscreens that showcase products and host presentations across a range
-        of sizes, layouts, and physical contexts. The challenge was that Material
-        3 alone wasn't sufficient for this environment.
+        Google&apos;s event spaces use interactive Boba screens: large-format touchscreens
+        that showcase products and host presentations across a range of sizes, layouts, and
+        physical contexts. The challenge was that Material 3 alone wasn&apos;t sufficient
+        for this environment.
       </p>
 
       <p className="cs-body">
-        Screens varied significantly in scale and placement. Implementation needs
-        differed across locations. The existing components and patterns weren't
-        built with spatial contexts in mind. A tailored system was needed, one
-        that stayed aligned with Google's broader design language while adapting
-        to a fundamentally different physical-digital environment.
+        Screens varied significantly in scale and placement. Implementation needs differed
+        across locations. The existing components and patterns weren&apos;t built with
+        spatial contexts in mind. A tailored system was needed — one that stayed aligned
+        with Google&apos;s broader design language while adapting to a fundamentally
+        different physical-digital environment.
       </p>
 
       <FullBleedImage
@@ -133,21 +225,32 @@ export default function GoogleBobaPage() {
 
       <div className="cs-divider" />
 
+      {/* ── KEY DESIGN DECISIONS ────────────────────── */}
+      <h2 className="cs-heading">Key Design Decisions.</h2>
+
+      <DecisionBlock
+        title="Extending Material 3 for physical space"
+        body="Boba screens aren't web or mobile — they're architectural. The system had to feel unmistakably Google while working in an environment Material 3 was never designed for. Rather than overriding Google's design language, I extended it: adapting tokens, shapes, and components for spatial scale without breaking the underlying system logic."
+      />
+      <DecisionBlock
+        title="Tokens as the scaling mechanism"
+        body="The token layer carries all the context-switching work — dark and light environments, different screen sizes, varying placements across spaces. Components stay stable; the token system adapts them. Getting this architecture right from the start was what made the system genuinely scalable rather than just flexible."
+      />
+      <DecisionBlock
+        title="Scope clarity in a live project"
+        body="Joining mid-phase required tight scope discipline. The system ended at the component level; the template layer was owned by the design system specialist I collaborated with. Understanding that boundary — and designing tightly within it — meant we could ship a clean v1.0 without bleeding scope into each other's work."
+      />
+
+      <div className="cs-divider" />
+
       {/* ── APPROACH ─────────────────────────────────── */}
-      <h2 className="cs-heading">Building the foundation for v1.0.</h2>
+      <h2 className="cs-heading">Owning the system foundation.</h2>
 
       <p className="cs-body">
-        I joined the project in a later phase and focused on building the design
-        system foundation for the first release. My core responsibility was
-        defining the tokens, components, and variants needed to support scalable
-        application across event-space screens.
-      </p>
-
-      <p className="cs-body">
-        Working closely with the design system specialist who led the template
-        layer, I owned the design system structure itself, shaping it into a
-        production-ready foundation that aligned with Google's broader design
-        language while adapting it for a unique spatial use case.
+        I joined the project in a later phase and took ownership of the design system
+        foundation for v1.0. Working closely with the design system specialist who led
+        the template layer, I defined the tokens, components, and variants needed to
+        support scalable application across event-space screens.
       </p>
 
       <ImageGrid
@@ -159,7 +262,7 @@ export default function GoogleBobaPage() {
         caption="Core component definitions: slider variants, chips, and organic shape tokens."
       />
 
-      <p className="cs-body">Key responsibilities:</p>
+      <p className="cs-body">The system foundation I built included:</p>
       <ul
         className="cs-body"
         style={{
@@ -171,11 +274,11 @@ export default function GoogleBobaPage() {
         }}
       >
         {[
-          'Defining core system tokens (color, spacing, shape, motion)',
-          'Building component foundations and variant structures',
-          'Aligning with Material 3 while extending for spatial needs',
-          'Collaborating on the template layer with the design system specialist',
-          'Supporting design system QA as the experience moved toward build',
+          'Core system tokens — color, spacing, shape, motion',
+          'Component foundations and variant structures',
+          'Material 3 extension for spatial and physical-screen contexts',
+          'Organic shape language: soft blob forms that distinguish Boba from standard Material surfaces',
+          'Design system QA as the experience moved toward build',
         ].map((item) => (
           <li key={item} style={{ paddingLeft: '16px', position: 'relative' }}>
             <span
@@ -204,17 +307,17 @@ export default function GoogleBobaPage() {
       <h2 className="cs-heading">A system built for space.</h2>
 
       <p className="cs-body">
-        The result was a reusable design system tailored to interactive event
-        environments. The system introduced an organic shape language: soft
-        blobs and rounded forms that distinguish the Boba context from standard
-        Material surfaces, alongside a purple token system that could flex
-        across dark and light screen environments.
+        The result was a reusable design system tailored to interactive event environments.
+        The system introduced an organic shape language — soft blobs and rounded forms that
+        distinguish the Boba context from standard Material surfaces — alongside a purple
+        token system that flexes across dark and light screen environments.
       </p>
 
       <p className="cs-body">
-        Components were designed to scale gracefully across the range of screen
-        sizes present in Google event spaces, with clear documentation to support
-        implementation across locations.
+        Components were designed to scale gracefully across the range of screen sizes
+        present in Google event spaces, with clear documentation to support implementation
+        across locations. The system shipped at v1.0 and is the foundation all future
+        Boba deployments will build on.
       </p>
 
       <FullBleedImage
@@ -225,24 +328,24 @@ export default function GoogleBobaPage() {
 
       <div className="cs-divider" />
 
-      {/* ── TAKEAWAYS ─────────────────────────────────── */}
-      <h2 className="cs-heading">What I learned.</h2>
+      {/* ── REFLECTION ───────────────────────────────── */}
+      <h2 className="cs-heading">Coherence over novelty.</h2>
 
       <p className="cs-body">
-        This project strengthened my ability to work within an established design
-        ecosystem while still introducing meaningful structure for a genuinely
-        new context. The biggest design challenge wasn't creating something novel
-        it was creating something coherent: a system that felt unmistakably
-        Google while serving a fundamentally different environment.
+        The constraint here wasn&apos;t freedom — it was coherence. Building a system that
+        extended Material 3 into a genuinely new physical context required knowing exactly
+        which decisions were mine to make and which ones had to stay anchored to
+        Google&apos;s existing design language. Getting that balance right — distinctive
+        enough to serve the spatial environment, consistent enough to feel unmistakably
+        Google — was the central design challenge.
       </p>
 
       <p className="cs-body">
-        Working in a later phase of a live project also required clarity about
-        scope and ownership. Understanding where the system ended and the
-        template layer began, and collaborating tightly across that boundary,
-        was as important as the design work itself.
+        Joining a live project mid-phase also made scope clarity concrete as a design
+        skill. The work wasn&apos;t just about building the right components — it was
+        about understanding exactly where the system ended and collaborating tightly
+        across that boundary. A system that tries to do everything ends up owning nothing.
       </p>
-
 
     </CaseStudyLayout>
   )

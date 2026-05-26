@@ -72,6 +72,93 @@ function ImageGrid({
   )
 }
 
+function OverviewGrid() {
+  const rows: { label: string; value: string }[] = [
+    { label: 'Role', value: 'UX Designer & UX Strategist' },
+    {
+      label: 'Responsibilities',
+      value:
+        'Discovery · Stakeholder Workshops · Journey Mapping · UX Strategy · Page Architecture · Wireframing · Template Definition · Client Iteration',
+    },
+  ]
+  const outcomes = [
+    "Full UX foundation for Exact's 2026 website overhaul",
+    '17 page templates defined and designed',
+    '4 audience types mapped end-to-end',
+    'Approved by stakeholders — launching with new brand direction',
+  ]
+  return (
+    <div
+      className="my-12 rounded-[3px] overflow-hidden"
+      style={{ border: '1px solid var(--border)' }}
+    >
+      {rows.map((row) => (
+        <div
+          key={row.label}
+          className="grid gap-4 px-5 py-4"
+          style={{
+            gridTemplateColumns: '110px 1fr',
+            borderBottom: '1px solid var(--border)',
+          }}
+        >
+          <span className="text-[11px] uppercase tracking-[0.08em] text-[var(--faint)] pt-[2px] shrink-0">
+            {row.label}
+          </span>
+          <span className="text-[13px] text-[var(--muted)] font-light leading-[1.7]">
+            {row.value}
+          </span>
+        </div>
+      ))}
+      <div
+        className="grid gap-4 px-5 py-4"
+        style={{ gridTemplateColumns: '110px 1fr' }}
+      >
+        <span className="text-[11px] uppercase tracking-[0.08em] text-[var(--faint)] pt-[2px] shrink-0">
+          Outcome
+        </span>
+        <ul
+          style={{
+            listStyle: 'none',
+            padding: 0,
+            margin: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '4px',
+          }}
+        >
+          {outcomes.map((o) => (
+            <li
+              key={o}
+              className="text-[13px] text-[var(--muted)] font-light leading-[1.7] flex gap-2"
+            >
+              <span style={{ color: 'var(--faint)', userSelect: 'none', flexShrink: 0 }}>
+                —
+              </span>
+              <span>{o}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  )
+}
+
+function DecisionBlock({ title, body }: { title: string; body: string }) {
+  return (
+    <div
+      className="grid grid-cols-1 md:grid-cols-[220px_1fr] gap-2 md:gap-10 py-7"
+      style={{ borderTop: '1px solid var(--border)' }}
+    >
+      <h3 className="text-[13px] font-normal text-[var(--text)] leading-[1.5] tracking-[-0.005em] md:pt-[3px]">
+        {title}
+      </h3>
+      <p className="text-[15px] text-[var(--muted)] font-light leading-[1.75] mt-1 md:mt-0">
+        {body}
+      </p>
+    </div>
+  )
+}
+
 /* ── Page ──────────────────────────────────────── */
 
 export default function ExactPage() {
@@ -90,21 +177,24 @@ export default function ExactPage() {
     >
 
       {/* ── OUTCOME ─────────────────────────────────── */}
-      <h2 className="cs-heading">A new foundation. Launching 2026.</h2>
+      <h2 className="cs-heading">17 templates. 4 audiences. Launching 2026.</h2>
 
       <p className="cs-body">
-        The redesign was well received by stakeholders and is set to launch in
-        2026 alongside updated branding. The project delivered the full UX
-        foundation for a major website overhaul, defining the structure,
-        templates, and key pages that will underpin Exact's new digital presence.
+        I led the UX process end-to-end for Exact&apos;s full website overhaul — from scoping
+        workshops and journey mapping through template definition, wireframing, and client
+        handover. The project delivered the complete UX foundation for a major platform
+        redesign, now approved by stakeholders and launching in 2026 alongside a new brand
+        direction.
       </p>
 
       <StatRow
         stats={[
           { value: '4', label: 'audience types mapped' },
-          { value: '17', label: 'page templates defined and designed' },
+          { value: '17', label: 'page templates defined' },
         ]}
       />
+
+      <OverviewGrid />
 
       <div className="cs-divider" />
 
@@ -112,18 +202,17 @@ export default function ExactPage() {
       <h2 className="cs-heading">A site built for experts, not for everyone.</h2>
 
       <p className="cs-body">
-        Exact's existing website was highly information-dense, with heavy
-        cross-linking and limited narrative structure. While effective for
-        existing users who already understood the product landscape, it lacked
-        clarity for new visitors, particularly those outside Exact's traditional
-        accountant audience.
+        Exact&apos;s existing website was highly information-dense, with heavy cross-linking
+        and limited narrative structure. While effective for existing users who already
+        understood the product landscape, it lacked clarity for new visitors — particularly
+        those outside Exact&apos;s traditional accountant audience.
       </p>
 
       <p className="cs-body">
-        The challenge was threefold: restructure the platform to communicate
-        product value more clearly, support a broader audience including CFOs and
-        entrepreneurs, and align with an upcoming brand direction, while
-        respecting existing content and avoiding disruption to live product pages.
+        The challenge was threefold: restructure the platform to communicate product value
+        more clearly, support a broader audience including CFOs and entrepreneurs, and align
+        with an upcoming brand direction — while respecting existing content and avoiding
+        disruption to live product pages.
       </p>
 
       <FullBleedImage
@@ -134,18 +223,30 @@ export default function ExactPage() {
 
       <div className="cs-divider" />
 
+      {/* ── KEY DESIGN DECISIONS ────────────────────── */}
+      <h2 className="cs-heading">Key Design Decisions.</h2>
+
+      <DecisionBlock
+        title="Architecture as the argument"
+        body="On a platform this complex, the page structure is the experience. Before wireframing a single screen, I mapped what each page type needed to do, in what order, and for whom. The template logic came first — individual page decisions followed from that foundation, not the other way around."
+      />
+      <DecisionBlock
+        title="Designing across four audiences without losing specificity"
+        body="Accountants, CFOs, small business owners, and large business owners use the same platform but need fundamentally different entry points. Journey mapping gave me the evidence to make those distinctions explicit in the structure — so each audience found a path built for them, without requiring four separate sites."
+      />
+      <DecisionBlock
+        title="Wireframes as alignment tools"
+        body="Client review cycles ran across multiple stakeholders with different priorities. I structured wireframes to be readable by non-designers: decisions made explicit, hierarchy visible, rationale embedded. The goal was to get alignment on structure before visual design — not to present polished work, but to create shared understanding."
+      />
+
+      <div className="cs-divider" />
+
       {/* ── APPROACH ─────────────────────────────────── */}
-      <h2 className="cs-heading">From workshops to wireframes.</h2>
+      <h2 className="cs-heading">Discovery to architecture.</h2>
 
       <p className="cs-body">
-        I led the UX process from early discovery through to handover. We started
-        with a scoping workshop to align on audiences, business goals, and
-        constraints, establishing a shared understanding of what the redesign
-        needed to achieve before any design work began.
-      </p>
-
-      <p className="cs-body">
-        From there, the process moved through four key phases:
+        The process moved through four key phases — each one building the foundation for
+        the next.
       </p>
 
       <ImageGrid
@@ -180,7 +281,7 @@ export default function ExactPage() {
           {
             n: '3.',
             title: 'Template definition',
-            body: 'I defined page templates to structure content and functionality across the site. Each template established a content hierarchy and narrative logic for its page type.',
+            body: 'I defined page templates to structure content and functionality across the site. Each template established a content hierarchy and narrative logic for its page type — the architecture that would carry the visual layer later.',
           },
           {
             n: '4.',
@@ -234,8 +335,7 @@ export default function ExactPage() {
       <h2 className="cs-heading">Structure first. Story second.</h2>
 
       <p className="cs-body">
-        I designed the core structure and key pages of the new platform
-        including but not limited to:
+        I designed the core structure and key pages of the new platform, including:
       </p>
 
       <ImageGrid
@@ -248,17 +348,17 @@ export default function ExactPage() {
 
       <p className="cs-body">
         <strong style={{ fontWeight: 400, color: 'var(--text)' }}>Homepage</strong>
-        {': '}Introducing Exact, communicating core value, and guiding different
-        audience types toward the right product area. The redesign introduced a
-        clearer narrative flow: set the stage, show what's on offer, demonstrate
-        who it's for, and prove why Exact is the expert.
+        {': '}Introducing Exact, communicating core value, and guiding different audience
+        types toward the right product area. The redesign introduced a clearer narrative
+        flow: set the stage, show what&apos;s on offer, demonstrate who it&apos;s for,
+        and prove why Exact is the expert.
       </p>
 
       <p className="cs-body">
         <strong style={{ fontWeight: 400, color: 'var(--text)' }}>Capability pages</strong>
-        {': '}Showing what the software enables customers to do, proving its
-        importance, and connecting it to specific products. These pages bridge
-        the gap between problem-awareness and product consideration.
+        {': '}Showing what the software enables customers to do, proving its importance,
+        and connecting it to specific products. These pages bridge the gap between
+        problem-awareness and product consideration.
       </p>
 
       <ImageGrid
@@ -271,9 +371,9 @@ export default function ExactPage() {
 
       <p className="cs-body">
         <strong style={{ fontWeight: 400, color: 'var(--text)' }}>Knowledge hub</strong>
-        {': '}A content destination for thought leadership, articles, and videos.
-        The redesign structured the hub around audience needs and content formats
-        rather than a flat chronological feed.
+        {': '}A content destination for thought leadership, articles, and videos. The
+        redesign structured the hub around audience needs and content formats rather than
+        a flat chronological feed.
       </p>
 
       <ImageGrid
@@ -286,36 +386,30 @@ export default function ExactPage() {
 
       <p className="cs-body">
         <strong style={{ fontWeight: 400, color: 'var(--text)' }}>Product detail pages</strong>
-        {': '}Connecting Exact's value proposition to specific software features,
-        showing impact through customer stories, and guiding users toward trial
-        or purchase.
+        {': '}Connecting Exact&apos;s value proposition to specific software features,
+        showing impact through customer stories, and guiding users toward trial or purchase.
       </p>
 
       <div className="cs-divider" />
 
-      {/* ── TAKEAWAYS ─────────────────────────────────── */}
-      <h2 className="cs-heading">What I learned.</h2>
+      {/* ── REFLECTION ───────────────────────────────── */}
+      <h2 className="cs-heading">What this scale of work clarified.</h2>
 
       <p className="cs-body">
-        This project strengthened my ability to lead UX work end-to-end, from
-        shaping the initial brief and running workshops to structuring complex
-        content and collaborating across disciplines.
+        Leading this project end-to-end — from scoping workshops through client handover —
+        made one thing concrete: on a marketing platform of this complexity, the information
+        architecture is the product strategy. Getting the template logic right, understanding
+        what each page needed to do and in what sequence, was more consequential than any
+        single design decision. The structure either earns attention or it loses it before
+        the visual layer ever gets a chance.
       </p>
 
       <p className="cs-body">
-        The most valuable lesson was about the relationship between structure and
-        story. On a large marketing site, the architecture is the argument.
-        Getting the page templates right, understanding what each page needs to
-        do, in what order and for whom, was more impactful than any individual
-        design decision.
+        Working across four distinct audience types simultaneously also sharpened something
+        less visible: the ability to hold competing priorities without collapsing them into
+        a single compromise. Each audience had legitimate, different needs. The design work
+        was in making those distinctions explicit and buildable — not smoothing over them.
       </p>
-
-      <p className="cs-body">
-        Working across four distinct audience types also sharpened my ability to
-        hold multiple perspectives simultaneously without letting any single one
-        dominate the solution.
-      </p>
-
 
     </CaseStudyLayout>
   )

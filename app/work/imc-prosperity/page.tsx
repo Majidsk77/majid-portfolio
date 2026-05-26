@@ -208,7 +208,7 @@ export default function IMCProsperityPage() {
       <div className="cs-divider" />
 
       {/* ── THE CHALLENGE ───────────────────────────── */}
-      <h2 className="cs-heading">The Challenge.</h2>
+      <h2 className="cs-heading">A game that had to work.</h2>
 
       <p className="cs-body">
         IMC Prosperity sits at the intersection of competitive gameplay and high-density
