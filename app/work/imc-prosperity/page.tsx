@@ -187,11 +187,11 @@ export default function IMCProsperityPage() {
       <h2 className="cs-heading">30,703 players. 117 countries. Launched 2026.</h2>
 
       <p className="cs-body">
-        Prosperity 04 opened for sign-up in March 2026: the fourth edition of IMC&apos;s
-        annual student trading competition, now running on a fully redesigned platform
-        with a space exploration theme. The finished experience supports a large-scale
-        global competition — shipped on time, with strong client reception and a
-        significant increase in participation.
+        Prosperity 04 launched in March 2026 — the fourth edition of IMC&apos;s annual
+        student trading competition, fully redesigned around a space exploration theme.
+        As the sole UX Designer on the project, I owned the experience from wireframes
+        through design QA, contributing to a platform that scaled to a record-breaking
+        competition.
       </p>
 
       <StatRow
@@ -225,9 +225,9 @@ export default function IMCProsperityPage() {
       </p>
 
       <p className="cs-body">
-        Additionally, the experience needed to scale consistently across multiple gameplay
-        systems for over 30,000 participants globally — from first-time players completing
-        the tutorial to experienced teams competing in finals.
+        The platform also had to hold together across multiple gameplay phases for 30,000+
+        concurrent participants — from first-time tutorial players to teams competing for
+        finals spots.
       </p>
 
       <ImageGrid
@@ -245,7 +245,7 @@ export default function IMCProsperityPage() {
 
       <DecisionBlock
         title="Balancing immersion with usability"
-        body="The interface needed to feel engaging and game-like without compromising information clarity. Working closely with the creative director to align visual direction with usability, we used clear hierarchy, modular layouts, and consistent interaction patterns to support fast comprehension during live competition."
+        body="The interface had to feel game-like without trading clarity for excitement. Working with the creative director to keep visual ambition grounded in function, I established a system of clear hierarchy and modular layouts that let players act quickly under pressure."
       />
       <DecisionBlock
         title="Designing for high information density"
@@ -253,7 +253,7 @@ export default function IMCProsperityPage() {
       />
       <DecisionBlock
         title="Creating scalable UX patterns"
-        body="Because the event consisted of multiple gameplay phases, the experience required reusable interaction and layout systems. I partnered with the visual designer to translate UX structure into a cohesive interface that could scale consistently across future iterations of the competition."
+        body="The competition's multi-phase structure meant the UX system had to flex across contexts rather than be rebuilt for each one. I partnered with the visual designer to ensure the visual layer extended — not replaced — the underlying UX architecture."
       />
 
       <div className="cs-divider" />
@@ -274,19 +274,13 @@ export default function IMCProsperityPage() {
         interaction patterns for a global audience.
       </p>
 
-      <p className="cs-body">
-        The work covered the full player journey, from sign-up and tutorial through
-        trading rounds, intermission, and supporting features like leaderboards, crew
-        honours, and the onboard advisor.
-      </p>
-
       <FullBleedImage
         src="prosperity-tutorial.png"
         alt="Prosperity tutorial round screen"
         caption="Tutorial round — introducing new players to the game mechanics before live rounds begin."
       />
 
-      <p className="cs-body">Core flows designed:</p>
+      <p className="cs-body">The full player journey, end to end:</p>
       <ul
         className="cs-body"
         style={{
@@ -346,9 +340,9 @@ export default function IMCProsperityPage() {
       </p>
 
       <p className="cs-body">
-        Collaborating with the visual designer to translate UX structure into a cohesive
-        interface system was central to this balance. Fidelity increased incrementally,
-        keeping space for design decisions to be validated before committing to final assets.
+        Working closely with the visual designer, we iterated on structure before applying
+        the visual layer — making sure the information hierarchy held up before the
+        world-building was applied on top.
       </p>
 
       <FullBleedImage
@@ -371,15 +365,16 @@ export default function IMCProsperityPage() {
       <h2 className="cs-heading">Reflection.</h2>
 
       <p className="cs-body">
-        This project reinforced the importance of balancing immersion with usability in
-        large-scale interactive systems. Designing for over 30,000 global participants
-        required scalable UX thinking, clear information hierarchy, and close collaboration
-        across design and development.
+        Designing for this competition made the tension between immersion and usability
+        concrete. With 30,000 players navigating live trading logic under time pressure,
+        the decisions that mattered most weren&apos;t about aesthetics — they were about
+        clarity, speed, and structure.
       </p>
 
       <p className="cs-body">
-        It also highlighted how strong user experiences emerge not only from visual polish,
-        but from creating systems that remain intuitive under complexity.
+        It also reinforced that systems built for scale need modular thinking from the
+        start. Trying to retrofit coherence into a multi-phase experience is expensive;
+        designing it in from wireframes is not.
       </p>
 
     </CaseStudyLayout>
