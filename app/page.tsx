@@ -2,10 +2,43 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { motion, useInView } from 'framer-motion'
-import { useRef } from 'react'
+import { motion, useInView, AnimatePresence } from 'framer-motion'
+import { useRef, useState, useEffect } from 'react'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
+
+const ABOUT_WORDS = ['product', 'strategic', 'spatial', 'happy', 'creative']
+
+function AnimatedWord() {
+  const [index, setIndex] = useState(0)
+
+  useEffect(() => {
+    const id = setInterval(() => setIndex(i => (i + 1) % ABOUT_WORDS.length), 2600)
+    return () => clearInterval(id)
+  }, [])
+
+  return (
+    // The invisible ghost ("strategic" = longest word) fixes the container
+    // width so "designer." never shifts position
+    <span className="relative inline-block">
+      <span className="invisible select-none" aria-hidden="true">
+        strategic
+      </span>
+      <AnimatePresence mode="wait">
+        <motion.span
+          key={ABOUT_WORDS[index]}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          className="absolute left-0 top-0"
+        >
+          {ABOUT_WORDS[index]}
+        </motion.span>
+      </AnimatePresence>
+    </span>
+  )
+}
 
 const projects = [
   {
@@ -35,7 +68,7 @@ const projects = [
     desc: "Redesigning Exact's marketing platform from information-heavy pages to a story-driven experience, built around multiple audience types and a new brand direction.",
     client: 'Exact',
     year: '2025',
-    image: 'exact-homepage-design.png',
+    image: 'exact-hero.png',
     href: '/work/exact',
   },
 ]
@@ -137,19 +170,34 @@ export default function HomePage() {
 
         {/* Text */}
         <div className="relative z-10 text-center px-6">
-          <motion.span
+
+          {/* Availability badge */}
+          <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="block text-[11px] uppercase tracking-[0.14em] text-[var(--muted)] mb-6"
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="flex justify-center mb-7"
           >
-            Product Designer · Amsterdam
-          </motion.span>
+            <span
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] tracking-[0.05em] text-[var(--muted)]"
+              style={{
+                border: '1px solid rgba(17,17,16,0.13)',
+                background: 'rgba(17,17,16,0.03)',
+              }}
+            >
+              <span
+                className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                style={{ backgroundColor: '#5a9e6f', opacity: 0.85 }}
+                aria-hidden="true"
+              />
+              Available for Product Design roles
+            </span>
+          </motion.div>
 
           <motion.h1
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.35 }}
+            transition={{ duration: 0.6, delay: 0.25 }}
             className="font-serif text-center tracking-[-0.025em] leading-[0.92]"
             style={{ fontSize: 'clamp(72px, 10vw, 110px)' }}
           >
@@ -159,12 +207,44 @@ export default function HomePage() {
           <motion.p
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
             className="font-serif italic text-[var(--muted)] mt-6"
             style={{ fontSize: 'clamp(18px, 2.5vw, 26px)' }}
           >
             Creating strategic interactive experiences.
           </motion.p>
+
+          {/* Metadata line */}
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.52 }}
+            className="text-[11px] text-[var(--faint)] tracking-[0.07em] mt-4"
+          >
+            Amsterdam · Product Design · Interaction Design · Digital Products
+          </motion.p>
+
+          {/* CTAs */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.65 }}
+            className="flex items-center justify-center gap-4 mt-9 flex-wrap"
+          >
+            <Link
+              href="/#work"
+              className="inline-flex items-center px-6 py-2.5 rounded-full bg-[var(--text)] text-[var(--bg)] text-[11px] uppercase tracking-[0.1em] hover:opacity-75 transition-opacity duration-200"
+            >
+              View selected work
+            </Link>
+            <a
+              href="mailto:majidsajid@outlook.com"
+              className="text-[11px] uppercase tracking-[0.1em] text-[var(--muted)] hover:text-[var(--text)] transition-colors duration-200 underline underline-offset-4"
+            >
+              Get in touch
+            </a>
+          </motion.div>
+
         </div>
 
         {/* Bottom fade — softens the orb into the next section */}
@@ -224,7 +304,7 @@ export default function HomePage() {
             <h2 className="font-serif text-[34px] leading-[1.15] tracking-[-0.01em]">
               Majid Kareem,
               <br />
-              <em>product designer.</em>
+              <em><AnimatedWord /> designer.</em>
             </h2>
 
             <p className="text-[16px] text-[var(--muted)] leading-[1.75] font-light max-w-[420px]">

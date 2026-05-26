@@ -12,7 +12,7 @@ interface Props {
   tags: string[]
   client: string
   year: string
-  role: string
+  role?: string
   heroImage: string
   heroAlt: string
   heroPosition?: 'center' | 'top'
@@ -84,9 +84,11 @@ export default function CaseStudyLayout({
           <span className="text-[12px] uppercase tracking-[0.1em] text-[var(--muted)]">
             {year}
           </span>
-          <span className="text-[12px] uppercase tracking-[0.1em] text-[var(--muted)]">
-            {role}
-          </span>
+          {role && (
+            <span className="text-[12px] uppercase tracking-[0.1em] text-[var(--muted)]">
+              {role}
+            </span>
+          )}
         </div>
       </div>
 

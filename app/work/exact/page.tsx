@@ -83,9 +83,9 @@ export default function ExactPage() {
       client="Exact"
       year="2025"
       role="UX Designer & UX Strategist"
-      heroImage="exact-homepage-design.png"
-      heroAlt="Exact.com hi-fi homepage design"
-      heroPosition="top"
+      heroImage="exact-hero.png"
+      heroAlt="Exact.com hi-fi capability page design"
+      heroPosition="center"
       nextProject={{ label: 'Google Boba', href: '/work/google-boba' }}
     >
 
@@ -102,7 +102,7 @@ export default function ExactPage() {
       <StatRow
         stats={[
           { value: '4', label: 'audience types mapped' },
-          { value: '4', label: 'core page templates defined' },
+          { value: '17', label: 'page templates defined and designed' },
         ]}
       />
 
@@ -234,8 +234,8 @@ export default function ExactPage() {
       <h2 className="cs-heading">Structure first. Story second.</h2>
 
       <p className="cs-body">
-        I designed the core structure and key pages of the new platform across
-        four page types:
+        I designed the core structure and key pages of the new platform
+        including but not limited to:
       </p>
 
       <ImageGrid

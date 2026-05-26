@@ -82,7 +82,6 @@ export default function GoogleBobaPage() {
       tags={['Design Systems', 'Spatial Design', 'Google']}
       client="Google"
       year="2026"
-      role="Design Systems Designer"
       heroImage="boba-hero.png"
       heroAlt="Google Boba kiosk screen — 'Discover how we're making AI accessible'"
       nextProject={{ label: 'IMC Prosperity', href: '/work/imc-prosperity' }}

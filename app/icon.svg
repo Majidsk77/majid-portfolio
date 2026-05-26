@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <radialGradient id="g" cx="42%" cy="38%" r="65%" gradientUnits="objectBoundingBox">
+      <stop offset="0%"   stop-color="#c4b5f4"/>
+      <stop offset="45%"  stop-color="#e8a0b0"/>
+      <stop offset="100%" stop-color="#f0b897"/>
+    </radialGradient>
+    <clipPath id="c">
+      <rect width="32" height="32" rx="7"/>
+    </clipPath>
+  </defs>
+
+  <!-- Warm beige background -->
+  <rect width="32" height="32" rx="7" fill="#f7f5f0"/>
+
+  <!-- Organic blob -->
+  <path
+    d="M19.5 3.8
+       C24.8 4.6 29.2 9.0 28.6 15.2
+       C28.0 21.2 23.1 27.8 16.4 27.9
+       C9.8 28.0 3.6 22.4 3.4 15.8
+       C3.2 9.4 8.2 4.0 13.8 3.4
+       C15.7 3.2 17.8 3.5 19.5 3.8Z"
+    fill="url(#g)"
+    opacity="0.92"
+    clip-path="url(#c)"
+  />
+</svg>
