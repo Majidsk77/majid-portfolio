@@ -148,7 +148,7 @@
 
   .cs-stat-value {
     font-family: var(--font-dm-serif), "DM Serif Display", serif;
-    font-size: 44px;
+    font-size: 32px;
     line-height: 1;
     letter-spacing: -0.02em;
     color: var(--text);
@@ -156,13 +156,14 @@
 
   @media (min-width: 768px) {
     .cs-stat-value {
-      font-size: 64px;
+      font-size: 42px;
     }
   }
 
   .cs-stat-label {
-    font-size: 13px;
-    color: var(--muted);
-    margin-top: 8px;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--faint);
+    margin-top: 6px;
   }
 }

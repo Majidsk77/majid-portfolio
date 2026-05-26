@@ -2,21 +2,7 @@
 
 import Image from 'next/image'
 import CaseStudyLayout from '@/components/CaseStudyLayout'
-
-/* ── Shared sub-components ──────────────────────── */
-
-function StatRow({ stats }: { stats: { value: string; label: string }[] }) {
-  return (
-    <div className="flex flex-wrap gap-16 my-12">
-      {stats.map((stat) => (
-        <div key={stat.label}>
-          <div className="cs-stat-value">{stat.value}</div>
-          <div className="cs-stat-label">{stat.label}</div>
-        </div>
-      ))}
-    </div>
-  )
-}
+import { StatRow, OverviewGrid } from '@/components/CaseStudyMeta'
 
 function FullBleedImage({
   src,
@@ -73,84 +59,6 @@ function ImageGrid({
   )
 }
 
-function OverviewGrid() {
-  const rows: { label: string; value: string }[] = [
-    { label: 'Role', value: 'UX Designer' },
-    { label: 'Timeline', value: '4 Months' },
-    {
-      label: 'Team',
-      value:
-        '1 UX Designer · 1 Creative Director · 1 Visual Designer · 3 Developers · 1 Product Manager',
-    },
-    {
-      label: 'Responsibilities',
-      value:
-        'UX Wireframing · User Flows · Interaction Design · UI Translation · Design QA · Design System Enhancement',
-    },
-  ]
-  const outcomes = [
-    'Shipped live for IMC Prosperity 2026',
-    'Supported 30,703 players across 117 countries',
-    'Increased participation by nearly 45%',
-    'Designed experiences for 18,803 competing teams',
-    'Redesigned 4 core gameplay systems',
-  ]
-  return (
-    <div
-      className="my-12 rounded-[3px] overflow-hidden"
-      style={{ border: '1px solid var(--border)' }}
-    >
-      {rows.map((row) => (
-        <div
-          key={row.label}
-          className="grid gap-4 px-5 py-4"
-          style={{
-            gridTemplateColumns: '110px 1fr',
-            borderBottom: '1px solid var(--border)',
-          }}
-        >
-          <span className="text-[11px] uppercase tracking-[0.08em] text-[var(--faint)] pt-[2px] shrink-0">
-            {row.label}
-          </span>
-          <span className="text-[13px] text-[var(--muted)] font-light leading-[1.7]">
-            {row.value}
-          </span>
-        </div>
-      ))}
-      <div
-        className="grid gap-4 px-5 py-4"
-        style={{ gridTemplateColumns: '110px 1fr' }}
-      >
-        <span className="text-[11px] uppercase tracking-[0.08em] text-[var(--faint)] pt-[2px] shrink-0">
-          Outcome
-        </span>
-        <ul
-          style={{
-            listStyle: 'none',
-            padding: 0,
-            margin: 0,
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '4px',
-          }}
-        >
-          {outcomes.map((o) => (
-            <li
-              key={o}
-              className="text-[13px] text-[var(--muted)] font-light leading-[1.7] flex gap-2"
-            >
-              <span style={{ color: 'var(--faint)', userSelect: 'none', flexShrink: 0 }}>
-                —
-              </span>
-              <span>{o}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  )
-}
-
 function DecisionBlock({ title, body }: { title: string; body: string }) {
   return (
     <div
@@ -203,7 +111,21 @@ export default function IMCProsperityPage() {
         ]}
       />
 
-      <OverviewGrid />
+      <OverviewGrid
+        rows={[
+          { label: 'Role', value: 'UX Designer' },
+          { label: 'Timeline', value: '4 Months' },
+          { label: 'Team', value: '1 UX Designer · 1 Creative Director · 1 Visual Designer · 3 Developers · 1 Product Manager' },
+          { label: 'Responsibilities', value: 'UX Wireframing · User Flows · Interaction Design · UI Translation · Design QA · Design System Enhancement' },
+        ]}
+        outcomes={[
+          'Shipped live for IMC Prosperity 2026',
+          'Supported 30,703 players across 117 countries',
+          'Increased participation by nearly 45%',
+          'Designed experiences for 18,803 competing teams',
+          'Redesigned 4 core gameplay systems',
+        ]}
+      />
 
       <div className="cs-divider" />
 
