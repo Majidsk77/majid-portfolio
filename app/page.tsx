@@ -179,7 +179,7 @@ export default function HomePage() {
             className="flex justify-center mb-7"
           >
             <span
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] tracking-[0.05em] text-[var(--muted)]"
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] tracking-[0.05em] text-[var(--muted)] whitespace-nowrap"
               style={{
                 border: '1px solid rgba(17,17,16,0.13)',
                 background: 'rgba(17,17,16,0.03)',
@@ -190,7 +190,7 @@ export default function HomePage() {
                 style={{ backgroundColor: '#5a9e6f', opacity: 0.85 }}
                 aria-hidden="true"
               />
-              Available for Product Design roles
+              Available for contract and freelance roles
             </span>
           </motion.div>
 
