@@ -60,7 +60,7 @@ export default function Nav() {
             About
           </Link>
           <a
-            href="https://drive.google.com/file/d/1kdNZsUvBXEU2rrJMLUvZFp2vJCtL0GfK/view?usp=sharing"
+            href="https://drive.google.com/file/d/1-40FvUisOKLs-e9uVBAJ3Ftg8TM9EUVK/view?usp=sharing"
             target="_blank"
             rel="noopener noreferrer"
             className="text-[11px] uppercase tracking-[0.1em] font-normal text-[var(--muted)] hover:text-[var(--text)] transition-colors duration-200"
@@ -107,7 +107,7 @@ export default function Nav() {
         {[
           { label: 'Work', href: '/#work', external: false },
           { label: 'About', href: '/#about', external: false },
-          { label: 'Resume', href: 'https://drive.google.com/file/d/1kdNZsUvBXEU2rrJMLUvZFp2vJCtL0GfK/view?usp=sharing', external: true },
+          { label: 'Resume', href: 'https://drive.google.com/file/d/1-40FvUisOKLs-e9uVBAJ3Ftg8TM9EUVK/view?usp=sharing', external: true },
           { label: 'Contact', href: 'mailto:majidsajid@outlook.com', external: true },
         ].map((item, i) =>
           item.external ? (
