@@ -18,8 +18,6 @@ function AnimatedWord() {
   }, [])
 
   return (
-    // The invisible ghost ("strategic" = longest word) fixes the container
-    // width so "designer." never shifts position
     <span className="relative inline-block">
       <span className="invisible select-none" aria-hidden="true">
         strategic
@@ -81,21 +79,24 @@ function ProjectCard({
   index: number
 }) {
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, amount: 0.1 })
+  const isInView = useInView(ref, { once: true, amount: 0.15 })
   const isEven = index % 2 === 1
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 24 }}
+      initial={{ opacity: 0, y: 28 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      transition={{
+        duration: 0.8,
+        ease: [0.22, 1, 0.36, 1],
+        delay: index * 0.12,
+      }}
     >
       <Link href={project.href} className="block group">
-        <div
-          className="grid grid-cols-1 md:grid-cols-2 border-t border-[var(--border)] hover:bg-black/[0.02] transition-colors duration-300 md:min-h-[420px]"
-        >
-          {/* Image column — always on top on mobile, alternates on desktop */}
+        <div className="grid grid-cols-1 md:grid-cols-2 border-t border-[var(--border)] hover:bg-black/[0.02] transition-colors duration-500 md:min-h-[420px]">
+
+          {/* Image column — soft drift on hover instead of aggressive scale */}
           <div
             className={`relative overflow-hidden h-64 md:h-auto order-first ${
               isEven ? 'md:order-first' : 'md:order-last'
@@ -105,15 +106,17 @@ function ProjectCard({
               src={`/images/${project.image}`}
               alt={project.name}
               fill
-              className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.025]"
+              className="object-cover transition-transform duration-700 group-hover:scale-[1.012] group-hover:-translate-y-1"
+              style={{ transitionTimingFunction: 'var(--ease-expo)' }}
             />
           </div>
 
-          {/* Info column */}
+          {/* Info column — lifts 2px on hover */}
           <div
-            className={`p-8 md:p-14 flex flex-col justify-center order-last ${
+            className={`p-8 md:p-14 flex flex-col justify-center order-last transition-transform duration-500 group-hover:-translate-y-0.5 ${
               isEven ? 'md:order-last' : 'md:order-first'
             }`}
+            style={{ transitionTimingFunction: 'var(--ease-expo)' }}
           >
             <span className="text-[11px] text-[var(--muted)] tracking-[0.06em] mb-2 block">
               {project.index}
@@ -127,14 +130,24 @@ function ProjectCard({
             <p className="text-[14px] text-[var(--muted)] leading-[1.7] font-light mb-8 max-w-[360px]">
               {project.desc}
             </p>
+
+            {/* Metadata row with hover-reveal arrow */}
             <div className="flex items-center gap-3">
               <span className="text-[11px] uppercase tracking-[0.1em] text-[var(--muted)]">
                 {project.client}
               </span>
               <span className="text-[var(--faint)] text-[11px]">·</span>
               <span className="text-[11px] text-[var(--muted)]">{project.year}</span>
+              <span
+                className="ml-2 text-[11px] text-[var(--text)] opacity-0 -translate-x-2 transition duration-500 group-hover:opacity-100 group-hover:translate-x-0"
+                style={{ transitionTimingFunction: 'var(--ease-expo)' }}
+                aria-hidden="true"
+              >
+                →
+              </span>
             </div>
           </div>
+
         </div>
       </Link>
     </motion.div>
@@ -142,6 +155,18 @@ function ProjectCard({
 }
 
 export default function HomePage() {
+  // ── Scroll indicator: fades once the hero is past ──────────────
+  const [heroScrolled, setHeroScrolled] = useState(false)
+  useEffect(() => {
+    const onScroll = () => setHeroScrolled(window.scrollY > 80)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  // ── About section: in-view reveal ─────────────────────────────
+  const aboutRef = useRef(null)
+  const aboutInView = useInView(aboutRef, { once: true, amount: 0.2 })
+
   return (
     <>
       <Nav />
@@ -168,10 +193,9 @@ export default function HomePage() {
           />
         </div>
 
-        {/* Text */}
+        {/* Hero text */}
         <div className="relative z-10 text-center px-6">
 
-          {/* Availability badge */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -197,7 +221,7 @@ export default function HomePage() {
           <motion.h1
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.25 }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.25 }}
             className="font-serif text-center tracking-[-0.025em] leading-[0.92]"
             style={{ fontSize: 'clamp(72px, 10vw, 110px)' }}
           >
@@ -207,7 +231,7 @@ export default function HomePage() {
           <motion.p
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.42 }}
             className="font-serif italic text-[var(--muted)] mt-6"
             style={{ fontSize: 'clamp(18px, 2.5vw, 26px)' }}
           >
@@ -216,7 +240,7 @@ export default function HomePage() {
 
         </div>
 
-        {/* Bottom fade — softens the orb into the next section */}
+        {/* Bottom fade */}
         <div
           className="absolute bottom-0 left-0 right-0 pointer-events-none"
           style={{
@@ -225,12 +249,16 @@ export default function HomePage() {
           }}
         />
 
-        {/* Scroll indicator */}
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 bounce-indicator z-10">
+        {/* Scroll indicator — fades once hero is scrolled past */}
+        <motion.div
+          animate={{ opacity: heroScrolled ? 0 : 1 }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
+          className="absolute bottom-10 left-1/2 -translate-x-1/2 bounce-indicator z-10 pointer-events-none"
+        >
           <span className="text-[var(--faint)] text-[12px] uppercase tracking-[0.12em]">
             ↓
           </span>
-        </div>
+        </motion.div>
       </section>
 
       {/* ── Selected Work ─────────────────────────────── */}
@@ -247,9 +275,17 @@ export default function HomePage() {
         ))}
       </section>
 
-      {/* ── About ─────────────────────────────────────── */}
-      <section id="about" className="px-6 md:px-12 py-16 md:py-20 border-t border-[var(--border)]">
+      {/* ── About — fades in on scroll ─────────────────── */}
+      <motion.section
+        ref={aboutRef}
+        id="about"
+        initial={{ opacity: 0, y: 20 }}
+        animate={aboutInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+        className="px-6 md:px-12 py-16 md:py-20 border-t border-[var(--border)]"
+      >
         <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] gap-10 md:gap-16 items-start">
+
           {/* Photo */}
           <div
             className="relative overflow-hidden rounded-[2px] max-w-[240px] md:max-w-none"
@@ -305,7 +341,7 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       <Footer />
     </>
