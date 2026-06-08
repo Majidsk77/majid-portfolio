@@ -1,11 +1,17 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
+
+const EMAIL = 'majidsajid@outlook.com'
+const RESUME_URL =
+  'https://drive.google.com/file/d/1-40FvUisOKLs-e9uVBAJ3Ftg8TM9EUVK/view?usp=sharing'
 
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [copied, setCopied] = useState(false)
+  const copyTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60)
@@ -27,7 +33,47 @@ export default function Nav() {
     return () => { document.body.style.overflow = '' }
   }, [menuOpen])
 
+  // Clean up the toast timer on unmount
+  useEffect(() => {
+    return () => {
+      if (copyTimer.current) clearTimeout(copyTimer.current)
+    }
+  }, [])
+
   const close = () => setMenuOpen(false)
+
+  const showCopied = () => {
+    setCopied(true)
+    if (copyTimer.current) clearTimeout(copyTimer.current)
+    copyTimer.current = setTimeout(() => setCopied(false), 2000)
+  }
+
+  // Copy email to clipboard (Clipboard API + legacy fallback). Never opens mailto.
+  const copyEmail = async () => {
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(EMAIL)
+        showCopied()
+        return
+      }
+    } catch {
+      // fall through to the legacy fallback below
+    }
+    try {
+      const ta = document.createElement('textarea')
+      ta.value = EMAIL
+      ta.setAttribute('readonly', '')
+      ta.style.position = 'fixed'
+      ta.style.top = '-9999px'
+      document.body.appendChild(ta)
+      ta.select()
+      document.execCommand('copy')
+      document.body.removeChild(ta)
+      showCopied()
+    } catch {
+      // Last resort: nothing destructive, no mailto fallback per spec
+    }
+  }
 
   return (
     <>
@@ -67,12 +113,13 @@ export default function Nav() {
           >
             Resume
           </a>
-          <a
-            href="mailto:majidsajid@outlook.com"
-            className="text-[11px] uppercase tracking-[0.1em] font-normal text-[var(--muted)] hover:text-[var(--text)] transition-colors duration-200"
+          <button
+            type="button"
+            onClick={copyEmail}
+            className="text-[11px] uppercase tracking-[0.1em] font-normal text-[var(--muted)] hover:text-[var(--text)] transition-colors duration-200 cursor-pointer"
           >
             Contact
-          </a>
+          </button>
         </div>
 
         {/* Hamburger button — mobile only */}
@@ -105,12 +152,29 @@ export default function Nav() {
         style={{ background: 'rgba(247,245,240,0.97)', backdropFilter: 'blur(12px)' }}
       >
         {[
-          { label: 'Work', href: '/#work', external: false },
-          { label: 'About', href: '/#about', external: false },
-          { label: 'Resume', href: 'https://drive.google.com/file/d/1-40FvUisOKLs-e9uVBAJ3Ftg8TM9EUVK/view?usp=sharing', external: true },
-          { label: 'Contact', href: 'mailto:majidsajid@outlook.com', external: true },
+          { label: 'Work', href: '/#work', external: false, copy: false },
+          { label: 'About', href: '/#about', external: false, copy: false },
+          { label: 'Resume', href: RESUME_URL, external: true, copy: false },
+          { label: 'Contact', href: '', external: false, copy: true },
         ].map((item, i) =>
-          item.external ? (
+          item.copy ? (
+            <button
+              key={item.label}
+              type="button"
+              onClick={() => {
+                copyEmail()
+                close()
+              }}
+              className="font-serif italic text-[42px] tracking-[-0.01em] text-[var(--text)] hover:text-[var(--muted)] transition-colors duration-200 cursor-pointer"
+              style={{
+                opacity: menuOpen ? 1 : 0,
+                transform: menuOpen ? 'translateY(0)' : 'translateY(12px)',
+                transition: `opacity 0.35s ease ${i * 70}ms, transform 0.35s ease ${i * 70}ms, color 0.2s`,
+              }}
+            >
+              {item.label}
+            </button>
+          ) : item.external ? (
             <a
               key={item.label}
               href={item.href}
@@ -141,6 +205,28 @@ export default function Nav() {
               {item.label}
             </Link>
           )
+        )}
+      </div>
+
+      {/* Copy-email toast — aria-live, fixed, never shifts layout */}
+      <div
+        role="status"
+        aria-live="polite"
+        className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-[60] pointer-events-none transition-all duration-300 ${
+          copied ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
+        }`}
+      >
+        {copied && (
+          <span
+            className="inline-flex items-center px-4 py-2 rounded-full text-[11px] uppercase tracking-[0.08em] text-[var(--text)]"
+            style={{
+              border: '1px solid var(--border)',
+              background: 'rgba(247,245,240,0.95)',
+              backdropFilter: 'blur(8px)',
+            }}
+          >
+            Email copied
+          </span>
         )}
       </div>
     </>
