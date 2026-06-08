@@ -1,4 +1,10 @@
+'use client'
+
+import { useEmailCopy, EmailCopyToast } from './EmailCopy'
+
 export default function Footer() {
+  const { copied, copyEmail } = useEmailCopy()
+
   return (
     <footer className="w-full border-t border-[var(--border)] px-6 md:px-12 py-8 md:py-10">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -11,12 +17,13 @@ export default function Footer() {
         </span>
 
         <div className="flex items-center gap-6 md:justify-end">
-          <a
-            href="mailto:majidsajid@outlook.com"
-            className="text-[11px] uppercase tracking-[0.08em] text-[var(--muted)] hover:text-[var(--text)] transition-colors duration-200"
+          <button
+            type="button"
+            onClick={copyEmail}
+            className="text-[11px] uppercase tracking-[0.08em] text-[var(--muted)] hover:text-[var(--text)] transition-colors duration-200 cursor-pointer"
           >
             Email
-          </a>
+          </button>
           <span className="text-[var(--faint)] text-[11px]">·</span>
           <a
             href="https://www.linkedin.com/in/majid-kareem/"
@@ -28,6 +35,8 @@ export default function Footer() {
           </a>
         </div>
       </div>
+
+      <EmailCopyToast copied={copied} />
     </footer>
   )
 }
