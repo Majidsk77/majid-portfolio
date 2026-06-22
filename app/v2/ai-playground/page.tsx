@@ -40,6 +40,25 @@ const TOYS: Toy[] = [
   { id: 'farewell', label: '8-bit farewell card', src: '/images/playground/farewell.png', href: '#', left: '22.2%', top: '62.4%', width: '14.9%' },
 ]
 
+// Twinkling pixel "stars" — purely decorative ambient, scattered in the gaps
+// between toys. Indigo + coral tie to the lobby's AI Playground palette.
+const IN = 'rgba(99,102,241,0.7)'
+const CO = 'rgba(232,92,92,0.7)'
+const STARS = [
+  { left: '14%', top: '8%',  size: '6px', color: IN, delay: '0s',    dur: '2.4s' },
+  { left: '52%', top: '14%', size: '4px', color: CO, delay: '0.5s',  dur: '3.1s' },
+  { left: '88%', top: '12%', size: '5px', color: IN, delay: '1.1s',  dur: '2.7s' },
+  { left: '30%', top: '34%', size: '4px', color: CO, delay: '0.8s',  dur: '3.4s' },
+  { left: '62%', top: '28%', size: '6px', color: IN, delay: '0.2s',  dur: '2.9s' },
+  { left: '93%', top: '40%', size: '4px', color: CO, delay: '1.4s',  dur: '2.5s' },
+  { left: '8%',  top: '52%', size: '5px', color: IN, delay: '0.6s',  dur: '3.2s' },
+  { left: '47%', top: '58%', size: '4px', color: CO, delay: '1.0s',  dur: '2.6s' },
+  { left: '78%', top: '68%', size: '6px', color: IN, delay: '0.3s',  dur: '3.0s' },
+  { left: '38%', top: '82%', size: '4px', color: IN, delay: '1.2s',  dur: '2.8s' },
+  { left: '60%', top: '88%', size: '5px', color: CO, delay: '0.4s',  dur: '3.3s' },
+  { left: '90%', top: '80%', size: '4px', color: IN, delay: '0.9s',  dur: '2.7s' },
+]
+
 export default function AiPlaygroundRoom() {
   return (
     <div
@@ -78,10 +97,26 @@ export default function AiPlaygroundRoom() {
             overflow: 'hidden',
           }}
         >
-          {/* Back to lobby */}
-          <Link href="/v2" className="pg-back" aria-label="Back to lobby">
-            <span aria-hidden="true">←</span> Lobby
-          </Link>
+          {/* Ambient 8-bit atmosphere — pixel-grid floor + twinkling pixels.
+              Purely decorative, sits behind the scene. */}
+          <div className="pg-ambient" aria-hidden="true">
+            <div className="pg-floor" />
+            {STARS.map((s, i) => (
+              <span
+                key={i}
+                className="pg-star"
+                style={{
+                  left: s.left,
+                  top: s.top,
+                  width: s.size,
+                  height: s.size,
+                  background: s.color,
+                  animationDelay: s.delay,
+                  animationDuration: s.dur,
+                }}
+              />
+            ))}
+          </div>
 
           {/* Scene — absolute on desktop, stacked grid on mobile */}
           <div className="pg-scene">
@@ -111,26 +146,48 @@ export default function AiPlaygroundRoom() {
       <FooterV2 />
 
       <style>{`
-        /* Back-to-lobby pill */
-        .pg-back {
-          align-self: flex-start;
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          padding: 8px 14px;
-          border-radius: 30px;
-          border: 1px solid rgba(217, 217, 217, 0.7);
-          font-size: 14px;
-          color: #111110;
-          text-decoration: none;
-          z-index: 2;
-          transition: border-color 0.2s ease, background 0.2s ease;
+        /* Ambient layer — behind the scene, fills the whole room */
+        .pg-ambient {
+          position: absolute;
+          inset: 0;
+          z-index: 0;
+          pointer-events: none;
+          border-radius: inherit;
+          overflow: hidden;
         }
-        .pg-back:hover { border-color: rgba(217,217,217,1); background: rgba(17,17,16,0.03); }
+        /* Pixel-grid floor — fades up from the bottom, drifts slowly */
+        .pg-floor {
+          position: absolute;
+          inset: 40% 0 0 0;
+          background-image:
+            repeating-linear-gradient(0deg, transparent, transparent 23px, rgba(99,102,241,0.06) 23px, rgba(99,102,241,0.06) 24px),
+            repeating-linear-gradient(90deg, transparent, transparent 23px, rgba(99,102,241,0.06) 23px, rgba(99,102,241,0.06) 24px);
+          background-size: 24px 24px;
+          -webkit-mask-image: linear-gradient(to top, #000 0%, transparent 100%);
+          mask-image: linear-gradient(to top, #000 0%, transparent 100%);
+        }
+        .pg-star {
+          position: absolute;
+          display: block;
+          image-rendering: pixelated;
+        }
+        @media (prefers-reduced-motion: no-preference) {
+          .pg-floor { animation: pgFloorDrift 6s linear infinite; }
+          .pg-star  { animation-name: pgTwinkle; animation-timing-function: steps(1); animation-iteration-count: infinite; }
+        }
+        @keyframes pgFloorDrift {
+          from { background-position: 0 0, 0 0; }
+          to   { background-position: 0 24px, 24px 0; }
+        }
+        @keyframes pgTwinkle {
+          0%, 100% { opacity: 0; }
+          50%      { opacity: 1; }
+        }
 
         /* Desktop scene — aspect-locked stage, objects positioned absolutely */
         .pg-scene {
           position: relative;
+          z-index: 1;
           width: 100%;
           flex: 1;
           margin-top: 8px;
@@ -138,8 +195,9 @@ export default function AiPlaygroundRoom() {
         }
         .pg-title {
           position: absolute;
-          left: 30%;
-          top: 1.6%;
+          left: 50%;
+          top: 2%;
+          transform: translateX(-50%);
           width: 40%;
           max-width: 544px;
           height: auto;
@@ -191,6 +249,7 @@ export default function AiPlaygroundRoom() {
           }
           .pg-title {
             position: static;
+            transform: none;
             width: 80%;
             max-width: 320px;
             margin: 0 auto 4px;
