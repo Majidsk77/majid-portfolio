@@ -162,6 +162,60 @@ function PixelOverlay({ visible }: { visible: boolean }) {
   )
 }
 
+// ── WorkOverlay — Selected Work card only ─────────────────────────────────────
+// Two layers: a slow diagonal light sweep + a grain texture that breathes.
+// Easing is smooth (no steps) — editorial/premium, not glitchy.
+
+// SVG fractal noise encoded as a data URI — renders grain without canvas.
+const WORK_GRAIN = encodeURIComponent(
+  "<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'>" +
+  "<filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.68' numOctaves='4' stitchTiles='stitch'/></filter>" +
+  "<rect width='220' height='220' filter='url(#g)' opacity='0.45'/>" +
+  "</svg>"
+)
+
+function WorkOverlay({ visible }: { visible: boolean }) {
+  return (
+    <span
+      aria-hidden="true"
+      style={{
+        position: 'absolute',
+        inset: 0,
+        overflow: 'hidden',
+        pointerEvents: 'none',
+        borderRadius: 'inherit',
+        opacity: visible ? 1 : 0,
+        transition: 'opacity 0.7s ease',
+      }}
+    >
+      {/* Diagonal gradient sweep — warm light moving corner to corner */}
+      <span
+        style={{
+          position: 'absolute',
+          inset: 0,
+          background:
+            'linear-gradient(135deg, transparent 0%, rgba(247,245,240,0.55) 35%, rgba(225,218,205,0.45) 50%, rgba(247,245,240,0.55) 65%, transparent 100%)',
+          // background-size > 100% so background-position movement visibly shifts the gradient
+          backgroundSize: '300% 300%',
+          animation: visible ? 'v2WorkSweep 5s ease-in-out infinite' : 'none',
+        }}
+      />
+      {/* Grain — fractal noise tile breathing in opacity */}
+      <span
+        style={{
+          position: 'absolute',
+          // slightly oversized to hide tiling seams at card edges
+          inset: '-10px',
+          backgroundImage: `url("data:image/svg+xml,${WORK_GRAIN}")`,
+          backgroundSize: '220px 220px',
+          mixBlendMode: 'soft-light',
+          animation: visible ? 'v2GrainBreathe 4s ease-in-out infinite' : 'none',
+        }}
+      />
+    </span>
+  )
+}
+
 // ── WorldCard ─────────────────────────────────────────────────────────────────
 
 function WorldCard({ id, label, href, reducedMotion }: World & { reducedMotion: boolean }) {
@@ -204,6 +258,10 @@ function WorldCard({ id, label, href, reducedMotion }: World & { reducedMotion: 
       {/* 8-bit overlay — AI Playground only */}
       {id === 'playground' && !reducedMotion && (
         <PixelOverlay visible={on} />
+      )}
+      {/* Grain + gradient overlay — Selected Work only */}
+      {id === 'work' && !reducedMotion && (
+        <WorkOverlay visible={on} />
       )}
 
       {/* Label — playground gets a periodic glitch translate on hover */}
@@ -354,6 +412,15 @@ export default function HomePageV2() {
           0%   { opacity: 0; }
           50%  { opacity: 1; }
           100% { opacity: 0; }
+        }
+        @keyframes v2WorkSweep {
+          0%   { background-position: 0% 0%; }
+          50%  { background-position: 100% 100%; }
+          100% { background-position: 0% 0%; }
+        }
+        @keyframes v2GrainBreathe {
+          0%, 100% { opacity: 0.38; }
+          50%       { opacity: 0.62; }
         }
         @keyframes v2LabelGlitch {
           0%    { transform: translateX(0px); }
