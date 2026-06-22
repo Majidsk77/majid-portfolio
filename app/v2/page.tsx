@@ -163,13 +163,17 @@ function PixelOverlay({ visible }: { visible: boolean }) {
 }
 
 // ── WorkOverlay — Selected Work card only ─────────────────────────────────────
-// Dark editorial portal: two radial color blobs drifting over a deep bg,
-// capped with grain at screen blend. Text inverts to cream (see WorldCard).
+// Bold editorial portal over a deep #0e0e0d base:
+//  1. Rotating conic wheel — saturated magenta/violet/amber/teal — liquid color
+//  2. Two drifting bright radial blobs at screen blend — bloom + depth
+//  3. Diagonal light sweep crossing the surface
+//  4. Grain at screen blend — film texture on the dark field
+// Text inverts to cream (see WorldCard). Smooth easing — premium, not glitchy.
 
 const WORK_GRAIN = encodeURIComponent(
   "<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'>" +
   "<filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.68' numOctaves='4' stitchTiles='stitch'/></filter>" +
-  "<rect width='220' height='220' filter='url(#g)' opacity='0.5'/>" +
+  "<rect width='220' height='220' filter='url(#g)' opacity='0.55'/>" +
   "</svg>"
 )
 
@@ -187,34 +191,48 @@ function WorkOverlay({ visible }: { visible: boolean }) {
         transition: 'opacity 0.55s ease',
       }}
     >
-      {/* Color blob mesh — two radial gradients drifting at different speeds */}
+      {/* 1. Rotating conic color wheel — the liquid editorial energy */}
+      <span
+        style={{
+          position: 'absolute',
+          // oversized + centered so rotation never reveals corners
+          inset: '-60%',
+          background:
+            'conic-gradient(from 0deg at 50% 50%, ' +
+            '#d6356b 0deg, #6b3fd6 80deg, #2f6bd6 150deg, ' +
+            '#1e9c8a 220deg, #d6953f 300deg, #d6356b 360deg)',
+          filter: 'blur(28px)',
+          opacity: 0.55,
+          animation: visible ? 'v2WorkSpin 14s linear infinite' : 'none',
+        }}
+      />
+      {/* 2. Drifting bright blobs — bloom highlights at screen blend */}
       <span
         style={{
           position: 'absolute',
           inset: 0,
+          mixBlendMode: 'screen',
           background: [
-            'radial-gradient(ellipse 100% 80% at 15% 25%, rgba(55,45,105,0.95) 0%, transparent 60%)',
-            'radial-gradient(ellipse 80% 100% at 85% 80%, rgba(30,22,52,0.90) 0%, transparent 60%)',
-            'radial-gradient(ellipse 60% 60% at 55% 50%, rgba(75,50,35,0.30) 0%, transparent 65%)',
+            'radial-gradient(ellipse 70% 60% at 20% 25%, rgba(214,53,107,0.55) 0%, transparent 60%)',
+            'radial-gradient(ellipse 65% 70% at 82% 78%, rgba(47,107,214,0.50) 0%, transparent 60%)',
           ].join(', '),
-          backgroundSize: '220% 220%',
-          animation: visible ? 'v2WorkDrift 8s ease-in-out infinite alternate' : 'none',
+          backgroundSize: '200% 200%',
+          animation: visible ? 'v2WorkDrift 9s ease-in-out infinite alternate' : 'none',
         }}
       />
-      {/* Second blob layer at offset phase — creates liquid depth */}
+      {/* 3. Diagonal light sweep */}
       <span
         style={{
           position: 'absolute',
           inset: 0,
-          background: [
-            'radial-gradient(ellipse 70% 90% at 80% 15%, rgba(40,32,80,0.70) 0%, transparent 55%)',
-            'radial-gradient(ellipse 90% 60% at 20% 85%, rgba(25,18,45,0.60) 0%, transparent 55%)',
-          ].join(', '),
-          backgroundSize: '220% 220%',
-          animation: visible ? 'v2WorkDrift2 11s ease-in-out infinite alternate-reverse' : 'none',
+          background:
+            'linear-gradient(115deg, transparent 35%, rgba(255,255,255,0.16) 50%, transparent 65%)',
+          backgroundSize: '250% 250%',
+          mixBlendMode: 'screen',
+          animation: visible ? 'v2WorkSweep 6s ease-in-out infinite' : 'none',
         }}
       />
-      {/* Grain — screen blend on dark bg reads as bright texture */}
+      {/* 4. Grain — film texture over the color field */}
       <span
         style={{
           position: 'absolute',
@@ -222,7 +240,17 @@ function WorkOverlay({ visible }: { visible: boolean }) {
           backgroundImage: `url("data:image/svg+xml,${WORK_GRAIN}")`,
           backgroundSize: '220px 220px',
           mixBlendMode: 'screen',
+          opacity: 0.5,
           animation: visible ? 'v2GrainBreathe 4s ease-in-out infinite' : 'none',
+        }}
+      />
+      {/* Inner vignette — keeps edges grounded so text stays readable */}
+      <span
+        style={{
+          position: 'absolute',
+          inset: 0,
+          background:
+            'radial-gradient(ellipse 90% 90% at 50% 50%, transparent 45%, rgba(14,14,13,0.55) 100%)',
         }}
       />
     </span>
@@ -431,13 +459,18 @@ export default function HomePageV2() {
           50%  { opacity: 1; }
           100% { opacity: 0; }
         }
+        @keyframes v2WorkSpin {
+          from { transform: rotate(0deg); }
+          to   { transform: rotate(360deg); }
+        }
         @keyframes v2WorkDrift {
           0%   { background-position: 0% 0%; }
           100% { background-position: 100% 100%; }
         }
-        @keyframes v2WorkDrift2 {
-          0%   { background-position: 100% 0%; }
-          100% { background-position: 0% 100%; }
+        @keyframes v2WorkSweep {
+          0%   { background-position: 0% 0%; }
+          50%  { background-position: 100% 100%; }
+          100% { background-position: 0% 0%; }
         }
         @keyframes v2GrainBreathe {
           0%, 100% { opacity: 0.30; }
