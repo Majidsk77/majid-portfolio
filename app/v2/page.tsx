@@ -82,13 +82,24 @@ const TOKENS: Record<WorldId, {
 const EASE = 'cubic-bezier(0.22, 1, 0.36, 1)'
 
 // ── PixelOverlay — AI Playground card only ────────────────────────────────────
-// Scanlines scroll upward + three pixels blink at staggered step intervals.
-// steps(1) easing produces the hard frame-cut that reads as 8-bit.
+// Layers: scrolling scanlines + pixel grid floor + 10 pixel blocks spread
+// across the card in a staggered "boot sequence" pattern.
+// steps(1) easing on all blinking produces hard frame-cuts (8-bit feel).
 
 const PIXEL_BLOCKS = [
-  { w: 4, h: 4, bottom: 28, right: 22, delay: '0s',     dur: '0.7s' },
-  { w: 3, h: 3, bottom: 38, right: 31, delay: '0.28s',  dur: '0.9s' },
-  { w: 4, h: 4, bottom: 22, right: 33, delay: '0.55s',  dur: '0.6s' },
+  // bottom strip — first to light up
+  { w: 4, h: 4, bottom: 20, left:  22, right: undefined, delay: '0.00s', dur: '0.55s' },
+  { w: 3, h: 3, bottom: 20, left:  36, right: undefined, delay: '0.08s', dur: '0.70s' },
+  { w: 4, h: 4, bottom: 22, left: undefined, right: 22,  delay: '0.16s', dur: '0.60s' },
+  { w: 3, h: 3, bottom: 20, left: undefined, right: 36,  delay: '0.12s', dur: '0.80s' },
+  // mid band
+  { w: 3, h: 3, bottom: 60, left:  26, right: undefined, delay: '0.30s', dur: '0.65s' },
+  { w: 4, h: 4, bottom: 56, left: undefined, right: 28,  delay: '0.40s', dur: '0.75s' },
+  { w: 3, h: 3, bottom: 64, left:  50, right: undefined, delay: '0.35s', dur: '0.90s' },
+  // upper strip — last to light up, giving boot-sequence feel
+  { w: 3, h: 3, bottom: 96, left:  22, right: undefined, delay: '0.55s', dur: '0.85s' },
+  { w: 4, h: 4, bottom: 90, left: undefined, right: 22,  delay: '0.62s', dur: '0.60s' },
+  { w: 3, h: 3, bottom: 100,left:  46, right: undefined, delay: '0.70s', dur: '0.70s' },
 ]
 
 function PixelOverlay({ visible }: { visible: boolean }) {
@@ -102,31 +113,45 @@ function PixelOverlay({ visible }: { visible: boolean }) {
         pointerEvents: 'none',
         borderRadius: 'inherit',
         opacity: visible ? 1 : 0,
-        transition: 'opacity 0.35s ease',
+        transition: 'opacity 0.25s ease',
       }}
     >
-      {/* Scanlines — thin horizontal rules that scroll upward */}
+      {/* Pixel-grid floor — 8×8 tile scrolls diagonally, gives sense of digital space */}
+      <span
+        style={{
+          position: 'absolute',
+          inset: 0,
+          backgroundImage: [
+            'repeating-linear-gradient(0deg, transparent, transparent 7px, rgba(99,102,241,0.045) 7px, rgba(99,102,241,0.045) 8px)',
+            'repeating-linear-gradient(90deg, transparent, transparent 7px, rgba(99,102,241,0.045) 7px, rgba(99,102,241,0.045) 8px)',
+          ].join(', '),
+          backgroundSize: '8px 8px',
+          animation: visible ? 'v2GridDrift 3s linear infinite' : 'none',
+        }}
+      />
+      {/* Scanlines — denser and faster than before */}
       <span
         style={{
           position: 'absolute',
           inset: 0,
           backgroundImage:
-            'repeating-linear-gradient(transparent, transparent 3px, rgba(99,102,241,0.06) 3px, rgba(99,102,241,0.06) 4px)',
-          backgroundSize: '100% 4px',
-          animation: visible ? 'v2ScanScroll 1.4s linear infinite' : 'none',
+            'repeating-linear-gradient(transparent, transparent 2px, rgba(99,102,241,0.09) 2px, rgba(99,102,241,0.09) 3px)',
+          backgroundSize: '100% 3px',
+          animation: visible ? 'v2ScanScroll 0.9s linear infinite' : 'none',
         }}
       />
-      {/* Pixel blocks — blink in hard steps */}
+      {/* Pixel blocks — spread top-to-bottom, boot-sequence stagger */}
       {PIXEL_BLOCKS.map((p, i) => (
         <span
           key={i}
           style={{
             position: 'absolute',
             bottom: p.bottom,
-            right: p.right,
-            width: p.w,
+            ...(p.left  !== undefined ? { left:  p.left  } : {}),
+            ...(p.right !== undefined ? { right: p.right } : {}),
+            width:  p.w,
             height: p.h,
-            background: 'rgba(99,102,241,0.6)',
+            background: 'rgba(99,102,241,0.7)',
             animation: visible
               ? `v2PixelBlink ${p.dur} steps(1) ${p.delay} infinite`
               : 'none',
@@ -165,9 +190,10 @@ function WorldCard({ id, label, href, reducedMotion }: World & { reducedMotion: 
         outline: 'none',
         position: 'relative',
         overflow: 'hidden',
-        // Selected Work: editorial shadow lift
         boxShadow:
-          id === 'work' && on
+          id === 'playground' && on
+            ? 'inset 0 0 32px rgba(99,102,241,0.10), inset 0 0 8px rgba(99,102,241,0.08)'
+            : id === 'work' && on
             ? '0 4px 20px rgba(17,17,16,0.08)'
             : '0 0 0 rgba(0,0,0,0)',
         transition: reducedMotion
@@ -180,7 +206,7 @@ function WorldCard({ id, label, href, reducedMotion }: World & { reducedMotion: 
         <PixelOverlay visible={on} />
       )}
 
-      {/* Label */}
+      {/* Label — playground gets a periodic glitch translate on hover */}
       <span
         style={{
           fontSize: '18px',
@@ -188,6 +214,10 @@ function WorldCard({ id, label, href, reducedMotion }: World & { reducedMotion: 
           color: '#111110',
           lineHeight: 1.3,
           letterSpacing: '-0.01em',
+          display: 'inline-block',
+          animation: id === 'playground' && on && !reducedMotion
+            ? 'v2LabelGlitch 2.4s steps(1) infinite'
+            : 'none',
         }}
       >
         {label}
@@ -314,12 +344,27 @@ export default function HomePageV2() {
       <style>{`
         @keyframes v2ScanScroll {
           from { background-position: 0 0; }
-          to   { background-position: 0 -4px; }
+          to   { background-position: 0 -3px; }
+        }
+        @keyframes v2GridDrift {
+          from { background-position: 0 0; }
+          to   { background-position: 8px 8px; }
         }
         @keyframes v2PixelBlink {
           0%   { opacity: 0; }
           50%  { opacity: 1; }
           100% { opacity: 0; }
+        }
+        @keyframes v2LabelGlitch {
+          0%    { transform: translateX(0px); }
+          8%    { transform: translateX(2px); }
+          12%   { transform: translateX(-1px); }
+          16%   { transform: translateX(0px); }
+          80%   { transform: translateX(0px); }
+          86%   { transform: translateX(-2px); }
+          90%   { transform: translateX(1px); }
+          94%   { transform: translateX(-1px); }
+          100%  { transform: translateX(0px); }
         }
         @media (max-width: 480px) {
           .worlds-grid { grid-template-columns: 1fr; }
