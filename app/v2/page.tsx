@@ -8,7 +8,7 @@
 import Link from 'next/link'
 import { Hanken_Grotesk } from 'next/font/google'
 import { useState, useEffect } from 'react'
-import Nav from '@/components/Nav'
+import NavV2 from './NavV2'
 import Footer from '@/components/Footer'
 
 const hanken = Hanken_Grotesk({
@@ -176,6 +176,7 @@ export default function HomePageV2() {
 
   return (
     <div
+      className={hanken.className}
       style={{
         minHeight: '100vh',
         display: 'flex',
@@ -183,11 +184,10 @@ export default function HomePageV2() {
         background: 'var(--bg)',
       }}
     >
-      <Nav />
+      <NavV2 />
 
       {/* Lobby — fills the space between Nav and Footer, content centered */}
       <main
-        className={hanken.className}
         style={{
           flex: 1,
           display: 'flex',
