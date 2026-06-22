@@ -30,7 +30,7 @@ interface World {
 // ── World definitions ─────────────────────────────────────────────────────────
 
 const WORLDS: World[] = [
-  { id: 'playground', label: 'AI Playground', href: '#' },
+  { id: 'playground', label: 'AI Playground', href: '/v2/ai-playground' },
   { id: 'work',       label: 'Selected Work',  href: '#' },
   { id: 'about',      label: 'About Me',        href: '#' },
 ]
