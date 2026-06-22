@@ -61,11 +61,11 @@ const TOKENS: Record<WorldId, {
   },
   work: {
     borderRest:  'rgba(17, 17, 16, 0.20)',
-    borderHover: 'rgba(17, 17, 16, 0.65)',
+    borderHover: 'rgba(255, 255, 255, 0.14)',  // light border on dark hover bg
     bgRest:      'transparent',
-    bgHover:     'rgba(17, 17, 16, 0.027)',
+    bgHover:     '#0e0e0d',                     // deep dark — portal opens
     arrowRest:   'rgba(17, 17, 16, 0.32)',
-    arrowHover:  'rgba(17, 17, 16, 0.80)',
+    arrowHover:  'rgba(247, 245, 240, 0.80)',   // cream on dark
     pixelGrid:   false,
   },
   about: {
@@ -163,14 +163,13 @@ function PixelOverlay({ visible }: { visible: boolean }) {
 }
 
 // ── WorkOverlay — Selected Work card only ─────────────────────────────────────
-// Two layers: a slow diagonal light sweep + a grain texture that breathes.
-// Easing is smooth (no steps) — editorial/premium, not glitchy.
+// Dark editorial portal: two radial color blobs drifting over a deep bg,
+// capped with grain at screen blend. Text inverts to cream (see WorldCard).
 
-// SVG fractal noise encoded as a data URI — renders grain without canvas.
 const WORK_GRAIN = encodeURIComponent(
   "<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'>" +
   "<filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.68' numOctaves='4' stitchTiles='stitch'/></filter>" +
-  "<rect width='220' height='220' filter='url(#g)' opacity='0.45'/>" +
+  "<rect width='220' height='220' filter='url(#g)' opacity='0.5'/>" +
   "</svg>"
 )
 
@@ -185,30 +184,44 @@ function WorkOverlay({ visible }: { visible: boolean }) {
         pointerEvents: 'none',
         borderRadius: 'inherit',
         opacity: visible ? 1 : 0,
-        transition: 'opacity 0.7s ease',
+        transition: 'opacity 0.55s ease',
       }}
     >
-      {/* Diagonal gradient sweep — warm light moving corner to corner */}
+      {/* Color blob mesh — two radial gradients drifting at different speeds */}
       <span
         style={{
           position: 'absolute',
           inset: 0,
-          background:
-            'linear-gradient(135deg, transparent 0%, rgba(247,245,240,0.55) 35%, rgba(225,218,205,0.45) 50%, rgba(247,245,240,0.55) 65%, transparent 100%)',
-          // background-size > 100% so background-position movement visibly shifts the gradient
-          backgroundSize: '300% 300%',
-          animation: visible ? 'v2WorkSweep 5s ease-in-out infinite' : 'none',
+          background: [
+            'radial-gradient(ellipse 100% 80% at 15% 25%, rgba(55,45,105,0.95) 0%, transparent 60%)',
+            'radial-gradient(ellipse 80% 100% at 85% 80%, rgba(30,22,52,0.90) 0%, transparent 60%)',
+            'radial-gradient(ellipse 60% 60% at 55% 50%, rgba(75,50,35,0.30) 0%, transparent 65%)',
+          ].join(', '),
+          backgroundSize: '220% 220%',
+          animation: visible ? 'v2WorkDrift 8s ease-in-out infinite alternate' : 'none',
         }}
       />
-      {/* Grain — fractal noise tile breathing in opacity */}
+      {/* Second blob layer at offset phase — creates liquid depth */}
       <span
         style={{
           position: 'absolute',
-          // slightly oversized to hide tiling seams at card edges
+          inset: 0,
+          background: [
+            'radial-gradient(ellipse 70% 90% at 80% 15%, rgba(40,32,80,0.70) 0%, transparent 55%)',
+            'radial-gradient(ellipse 90% 60% at 20% 85%, rgba(25,18,45,0.60) 0%, transparent 55%)',
+          ].join(', '),
+          backgroundSize: '220% 220%',
+          animation: visible ? 'v2WorkDrift2 11s ease-in-out infinite alternate-reverse' : 'none',
+        }}
+      />
+      {/* Grain — screen blend on dark bg reads as bright texture */}
+      <span
+        style={{
+          position: 'absolute',
           inset: '-10px',
           backgroundImage: `url("data:image/svg+xml,${WORK_GRAIN}")`,
           backgroundSize: '220px 220px',
-          mixBlendMode: 'soft-light',
+          mixBlendMode: 'screen',
           animation: visible ? 'v2GrainBreathe 4s ease-in-out infinite' : 'none',
         }}
       />
@@ -248,7 +261,7 @@ function WorldCard({ id, label, href, reducedMotion }: World & { reducedMotion: 
           id === 'playground' && on
             ? 'inset 0 0 32px rgba(99,102,241,0.10), inset 0 0 8px rgba(99,102,241,0.08)'
             : id === 'work' && on
-            ? '0 4px 20px rgba(17,17,16,0.08)'
+            ? '0 12px 48px rgba(0,0,0,0.40), 0 3px 12px rgba(0,0,0,0.25)'
             : '0 0 0 rgba(0,0,0,0)',
         transition: reducedMotion
           ? 'none'
@@ -264,15 +277,18 @@ function WorldCard({ id, label, href, reducedMotion }: World & { reducedMotion: 
         <WorkOverlay visible={on} />
       )}
 
-      {/* Label — playground gets a periodic glitch translate on hover */}
+      {/* Label — playground glitches; work inverts to cream on dark bg */}
       <span
         style={{
           fontSize: '18px',
           fontWeight: 400,
-          color: '#111110',
+          color: id === 'work' && on ? '#f7f5f0' : '#111110',
           lineHeight: 1.3,
           letterSpacing: '-0.01em',
           display: 'inline-block',
+          position: 'relative', // sits above overlay z-stack
+          zIndex: 1,
+          transition: reducedMotion ? 'none' : `color 0.4s ${EASE}`,
           animation: id === 'playground' && on && !reducedMotion
             ? 'v2LabelGlitch 2.4s steps(1) infinite'
             : 'none',
@@ -288,6 +304,8 @@ function WorldCard({ id, label, href, reducedMotion }: World & { reducedMotion: 
           fontSize: '14px',
           color: on ? tk.arrowHover : tk.arrowRest,
           display: 'inline-block',
+          position: 'relative',
+          zIndex: 1,
           transform: on ? 'translateX(4px)' : 'translateX(0)',
           transition: reducedMotion
             ? 'none'
@@ -413,14 +431,17 @@ export default function HomePageV2() {
           50%  { opacity: 1; }
           100% { opacity: 0; }
         }
-        @keyframes v2WorkSweep {
+        @keyframes v2WorkDrift {
           0%   { background-position: 0% 0%; }
-          50%  { background-position: 100% 100%; }
-          100% { background-position: 0% 0%; }
+          100% { background-position: 100% 100%; }
+        }
+        @keyframes v2WorkDrift2 {
+          0%   { background-position: 100% 0%; }
+          100% { background-position: 0% 100%; }
         }
         @keyframes v2GrainBreathe {
-          0%, 100% { opacity: 0.38; }
-          50%       { opacity: 0.62; }
+          0%, 100% { opacity: 0.30; }
+          50%       { opacity: 0.55; }
         }
         @keyframes v2LabelGlitch {
           0%    { transform: translateX(0px); }
