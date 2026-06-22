@@ -126,9 +126,7 @@ export default function NavV2() {
           paddingBottom: '24px',
           paddingLeft: 'clamp(20px, 2.78vw, 40px)',
           paddingRight: 'clamp(20px, 2.78vw, 40px)',
-          background: 'rgba(247, 245, 240, 0.92)',
-          backdropFilter: 'blur(12px)',
-          WebkitBackdropFilter: 'blur(12px)',
+          background: 'transparent',
         }}
       >
         {/* Logo pill */}
