@@ -258,10 +258,10 @@ function WorkOverlay({ visible }: { visible: boolean }) {
 }
 
 // ── AboutOverlay — About Me card only ─────────────────────────────────────────
-// Warm personal world: a soft spotlight blooms and the illustrated figure
-// rises into frame from below, then floats gently. The image top is masked
-// so its ground dissolves into the card — he appears from the world behind,
-// not pasted on like a headshot. Smooth easing — calm, human, tactile.
+// Warm personal world: on hover the illustration fills the card edge-to-edge
+// (object-fit cover, cropped to the figure) and rises gently into place, so
+// the card becomes a portrait scene rather than holding a floating image.
+// Soft cream scrims top + bottom keep the label and arrow readable.
 
 const ABOUT_ILLUSTRATION = '/images/about-illustration.png'
 
@@ -275,50 +275,49 @@ function AboutOverlay({ visible }: { visible: boolean }) {
         overflow: 'hidden',
         pointerEvents: 'none',
         borderRadius: 'inherit',
+        opacity: visible ? 1 : 0,
+        transform: visible ? 'translateY(0)' : 'translateY(14px)',
+        transition: 'opacity 0.55s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1)',
       }}
     >
-      {/* Warm spotlight — peach glow blooms from the lower centre */}
-      <span
+      {/* Full-bleed illustration — fills the card, cropped to the figure */}
+      <img
+        src={ABOUT_ILLUSTRATION}
+        alt=""
         style={{
           position: 'absolute',
           inset: 0,
-          background:
-            'radial-gradient(ellipse 80% 70% at 50% 100%, rgba(255,206,150,0.45) 0%, rgba(251,235,215,0.25) 40%, transparent 72%)',
-          opacity: visible ? 1 : 0,
-          transition: 'opacity 0.6s ease',
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          // bias the crop upward so the face sits in frame, not the trousers
+          objectPosition: '50% 22%',
+          // gentle scale float; the >100% scale keeps the fill edge-clean
+          animation: visible ? 'v2AboutFloat 5.5s ease-in-out infinite' : 'none',
         }}
       />
-      {/* Figure — rises from below + fades in, then floats */}
+      {/* Top scrim — keeps the dark label legible over the sky */}
       <span
         style={{
           position: 'absolute',
-          inset: 0,
-          opacity: visible ? 1 : 0,
-          transform: visible ? 'translateY(0)' : 'translateY(22px)',
-          transition: 'opacity 0.6s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1)',
+          insetInline: 0,
+          top: 0,
+          height: '46%',
+          background:
+            'linear-gradient(to bottom, rgba(251,243,230,0.85) 0%, rgba(251,243,230,0.35) 55%, transparent 100%)',
         }}
-      >
-        <img
-          src={ABOUT_ILLUSTRATION}
-          alt=""
-          style={{
-            position: 'absolute',
-            bottom: 0,
-            left: '50%',
-            height: '168%',
-            width: 'auto',
-            transform: 'translateX(-50%)',
-            objectFit: 'contain',
-            objectPosition: 'bottom center',
-            // dissolve the illustration's sky into the card, soften side edges
-            WebkitMaskImage:
-              'linear-gradient(to top, #000 38%, rgba(0,0,0,0.85) 60%, transparent 92%)',
-            maskImage:
-              'linear-gradient(to top, #000 38%, rgba(0,0,0,0.85) 60%, transparent 92%)',
-            animation: visible ? 'v2AboutFloat 5s ease-in-out infinite' : 'none',
-          }}
-        />
-      </span>
+      />
+      {/* Bottom scrim — warm anchor + arrow contrast */}
+      <span
+        style={{
+          position: 'absolute',
+          insetInline: 0,
+          bottom: 0,
+          height: '34%',
+          background:
+            'linear-gradient(to top, rgba(160,90,40,0.20) 0%, transparent 100%)',
+        }}
+      />
     </span>
   )
 }
@@ -545,8 +544,8 @@ export default function HomePageV2() {
           100% { background-position: 0% 0%; }
         }
         @keyframes v2AboutFloat {
-          0%, 100% { transform: translateX(-50%) translateY(0); }
-          50%       { transform: translateX(-50%) translateY(-5px); }
+          0%, 100% { transform: scale(1.06) translateY(0); }
+          50%       { transform: scale(1.06) translateY(-1.5%); }
         }
         @keyframes v2GrainBreathe {
           0%, 100% { opacity: 0.30; }
