@@ -257,6 +257,72 @@ function WorkOverlay({ visible }: { visible: boolean }) {
   )
 }
 
+// ── AboutOverlay — About Me card only ─────────────────────────────────────────
+// Warm personal world: a soft spotlight blooms and the illustrated figure
+// rises into frame from below, then floats gently. The image top is masked
+// so its ground dissolves into the card — he appears from the world behind,
+// not pasted on like a headshot. Smooth easing — calm, human, tactile.
+
+const ABOUT_ILLUSTRATION = '/images/about-illustration.png'
+
+function AboutOverlay({ visible }: { visible: boolean }) {
+  return (
+    <span
+      aria-hidden="true"
+      style={{
+        position: 'absolute',
+        inset: 0,
+        overflow: 'hidden',
+        pointerEvents: 'none',
+        borderRadius: 'inherit',
+      }}
+    >
+      {/* Warm spotlight — peach glow blooms from the lower centre */}
+      <span
+        style={{
+          position: 'absolute',
+          inset: 0,
+          background:
+            'radial-gradient(ellipse 80% 70% at 50% 100%, rgba(255,206,150,0.45) 0%, rgba(251,235,215,0.25) 40%, transparent 72%)',
+          opacity: visible ? 1 : 0,
+          transition: 'opacity 0.6s ease',
+        }}
+      />
+      {/* Figure — rises from below + fades in, then floats */}
+      <span
+        style={{
+          position: 'absolute',
+          inset: 0,
+          opacity: visible ? 1 : 0,
+          transform: visible ? 'translateY(0)' : 'translateY(22px)',
+          transition: 'opacity 0.6s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1)',
+        }}
+      >
+        <img
+          src={ABOUT_ILLUSTRATION}
+          alt=""
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            left: '50%',
+            height: '168%',
+            width: 'auto',
+            transform: 'translateX(-50%)',
+            objectFit: 'contain',
+            objectPosition: 'bottom center',
+            // dissolve the illustration's sky into the card, soften side edges
+            WebkitMaskImage:
+              'linear-gradient(to top, #000 38%, rgba(0,0,0,0.85) 60%, transparent 92%)',
+            maskImage:
+              'linear-gradient(to top, #000 38%, rgba(0,0,0,0.85) 60%, transparent 92%)',
+            animation: visible ? 'v2AboutFloat 5s ease-in-out infinite' : 'none',
+          }}
+        />
+      </span>
+    </span>
+  )
+}
+
 // ── WorldCard ─────────────────────────────────────────────────────────────────
 
 function WorldCard({ id, label, href, reducedMotion }: World & { reducedMotion: boolean }) {
@@ -290,6 +356,8 @@ function WorldCard({ id, label, href, reducedMotion }: World & { reducedMotion: 
             ? 'inset 0 0 32px rgba(99,102,241,0.10), inset 0 0 8px rgba(99,102,241,0.08)'
             : id === 'work' && on
             ? '0 12px 48px rgba(0,0,0,0.40), 0 3px 12px rgba(0,0,0,0.25)'
+            : id === 'about' && on
+            ? '0 10px 32px rgba(160,90,40,0.16)'
             : '0 0 0 rgba(0,0,0,0)',
         transition: reducedMotion
           ? 'none'
@@ -303,6 +371,10 @@ function WorldCard({ id, label, href, reducedMotion }: World & { reducedMotion: 
       {/* Grain + gradient overlay — Selected Work only */}
       {id === 'work' && !reducedMotion && (
         <WorkOverlay visible={on} />
+      )}
+      {/* Illustrated figure reveal — About Me only */}
+      {id === 'about' && !reducedMotion && (
+        <AboutOverlay visible={on} />
       )}
 
       {/* Label — playground glitches; work inverts to cream on dark bg */}
@@ -471,6 +543,10 @@ export default function HomePageV2() {
           0%   { background-position: 0% 0%; }
           50%  { background-position: 100% 100%; }
           100% { background-position: 0% 0%; }
+        }
+        @keyframes v2AboutFloat {
+          0%, 100% { transform: translateX(-50%) translateY(0); }
+          50%       { transform: translateX(-50%) translateY(-5px); }
         }
         @keyframes v2GrainBreathe {
           0%, 100% { opacity: 0.30; }
