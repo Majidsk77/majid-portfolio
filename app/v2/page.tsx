@@ -5,6 +5,9 @@
 // Starts as a copy of the live homepage (app/page.tsx) so it can be iterated on
 // independently. Editing this file does NOT affect the production homepage.
 // Reuses the shared <Nav> and <Footer> so navigation stays consistent.
+//
+// Preview-deploy smoke test: this comment exists to verify Vercel's GitHub
+// integration builds previews for the redesign/v2 branch. No visual change.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import Image from 'next/image'
