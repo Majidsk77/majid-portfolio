@@ -136,7 +136,7 @@ export default function NavV2() {
 
         {/* Desktop nav — Work / About / Contact */}
         <div
-          style={{ display: 'flex', gap: '16px', alignItems: 'center' }}
+          style={{ gap: '16px', alignItems: 'center' }}
           className="hidden md:flex"
         >
           <Pill href="/#work">
@@ -158,7 +158,6 @@ export default function NavV2() {
           aria-expanded={menuOpen}
           className="md:hidden"
           style={{
-            display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             background: 'none',
