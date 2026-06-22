@@ -61,11 +61,11 @@ const TOKENS: Record<WorldId, {
   },
   work: {
     borderRest:  'rgba(17, 17, 16, 0.20)',
-    borderHover: 'rgba(255, 255, 255, 0.14)',  // light border on dark hover bg
+    borderHover: 'rgba(120, 170, 200, 0.45)',   // soft oceanic border
     bgRest:      'transparent',
-    bgHover:     '#0e0e0d',                     // deep dark — portal opens
+    bgHover:     'rgba(236, 244, 248, 0.85)',    // light tinted base for blobs
     arrowRest:   'rgba(17, 17, 16, 0.32)',
-    arrowHover:  'rgba(247, 245, 240, 0.80)',   // cream on dark
+    arrowHover:  'rgba(17, 17, 16, 0.80)',
     pixelGrid:   false,
   },
   about: {
@@ -163,17 +163,15 @@ function PixelOverlay({ visible }: { visible: boolean }) {
 }
 
 // ── WorkOverlay — Selected Work card only ─────────────────────────────────────
-// Bold editorial portal over a deep #0e0e0d base:
-//  1. Rotating conic wheel — saturated magenta/violet/amber/teal — liquid color
-//  2. Two drifting bright radial blobs at screen blend — bloom + depth
-//  3. Diagonal light sweep crossing the surface
-//  4. Grain at screen blend — film texture on the dark field
-// Text inverts to cream (see WorldCard). Smooth easing — premium, not glitchy.
+// Soft editorial liquid: pastel blobs (cyan, lavender, mint, coral) drift and
+// breathe over a light tinted base — oceanic, fluid, polished. Two layers
+// move at different speeds/directions for depth; a whisper of grain only.
+// Light mood throughout — text stays dark and readable (no inversion).
 
 const WORK_GRAIN = encodeURIComponent(
-  "<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'>" +
-  "<filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.68' numOctaves='4' stitchTiles='stitch'/></filter>" +
-  "<rect width='220' height='220' filter='url(#g)' opacity='0.55'/>" +
+  "<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'>" +
+  "<filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/></filter>" +
+  "<rect width='200' height='200' filter='url(#g)' opacity='0.4'/>" +
   "</svg>"
 )
 
@@ -188,69 +186,49 @@ function WorkOverlay({ visible }: { visible: boolean }) {
         pointerEvents: 'none',
         borderRadius: 'inherit',
         opacity: visible ? 1 : 0,
-        transition: 'opacity 0.55s ease',
+        transition: 'opacity 0.6s ease',
       }}
     >
-      {/* 1. Rotating conic color wheel — the liquid editorial energy */}
+      {/* Layer 1 — pastel blobs drifting one way */}
       <span
         style={{
           position: 'absolute',
-          // oversized + centered so rotation never reveals corners
-          inset: '-60%',
-          background:
-            'conic-gradient(from 0deg at 50% 50%, ' +
-            '#d6356b 0deg, #6b3fd6 80deg, #2f6bd6 150deg, ' +
-            '#1e9c8a 220deg, #d6953f 300deg, #d6356b 360deg)',
-          filter: 'blur(28px)',
-          opacity: 0.55,
-          animation: visible ? 'v2WorkSpin 14s linear infinite' : 'none',
-        }}
-      />
-      {/* 2. Drifting bright blobs — bloom highlights at screen blend */}
-      <span
-        style={{
-          position: 'absolute',
-          inset: 0,
-          mixBlendMode: 'screen',
+          inset: '-25%',
           background: [
-            'radial-gradient(ellipse 70% 60% at 20% 25%, rgba(214,53,107,0.55) 0%, transparent 60%)',
-            'radial-gradient(ellipse 65% 70% at 82% 78%, rgba(47,107,214,0.50) 0%, transparent 60%)',
+            'radial-gradient(ellipse 55% 55% at 25% 30%, rgba(120,200,225,0.55) 0%, transparent 62%)',
+            'radial-gradient(ellipse 50% 60% at 78% 35%, rgba(190,170,235,0.50) 0%, transparent 62%)',
+            'radial-gradient(ellipse 60% 55% at 60% 80%, rgba(150,220,190,0.48) 0%, transparent 62%)',
           ].join(', '),
           backgroundSize: '200% 200%',
-          animation: visible ? 'v2WorkDrift 9s ease-in-out infinite alternate' : 'none',
+          filter: 'blur(14px)',
+          animation: visible ? 'v2WorkDrift 12s ease-in-out infinite alternate' : 'none',
         }}
       />
-      {/* 3. Diagonal light sweep */}
+      {/* Layer 2 — coral + sky accents drifting the other way, offset phase */}
       <span
         style={{
           position: 'absolute',
-          inset: 0,
-          background:
-            'linear-gradient(115deg, transparent 35%, rgba(255,255,255,0.16) 50%, transparent 65%)',
-          backgroundSize: '250% 250%',
-          mixBlendMode: 'screen',
-          animation: visible ? 'v2WorkSweep 6s ease-in-out infinite' : 'none',
+          inset: '-25%',
+          mixBlendMode: 'multiply',
+          background: [
+            'radial-gradient(ellipse 50% 55% at 80% 75%, rgba(245,165,150,0.42) 0%, transparent 60%)',
+            'radial-gradient(ellipse 55% 50% at 18% 78%, rgba(140,180,235,0.42) 0%, transparent 60%)',
+            'radial-gradient(ellipse 45% 45% at 50% 18%, rgba(235,200,160,0.36) 0%, transparent 62%)',
+          ].join(', '),
+          backgroundSize: '210% 210%',
+          filter: 'blur(16px)',
+          animation: visible ? 'v2WorkDrift2 16s ease-in-out infinite alternate-reverse' : 'none',
         }}
       />
-      {/* 4. Grain — film texture over the color field */}
+      {/* Whisper of grain — very subtle texture, soft-light on the light field */}
       <span
         style={{
           position: 'absolute',
-          inset: '-10px',
+          inset: '-8px',
           backgroundImage: `url("data:image/svg+xml,${WORK_GRAIN}")`,
-          backgroundSize: '220px 220px',
-          mixBlendMode: 'screen',
-          opacity: 0.5,
-          animation: visible ? 'v2GrainBreathe 4s ease-in-out infinite' : 'none',
-        }}
-      />
-      {/* Inner vignette — keeps edges grounded so text stays readable */}
-      <span
-        style={{
-          position: 'absolute',
-          inset: 0,
-          background:
-            'radial-gradient(ellipse 90% 90% at 50% 50%, transparent 45%, rgba(14,14,13,0.55) 100%)',
+          backgroundSize: '200px 200px',
+          mixBlendMode: 'soft-light',
+          opacity: 0.12,
         }}
       />
     </span>
@@ -354,7 +332,7 @@ function WorldCard({ id, label, href, reducedMotion }: World & { reducedMotion: 
           id === 'playground' && on
             ? 'inset 0 0 32px rgba(99,102,241,0.10), inset 0 0 8px rgba(99,102,241,0.08)'
             : id === 'work' && on
-            ? '0 12px 48px rgba(0,0,0,0.40), 0 3px 12px rgba(0,0,0,0.25)'
+            ? '0 8px 28px rgba(90,130,160,0.18)'
             : id === 'about' && on
             ? '0 10px 32px rgba(160,90,40,0.16)'
             : '0 0 0 rgba(0,0,0,0)',
@@ -376,12 +354,12 @@ function WorldCard({ id, label, href, reducedMotion }: World & { reducedMotion: 
         <AboutOverlay visible={on} />
       )}
 
-      {/* Label — playground glitches; work inverts to cream on dark bg */}
+      {/* Label — playground glitches; all worlds keep dark readable text */}
       <span
         style={{
           fontSize: '18px',
           fontWeight: 400,
-          color: id === 'work' && on ? '#f7f5f0' : '#111110',
+          color: '#111110',
           lineHeight: 1.3,
           letterSpacing: '-0.01em',
           display: 'inline-block',
@@ -530,26 +508,19 @@ export default function HomePageV2() {
           50%  { opacity: 1; }
           100% { opacity: 0; }
         }
-        @keyframes v2WorkSpin {
-          from { transform: rotate(0deg); }
-          to   { transform: rotate(360deg); }
-        }
         @keyframes v2WorkDrift {
-          0%   { background-position: 0% 0%; }
-          100% { background-position: 100% 100%; }
+          0%   { background-position: 0% 50%; }
+          50%  { background-position: 100% 50%; }
+          100% { background-position: 50% 100%; }
         }
-        @keyframes v2WorkSweep {
-          0%   { background-position: 0% 0%; }
-          50%  { background-position: 100% 100%; }
-          100% { background-position: 0% 0%; }
+        @keyframes v2WorkDrift2 {
+          0%   { background-position: 100% 50%; }
+          50%  { background-position: 0% 0%; }
+          100% { background-position: 50% 100%; }
         }
         @keyframes v2AboutFloat {
           0%, 100% { transform: scale(1.06) translateY(0); }
           50%       { transform: scale(1.06) translateY(-1.5%); }
-        }
-        @keyframes v2GrainBreathe {
-          0%, 100% { opacity: 0.30; }
-          50%       { opacity: 0.55; }
         }
         @keyframes v2LabelGlitch {
           0%    { transform: translateX(0px); }
