@@ -81,21 +81,68 @@ const TOKENS: Record<WorldId, {
 
 const EASE = 'cubic-bezier(0.22, 1, 0.36, 1)'
 
+// ── PixelOverlay — AI Playground card only ────────────────────────────────────
+// Scanlines scroll upward + three pixels blink at staggered step intervals.
+// steps(1) easing produces the hard frame-cut that reads as 8-bit.
+
+const PIXEL_BLOCKS = [
+  { w: 4, h: 4, bottom: 28, right: 22, delay: '0s',     dur: '0.7s' },
+  { w: 3, h: 3, bottom: 38, right: 31, delay: '0.28s',  dur: '0.9s' },
+  { w: 4, h: 4, bottom: 22, right: 33, delay: '0.55s',  dur: '0.6s' },
+]
+
+function PixelOverlay({ visible }: { visible: boolean }) {
+  return (
+    <span
+      aria-hidden="true"
+      style={{
+        position: 'absolute',
+        inset: 0,
+        overflow: 'hidden',
+        pointerEvents: 'none',
+        borderRadius: 'inherit',
+        opacity: visible ? 1 : 0,
+        transition: 'opacity 0.35s ease',
+      }}
+    >
+      {/* Scanlines — thin horizontal rules that scroll upward */}
+      <span
+        style={{
+          position: 'absolute',
+          inset: 0,
+          backgroundImage:
+            'repeating-linear-gradient(transparent, transparent 3px, rgba(99,102,241,0.06) 3px, rgba(99,102,241,0.06) 4px)',
+          backgroundSize: '100% 4px',
+          animation: visible ? 'v2ScanScroll 1.4s linear infinite' : 'none',
+        }}
+      />
+      {/* Pixel blocks — blink in hard steps */}
+      {PIXEL_BLOCKS.map((p, i) => (
+        <span
+          key={i}
+          style={{
+            position: 'absolute',
+            bottom: p.bottom,
+            right: p.right,
+            width: p.w,
+            height: p.h,
+            background: 'rgba(99,102,241,0.6)',
+            animation: visible
+              ? `v2PixelBlink ${p.dur} steps(1) ${p.delay} infinite`
+              : 'none',
+          }}
+        />
+      ))}
+    </span>
+  )
+}
+
 // ── WorldCard ─────────────────────────────────────────────────────────────────
 
 function WorldCard({ id, label, href, reducedMotion }: World & { reducedMotion: boolean }) {
   const [hovered, setHovered] = useState(false)
   const on = hovered && !reducedMotion
   const tk = TOKENS[id]
-
-  // AI Playground: faint dot-grid pattern fades in on hover (pixel/digital texture)
-  const pixelGrid =
-    tk.pixelGrid && on
-      ? [
-          'repeating-linear-gradient(0deg, transparent, transparent 7px, rgba(99,102,241,0.035) 7px, rgba(99,102,241,0.035) 8px)',
-          'repeating-linear-gradient(90deg, transparent, transparent 7px, rgba(99,102,241,0.035) 7px, rgba(99,102,241,0.035) 8px)',
-        ].join(', ')
-      : undefined
 
   return (
     <Link
@@ -113,7 +160,6 @@ function WorldCard({ id, label, href, reducedMotion }: World & { reducedMotion: 
         borderRadius: '14px',
         border: `1.5px solid ${on ? tk.borderHover : tk.borderRest}`,
         background: on ? tk.bgHover : tk.bgRest,
-        backgroundImage: pixelGrid,
         padding: '26px 22px 20px',
         textDecoration: 'none',
         outline: 'none',
@@ -129,6 +175,11 @@ function WorldCard({ id, label, href, reducedMotion }: World & { reducedMotion: 
           : `border-color 0.4s ${EASE}, background 0.4s ${EASE}, box-shadow 0.4s ${EASE}`,
       }}
     >
+      {/* 8-bit overlay — AI Playground only */}
+      {id === 'playground' && !reducedMotion && (
+        <PixelOverlay visible={on} />
+      )}
+
       {/* Label */}
       <span
         style={{
@@ -259,12 +310,19 @@ export default function HomePageV2() {
 
       <FooterV2 />
 
-      {/* Scoped responsive rule — keeps this isolated to /v2 */}
+      {/* Scoped keyframes and responsive rules — isolated to /v2 */}
       <style>{`
+        @keyframes v2ScanScroll {
+          from { background-position: 0 0; }
+          to   { background-position: 0 -4px; }
+        }
+        @keyframes v2PixelBlink {
+          0%   { opacity: 0; }
+          50%  { opacity: 1; }
+          100% { opacity: 0; }
+        }
         @media (max-width: 480px) {
-          .worlds-grid {
-            grid-template-columns: 1fr;
-          }
+          .worlds-grid { grid-template-columns: 1fr; }
         }
       `}</style>
     </div>
