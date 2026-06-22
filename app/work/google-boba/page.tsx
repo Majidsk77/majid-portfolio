@@ -86,7 +86,7 @@ export default function GoogleBobaPage() {
       year="2026"
       role="Design Systems Designer"
       heroImage="boba-hero.png"
-      heroAlt="Google Boba kiosk screen — 'Discover how we're making AI accessible'"
+      heroAlt="Google Boba kiosk screen: 'Discover how we're making AI accessible'"
       nextProject={{ label: 'IMC Prosperity', href: '/work/imc-prosperity' }}
     >
 
@@ -95,7 +95,7 @@ export default function GoogleBobaPage() {
 
       <p className="cs-body">
         The Google Boba design system launched across event spaces in Paris and Munich in
-        February 2026 — the first release of a scalable foundation built to carry Google&apos;s
+        February 2026, the first release of a scalable foundation built to carry Google&apos;s
         design principles into physical interactive environments. As the Design Systems
         Designer on the project, I owned the system architecture: tokens, components, and
         spatial variants that now underpin every Boba screen across Google&apos;s global
@@ -116,7 +116,7 @@ export default function GoogleBobaPage() {
           { label: 'Responsibilities', value: 'System Architecture · Token Design · Component Library · Material 3 Adaptation · Spatial UX · Design QA' },
         ]}
         outcomes={[
-          'Shipped — Paris and Munich, February 2026',
+          'Shipped to Paris and Munich, February 2026',
           'v1.0 design system foundation released',
           'Global rollout in progress throughout 2026',
           'System foundation for all future Boba deployments',
@@ -138,7 +138,7 @@ export default function GoogleBobaPage() {
       <p className="cs-body">
         Screens varied significantly in scale and placement. Implementation needs differed
         across locations. The existing components and patterns weren&apos;t built with
-        spatial contexts in mind. A tailored system was needed — one that stayed aligned
+        spatial contexts in mind. A tailored system was needed, one that stayed aligned
         with Google&apos;s broader design language while adapting to a fundamentally
         different physical-digital environment.
       </p>
@@ -156,15 +156,15 @@ export default function GoogleBobaPage() {
 
       <DecisionBlock
         title="Extending Material 3 for physical space"
-        body="Boba screens aren't web or mobile — they're architectural. The system had to feel unmistakably Google while working in an environment Material 3 was never designed for. Rather than overriding Google's design language, I extended it: adapting tokens, shapes, and components for spatial scale without breaking the underlying system logic."
+        body="Boba screens aren't web or mobile. They're architectural. The system had to feel unmistakably Google while working in an environment Material 3 was never designed for. Rather than overriding Google's design language, I extended it: adapting tokens, shapes, and components for spatial scale without breaking the underlying system logic."
       />
       <DecisionBlock
         title="Tokens as the scaling mechanism"
-        body="The token layer carries all the context-switching work — dark and light environments, different screen sizes, varying placements across spaces. Components stay stable; the token system adapts them. Getting this architecture right from the start was what made the system genuinely scalable rather than just flexible."
+        body="The token layer carries all the context-switching work: dark and light environments, different screen sizes, varying placements across spaces. Components stay stable; the token system adapts them. Getting this architecture right from the start was what made the system genuinely scalable rather than just flexible."
       />
       <DecisionBlock
         title="Scope clarity in a live project"
-        body="Joining mid-phase required tight scope discipline. The system ended at the component level; the template layer was owned by the design system specialist I collaborated with. Understanding that boundary — and designing tightly within it — meant we could ship a clean v1.0 without bleeding scope into each other's work."
+        body="Joining mid-phase required tight scope discipline. The system ended at the component level; the template layer was owned by the design system specialist I collaborated with. Understanding that boundary, and designing tightly within it, meant we could ship a clean v1.0 without bleeding scope into each other's work."
       />
 
       <div className="cs-divider" />
@@ -181,9 +181,9 @@ export default function GoogleBobaPage() {
 
       <ImageGrid
         images={[
-          { src: 'boba-components-1.png', alt: 'Boba component sheet — slider variants' },
-          { src: 'boba-components-2.png', alt: 'Boba component sheet — chips' },
-          { src: 'boba-components-3.png', alt: 'Boba component sheet — organic shape tokens' },
+          { src: 'boba-components-1.png', alt: 'Boba component sheet: slider variants' },
+          { src: 'boba-components-2.png', alt: 'Boba component sheet: chips' },
+          { src: 'boba-components-3.png', alt: 'Boba component sheet: organic shape tokens' },
         ]}
         caption="Core component definitions: slider variants, chips, and organic shape tokens."
       />
@@ -200,7 +200,7 @@ export default function GoogleBobaPage() {
         }}
       >
         {[
-          'Core system tokens — color, spacing, shape, motion',
+          'Core system tokens: color, spacing, shape, motion',
           'Component foundations and variant structures',
           'Material 3 extension for spatial and physical-screen contexts',
           'Organic shape language: soft blob forms that distinguish Boba from standard Material surfaces',
@@ -234,8 +234,8 @@ export default function GoogleBobaPage() {
 
       <p className="cs-body">
         The result was a reusable design system tailored to interactive event environments.
-        The system introduced an organic shape language — soft blobs and rounded forms that
-        distinguish the Boba context from standard Material surfaces — alongside a purple
+        The system introduced an organic shape language (soft blobs and rounded forms that
+        distinguish the Boba context from standard Material surfaces) alongside a purple
         token system that flexes across dark and light screen environments.
       </p>
 
@@ -258,17 +258,17 @@ export default function GoogleBobaPage() {
       <h2 className="cs-heading">Coherence over novelty.</h2>
 
       <p className="cs-body">
-        The constraint here wasn&apos;t freedom — it was coherence. Building a system that
+        The constraint here wasn&apos;t freedom. It was coherence. Building a system that
         extended Material 3 into a genuinely new physical context required knowing exactly
         which decisions were mine to make and which ones had to stay anchored to
-        Google&apos;s existing design language. Getting that balance right — distinctive
+        Google&apos;s existing design language. Getting that balance right, distinctive
         enough to serve the spatial environment, consistent enough to feel unmistakably
-        Google — was the central design challenge.
+        Google, was the central design challenge.
       </p>
 
       <p className="cs-body">
         Joining a live project mid-phase also made scope clarity concrete as a design
-        skill. The work wasn&apos;t just about building the right components — it was
+        skill. The work wasn&apos;t just about building the right components. It was
         about understanding exactly where the system ended and collaborating tightly
         across that boundary. A system that tries to do everything ends up owning nothing.
       </p>

@@ -95,7 +95,7 @@ export default function ExactPage() {
       <h2 className="cs-heading">17 templates. 4 audiences. Launching 2026.</h2>
 
       <p className="cs-body">
-        I led the UX process end-to-end for Exact&apos;s full website overhaul — from scoping
+        I led the UX process end-to-end for Exact&apos;s full website overhaul, from scoping
         workshops and journey mapping through template definition, wireframing, and client
         handover. The project delivered the complete UX foundation for a major platform
         redesign, now approved by stakeholders and launching in 2026 alongside a new brand
@@ -118,7 +118,7 @@ export default function ExactPage() {
           "Full UX foundation for Exact's 2026 website overhaul",
           '17 page templates defined and designed',
           '4 audience types mapped end-to-end',
-          'Approved by stakeholders — launching with new brand direction',
+          'Approved by stakeholders, launching with new brand direction',
         ]}
       />
 
@@ -130,20 +130,20 @@ export default function ExactPage() {
       <p className="cs-body">
         Exact&apos;s existing website was highly information-dense, with heavy cross-linking
         and limited narrative structure. While effective for existing users who already
-        understood the product landscape, it lacked clarity for new visitors — particularly
+        understood the product landscape, it lacked clarity for new visitors, particularly
         those outside Exact&apos;s traditional accountant audience.
       </p>
 
       <p className="cs-body">
         The challenge was threefold: restructure the platform to communicate product value
         more clearly, support a broader audience including CFOs and entrepreneurs, and align
-        with an upcoming brand direction — while respecting existing content and avoiding
+        with an upcoming brand direction, while respecting existing content and avoiding
         disruption to live product pages.
       </p>
 
       <FullBleedImage
         src="exact-journey-accountant.png"
-        alt="User journey map — accountant moving through the existing site"
+        alt="User journey map: accountant moving through the existing site"
         caption="User journey mapping: understanding how an accountant moves through the existing site."
       />
 
@@ -154,15 +154,15 @@ export default function ExactPage() {
 
       <DecisionBlock
         title="Architecture as the argument"
-        body="On a platform this complex, the page structure is the experience. Before wireframing a single screen, I mapped what each page type needed to do, in what order, and for whom. The template logic came first — individual page decisions followed from that foundation, not the other way around."
+        body="On a platform this complex, the page structure is the experience. Before wireframing a single screen, I mapped what each page type needed to do, in what order, and for whom. The template logic came first. Individual page decisions followed from that foundation, not the other way around."
       />
       <DecisionBlock
         title="Designing across four audiences without losing specificity"
-        body="Accountants, CFOs, small business owners, and large business owners use the same platform but need fundamentally different entry points. Journey mapping gave me the evidence to make those distinctions explicit in the structure — so each audience found a path built for them, without requiring four separate sites."
+        body="Accountants, CFOs, small business owners, and large business owners use the same platform but need fundamentally different entry points. Journey mapping gave me the evidence to make those distinctions explicit in the structure, so each audience found a path built for them, without requiring four separate sites."
       />
       <DecisionBlock
         title="Wireframes as alignment tools"
-        body="Client review cycles ran across multiple stakeholders with different priorities. I structured wireframes to be readable by non-designers: decisions made explicit, hierarchy visible, rationale embedded. The goal was to get alignment on structure before visual design — not to present polished work, but to create shared understanding."
+        body="Client review cycles ran across multiple stakeholders with different priorities. I structured wireframes to be readable by non-designers: decisions made explicit, hierarchy visible, rationale embedded. The goal was to get alignment on structure before visual design, not to present polished work, but to create shared understanding."
       />
 
       <div className="cs-divider" />
@@ -171,14 +171,14 @@ export default function ExactPage() {
       <h2 className="cs-heading">Discovery to architecture.</h2>
 
       <p className="cs-body">
-        The process moved through four key phases — each one building the foundation for
+        The process moved through four key phases, each one building the foundation for
         the next.
       </p>
 
       <ImageGrid
         images={[
-          { src: 'exact-journey-cfo.png', alt: 'User journey — CFO value journey' },
-          { src: 'exact-journey-small-biz.png', alt: 'User journey — Small Business Owner self-service journey' },
+          { src: 'exact-journey-cfo.png', alt: 'User journey: CFO value journey' },
+          { src: 'exact-journey-small-biz.png', alt: 'User journey: Small Business Owner self-service journey' },
         ]}
         caption="User journeys for the CFO (value journey) and Small Business Owner (self-service journey)."
       />
@@ -207,7 +207,7 @@ export default function ExactPage() {
           {
             n: '3.',
             title: 'Template definition',
-            body: 'I defined page templates to structure content and functionality across the site. Each template established a content hierarchy and narrative logic for its page type — the architecture that would carry the visual layer later.',
+            body: 'I defined page templates to structure content and functionality across the site. Each template established a content hierarchy and narrative logic for its page type: the architecture that would carry the visual layer later.',
           },
           {
             n: '4.',
@@ -243,16 +243,16 @@ export default function ExactPage() {
 
       <ImageGrid
         images={[
-          { src: 'exact-template-homepage.png', alt: 'Page template — homepage narrative structure' },
-          { src: 'exact-template-capability.png', alt: 'Page template — capability page' },
+          { src: 'exact-template-homepage.png', alt: 'Page template: homepage narrative structure' },
+          { src: 'exact-template-capability.png', alt: 'Page template: capability page' },
         ]}
-        caption="Page templates: homepage and capability page — defining the narrative structure before visual design."
+        caption="Homepage and capability page templates: defining narrative structure before visual design."
       />
 
       <FullBleedImage
         src="exact-homepage-wireframe.jpg"
         alt="Exact homepage wireframe"
-        caption="Homepage wireframe — establishing structure and hierarchy before visual design."
+        caption="Homepage wireframe: establishing structure and hierarchy before visual design."
       />
 
       <div className="cs-divider" />
@@ -269,7 +269,7 @@ export default function ExactPage() {
           { src: 'exact-homepage-design.png', alt: 'Hi-fi homepage design' },
           { src: 'exact-capability-design.png', alt: 'Hi-fi capability page design' },
         ]}
-        caption="Hi-fi homepage and capability page — visual design applied to the UX structure."
+        caption="Hi-fi homepage and capability page: visual design applied to the UX structure."
       />
 
       <p className="cs-body">
@@ -292,7 +292,7 @@ export default function ExactPage() {
           { src: 'exact-knowledge-hub-wireframe.png', alt: 'Knowledge hub wireframe' },
           { src: 'exact-knowledge-hub-design.png', alt: 'Knowledge hub hi-fi design' },
         ]}
-        caption="Knowledge hub — wireframe to hi-fi. A content destination for thought leadership across audience types."
+        caption="Knowledge hub: wireframe to hi-fi. A content destination for thought leadership across audience types."
       />
 
       <p className="cs-body">
@@ -307,7 +307,7 @@ export default function ExactPage() {
           { src: 'exact-product-detail-wireframe.png', alt: 'Product detail page wireframe' },
           { src: 'exact-product-detail-design.png', alt: 'Product detail page hi-fi design' },
         ]}
-        caption="Product detail page — wireframe to hi-fi. From product promise to plans and pricing."
+        caption="Product detail page: wireframe to hi-fi. From product promise to plans and pricing."
       />
 
       <p className="cs-body">
@@ -322,7 +322,7 @@ export default function ExactPage() {
       <h2 className="cs-heading">What this scale of work clarified.</h2>
 
       <p className="cs-body">
-        Leading this project end-to-end — from scoping workshops through client handover —
+        Leading this project end-to-end, from scoping workshops through client handover,
         made one thing concrete: on a marketing platform of this complexity, the information
         architecture is the product strategy. Getting the template logic right, understanding
         what each page needed to do and in what sequence, was more consequential than any
@@ -334,7 +334,7 @@ export default function ExactPage() {
         Working across four distinct audience types simultaneously also sharpened something
         less visible: the ability to hold competing priorities without collapsing them into
         a single compromise. Each audience had legitimate, different needs. The design work
-        was in making those distinctions explicit and buildable — not smoothing over them.
+        was in making those distinctions explicit and buildable, not smoothing over them.
       </p>
 
     </CaseStudyLayout>

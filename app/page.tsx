@@ -53,7 +53,7 @@ const projects = [
     index: '02',
     tag: 'UX Design · Product Design',
     name: 'IMC Prosperity',
-    desc: "A space-themed trading game for IMC's annual global student competition — 30,703 players across 117 countries.",
+    desc: "A space-themed trading game for IMC's annual global student competition. 30,703 players across 117 countries.",
     client: 'IMC',
     year: '2025–26',
     image: 'prosperity-outpost.png',
@@ -63,7 +63,7 @@ const projects = [
     index: '03',
     tag: 'UX Design · Discovery',
     name: 'Exact .com',
-    desc: "UX strategy and design for Exact's full website overhaul — 17 templates across 4 audience types, from discovery through handover.",
+    desc: "UX strategy and design for Exact's full website overhaul: 17 templates across 4 audience types, from discovery through handover.",
     client: 'Exact',
     year: '2025',
     image: 'exact-hero.png',
@@ -317,7 +317,7 @@ export default function HomePage() {
             </span>
 
             <p className="text-[16px] text-[var(--muted)] leading-[1.75] font-light max-w-[420px]">
-              I care about what digital experiences could be — not just what
+              I care about what digital experiences could be, not just what
               they are. Making complex things feel clear, intentional, and
               satisfying to use. Especially curious about how emerging
               technology opens up entirely new kinds of interaction.

@@ -54,7 +54,7 @@ export const metadata: Metadata = {
         url: "/images/exact-hero.png",
         width: 2919,
         height: 824,
-        alt: "Majid Kareem — Product Designer Portfolio",
+        alt: "Majid Kareem: Product Designer Portfolio",
       },
     ],
   },

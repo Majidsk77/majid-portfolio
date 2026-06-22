@@ -87,7 +87,7 @@ export default function IMCProsperityPage() {
       year="2025–26"
       role="UX Designer"
       heroImage="prosperity-outpost.png"
-      heroAlt="Prosperity 04 Mars outpost — team score card view"
+      heroAlt="Prosperity 04 Mars outpost: team score card view"
       nextProject={{ label: 'Exact .com', href: '/work/exact' }}
     >
 
@@ -95,7 +95,7 @@ export default function IMCProsperityPage() {
       <h2 className="cs-heading">30,703 players. 117 countries. Launched 2026.</h2>
 
       <p className="cs-body">
-        Prosperity 04 launched in March 2026 — the fourth edition of IMC&apos;s annual
+        Prosperity 04 launched in March 2026, the fourth edition of IMC&apos;s annual
         student trading competition, fully redesigned around a space exploration theme.
         As the sole UX Designer on the project, I owned the experience from wireframes
         through design QA, contributing to a platform that scaled to a record-breaking
@@ -148,14 +148,14 @@ export default function IMCProsperityPage() {
 
       <p className="cs-body">
         The platform also had to hold together across multiple gameplay phases for 30,000+
-        concurrent participants — from first-time tutorial players to teams competing for
+        concurrent participants, from first-time tutorial players to teams competing for
         finals spots.
       </p>
 
       <ImageGrid
         images={[
-          { src: 'prosperity-island.png', alt: 'Prosperity 3 — island world theme' },
-          { src: 'prosperity-outpost.png', alt: 'Prosperity 04 — space exploration theme' },
+          { src: 'prosperity-island.png', alt: 'Prosperity 3: island world theme' },
+          { src: 'prosperity-outpost.png', alt: 'Prosperity 04: space exploration theme' },
         ]}
         caption="From Prosperity 3's island world to the space-exploration theme of Prosperity 04."
       />
@@ -171,11 +171,11 @@ export default function IMCProsperityPage() {
       />
       <DecisionBlock
         title="Designing for high information density"
-        body="Players continuously monitored rankings, gameplay systems, and progression states. Wireframes focused heavily on scannability — reducing cognitive overload while maintaining visual excitement. Every layout decision was tested against a single question: can a player act on this in seconds?"
+        body="Players continuously monitored rankings, gameplay systems, and progression states. Wireframes focused heavily on scannability, reducing cognitive overload while maintaining visual excitement. Every layout decision was tested against a single question: can a player act on this in seconds?"
       />
       <DecisionBlock
         title="Creating scalable UX patterns"
-        body="The competition's multi-phase structure meant the UX system had to flex across contexts rather than be rebuilt for each one. I partnered with the visual designer to ensure the visual layer extended — not replaced — the underlying UX architecture."
+        body="The competition's multi-phase structure meant the UX system had to flex across contexts rather than be rebuilt for each one. I partnered with the visual designer to ensure the visual layer extended, not replaced, the underlying UX architecture."
       />
 
       <div className="cs-divider" />
@@ -185,7 +185,7 @@ export default function IMCProsperityPage() {
 
       <p className="cs-body">
         I joined the project after the discovery phase and took ownership of wireframes
-        for the core game flows — working closely with developers to ensure feasible
+        for the core game flows, working closely with developers to ensure feasible
         implementation from the start.
       </p>
 
@@ -199,7 +199,7 @@ export default function IMCProsperityPage() {
       <FullBleedImage
         src="prosperity-tutorial.png"
         alt="Prosperity tutorial round screen"
-        caption="Tutorial round — introducing new players to the game mechanics before live rounds begin."
+        caption="Tutorial round: introducing new players to the game mechanics before live rounds begin."
       />
 
       <p className="cs-body">The full player journey, end to end:</p>
@@ -232,7 +232,7 @@ export default function IMCProsperityPage() {
       <ImageGrid
         images={[
           { src: 'prosperity-leaderboard.png', alt: 'Prosperity leaderboard screen' },
-          { src: 'prosperity-badge.png', alt: 'First Responder badge — crew honours system' },
+          { src: 'prosperity-badge.png', alt: 'First Responder badge: crew honours system' },
         ]}
         caption="Leaderboard structure and the crew honours badge system."
       />
@@ -246,7 +246,7 @@ export default function IMCProsperityPage() {
       <FullBleedImage
         src="prosperity-advisor.png"
         alt="The onboard advisor giving strategic guidance"
-        caption="The onboard advisor — a narrative feature that gives teams strategic guidance during rounds."
+        caption="The onboard advisor: a narrative feature that gives teams strategic guidance during rounds."
       />
 
       <div className="cs-divider" />
@@ -256,21 +256,21 @@ export default function IMCProsperityPage() {
 
       <p className="cs-body">
         The solution was to use the space narrative as a framing layer rather than a
-        visual override. The UI prioritised legibility and structure — clean card
-        components, clear hierarchy, consistent round navigation — wrapped in a world
+        visual override. The UI prioritised legibility and structure (clean card
+        components, clear hierarchy, consistent round navigation) wrapped in a world
         that felt genuinely new.
       </p>
 
       <p className="cs-body">
         Working closely with the visual designer, we iterated on structure before applying
-        the visual layer — making sure the information hierarchy held up before the
+        the visual layer, making sure the information hierarchy held up before the
         world-building was applied on top.
       </p>
 
       <FullBleedImage
         src="prosperity-countdown.png"
         alt="Phase countdown screen"
-        caption="Phase countdown and round holding screens — moments of tension built into the experience."
+        caption="Phase countdown and round holding screens: moments of tension built into the experience."
       />
 
       <ImageGrid
@@ -278,7 +278,7 @@ export default function IMCProsperityPage() {
           { src: 'prosperity-signup.png', alt: 'Join the Challenge sign-up screen' },
           { src: 'prosperity-tutorial.png', alt: 'Tutorial round screen' },
         ]}
-        caption="Sign-up and tutorial flows — reducing friction for first-time players."
+        caption="Sign-up and tutorial flows: reducing friction for first-time players."
       />
 
       <div className="cs-divider" />
@@ -289,7 +289,7 @@ export default function IMCProsperityPage() {
       <p className="cs-body">
         Designing for this competition made the tension between immersion and usability
         concrete. With 30,000 players navigating live trading logic under time pressure,
-        the decisions that mattered most weren&apos;t about aesthetics — they were about
+        the decisions that mattered most weren&apos;t about aesthetics. They were about
         clarity, speed, and structure.
       </p>
 
