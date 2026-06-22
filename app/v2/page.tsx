@@ -178,10 +178,14 @@ export default function HomePageV2() {
     <div
       className={hanken.className}
       style={{
-        minHeight: '100vh',
+        // Exact viewport height on desktop so nav+lobby+footer all fit without scroll.
+        // dvh falls back to vh in older browsers; both prevent over-tall pages.
+        height: '100dvh',
         display: 'flex',
         flexDirection: 'column',
         background: 'var(--bg)',
+        // Allow scroll on very small/mobile viewports where content naturally exceeds one screen.
+        overflowY: 'auto',
       }}
     >
       <NavV2 />
@@ -193,7 +197,10 @@ export default function HomePageV2() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: 'clamp(100px, 10vw, 120px) clamp(16px, 2.8vw, 40px) 40px',
+          // Top: just enough to clear the fixed nav (~88px).
+          // Use vh for vertical values so padding scales with viewport height, not width.
+          padding: 'clamp(88px, 11vh, 108px) clamp(16px, 2.8vw, 40px) clamp(16px, 2vh, 32px)',
+          minHeight: 0, // lets flex child shrink inside the exact-height parent
         }}
       >
         {/* Outer rounded container — matches Figma panel (1360px, border, radius 30) */}
@@ -203,11 +210,13 @@ export default function HomePageV2() {
             maxWidth: '1360px',
             border: '1px solid rgba(217, 217, 217, 0.7)',
             borderRadius: '30px',
-            padding: 'clamp(56px, 8vw, 110px) clamp(28px, 5vw, 72px)',
+            // vh-based padding so the panel breathes at large viewports but stays
+            // compact enough to fit on 768–800px laptop screens.
+            padding: 'clamp(28px, 5vh, 64px) clamp(28px, 5vw, 72px)',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            gap: '56px',
+            gap: 'clamp(20px, 3vh, 40px)',
           }}
         >
           {/* Headline — preserved from Figma, Hanken Grotesk 400 */}
