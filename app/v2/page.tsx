@@ -208,14 +208,16 @@ export default function HomePageV2() {
           style={{
             width: '100%',
             maxWidth: '1360px',
+            // Stretch to fill all available height between nav offset and footer.
+            alignSelf: 'stretch',
             border: '1px solid rgba(217, 217, 217, 0.7)',
             borderRadius: '30px',
-            // vh-based padding so the panel breathes at large viewports but stays
-            // compact enough to fit on 768–800px laptop screens.
             padding: 'clamp(28px, 5vh, 64px) clamp(28px, 5vw, 72px)',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
+            // Center content vertically inside the now-tall panel.
+            justifyContent: 'center',
             gap: 'clamp(20px, 3vh, 40px)',
           }}
         >
