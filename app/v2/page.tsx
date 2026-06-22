@@ -9,7 +9,7 @@ import Link from 'next/link'
 import { Hanken_Grotesk } from 'next/font/google'
 import { useState, useEffect } from 'react'
 import NavV2 from './NavV2'
-import Footer from '@/components/Footer'
+import FooterV2 from './FooterV2'
 
 const hanken = Hanken_Grotesk({
   subsets: ['latin'],
@@ -255,7 +255,7 @@ export default function HomePageV2() {
         </div>
       </main>
 
-      <Footer />
+      <FooterV2 />
 
       {/* Scoped responsive rule — keeps this isolated to /v2 */}
       <style>{`
