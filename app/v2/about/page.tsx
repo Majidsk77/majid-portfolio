@@ -3,13 +3,14 @@ import { Hanken_Grotesk } from 'next/font/google'
 import NavV2 from '../NavV2'
 import FooterV2 from '../FooterV2'
 import Notepad from './Notepad'
+import Mirror from './Mirror'
 
 // About Me room — entered from the /v2 lobby's About Me world.
 // Reuses the /v2 nav, footer, and framed container. Inside, a warm teal
 // line-art room with objects to discover. Matches Figma node 6:2897.
-// Notepad fun-fact cycling is live (see Notepad.tsx). Other object
-// interactions (song hover, painting note reveal, mirror overlay) are
-// intentionally NOT built yet.
+// Notepad fun-fact cycling (Notepad.tsx) and the mirror reflection + About
+// panel (Mirror.tsx) are live. Remaining object interactions (vinyl song
+// hover, painting note reveal) are intentionally NOT built yet.
 
 const hanken = Hanken_Grotesk({
   subsets: ['latin'],
@@ -37,7 +38,6 @@ interface RoomObject {
 
 const OBJECTS: RoomObject[] = [
   { id: 'painting', label: 'Amsterdam painting',        src: '/images/about/painting.svg', left: '19.5%', top: '20.6%', width: '11.2%', ratio: '153.814 / 143.155' },
-  { id: 'mirror',   label: 'Standing mirror',           src: '/images/about/mirror.svg',   left: '71%',   top: '24%',   width: '12.5%', ratio: '197.011 / 435.055' },
   { id: 'vinyl',    label: 'Vinyl player on a table',   src: '/images/about/vinyl.svg',    left: '9.6%',  top: '58%',   width: '31.7%', ratio: '431 / 256.607' },
 ]
 
@@ -85,6 +85,9 @@ export default function AboutRoom() {
 
             {/* Notepad — click/Enter/Space cycles short notes (client island) */}
             <Notepad />
+
+            {/* Mirror — hover reveals reflection, click opens About panel (client island) */}
+            <Mirror />
 
             {/* Object buttons */}
             {OBJECTS.map(o => (
