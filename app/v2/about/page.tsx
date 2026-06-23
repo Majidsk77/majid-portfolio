@@ -35,7 +35,7 @@ interface RoomObject {
 
 const OBJECTS: RoomObject[] = [
   { id: 'painting', label: 'Amsterdam painting',        src: '/images/about/painting.svg', left: '19.5%', top: '20.6%', width: '11.2%', ratio: '153.814 / 143.155' },
-  { id: 'mirror',   label: 'Standing mirror',           src: '/images/about/mirror.svg',   left: '70.1%', top: '30%',   width: '14.5%', ratio: '197.011 / 435.055' },
+  { id: 'mirror',   label: 'Standing mirror',           src: '/images/about/mirror.svg',   left: '71%',   top: '24%',   width: '12.5%', ratio: '197.011 / 435.055' },
   { id: 'vinyl',    label: 'Vinyl player on a table',   src: '/images/about/vinyl.svg',    left: '9.6%',  top: '58%',   width: '31.7%', ratio: '431 / 256.607' },
 ]
 
@@ -115,9 +115,10 @@ export default function AboutRoom() {
         /* Teal floor line running across the room */
         .ab-floor {
           position: absolute;
-          left: 0;
-          right: 0;
-          top: 82%;
+          /* bleed slightly into the container padding so it spans wider */
+          left: -3%;
+          right: -3%;
+          top: 86%;
           height: 0;
           border-top: 1.5px solid rgba(121, 175, 182, 0.85);
         }
@@ -159,7 +160,11 @@ export default function AboutRoom() {
         }
         .ab-notepad-text {
           position: absolute;
-          inset: 28% 12% 0 12%;
+          /* writable area below the spiral binding; flex-centred both axes */
+          inset: 30% 14% 9% 14%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace;
           font-size: clamp(9px, 0.95vw, 14px);
           line-height: 1.25;
