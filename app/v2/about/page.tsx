@@ -66,22 +66,9 @@ export default function AboutRoom() {
           minHeight: 0,
         }}
       >
-        {/* The room — same framed container as the lobby */}
-        <div
-          style={{
-            position: 'relative',
-            width: '100%',
-            maxWidth: '1360px',
-            alignSelf: 'stretch',
-            border: '1px solid rgba(217, 217, 217, 0.7)',
-            borderRadius: '30px',
-            /* no padding — room art is positioned against the full box, as in Figma */
-            padding: 0,
-            display: 'flex',
-            flexDirection: 'column',
-            overflow: 'hidden',
-          }}
-        >
+        {/* The room — a fixed-aspect-ratio stage (Figma 1360×681) that scales
+            as one scene so object relationships never drift across screens */}
+        <div className="ab-room">
           <div className="ab-scene">
             {/* Floor line */}
             <div className="ab-floor" aria-hidden="true" />
@@ -110,9 +97,30 @@ export default function AboutRoom() {
       <FooterV2 />
 
       <style>{`
+        /* Room stage — fixed Figma aspect ratio so the whole scene scales
+           uniformly. Width is bounded by available width AND height, so it
+           never overflows the viewport on short/wide desktops. */
+        .ab-room {
+          position: relative;
+          margin: 0 auto;
+          width: 100%;
+          max-width: 1360px;
+          border: 1px solid rgba(217, 217, 217, 0.7);
+          border-radius: 30px;
+          overflow: hidden;
+        }
+        @media (min-width: 761px) {
+          .ab-room {
+            /* 1360/681 ≈ 1.997; 220px ≈ nav + footer + main padding budget */
+            width: min(100%, 1360px, (100dvh - 220px) * 1.997);
+            aspect-ratio: 1360 / 681;
+          }
+          .ab-scene { position: absolute; inset: 0; }
+        }
         .ab-scene {
           position: relative;
           width: 100%;
+          height: 100%;
           flex: 1;
           min-height: 0;
         }
@@ -182,9 +190,15 @@ export default function AboutRoom() {
           pointer-events: none;
         }
 
-        /* Mobile — drop the absolute stage, stack the objects */
+        /* Mobile — drop the fixed-aspect stage, stack the objects (not optimised) */
         @media (max-width: 760px) {
+          .ab-room {
+            aspect-ratio: auto;
+            overflow: visible;
+            padding: 24px 0;
+          }
           .ab-scene {
+            position: static;
             display: flex;
             flex-direction: column;
             align-items: center;
