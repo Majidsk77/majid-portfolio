@@ -171,16 +171,6 @@ export default function AboutRoom() {
           text-align: center;
           pointer-events: none;
         }
-        /* Subtle cue that the note is clickable: dotted underline + deepen on hover/focus */
-        .ab-notepad--interactive .ab-notepad-text > span {
-          border-bottom: 1px dotted rgba(121, 175, 182, 0.7);
-          padding-bottom: 2px;
-          transition: border-color 0.25s ease;
-        }
-        .ab-notepad--interactive:hover .ab-notepad-text > span,
-        .ab-notepad--interactive:focus-visible .ab-notepad-text > span {
-          border-bottom-color: rgba(121, 175, 182, 1);
-        }
 
         /* Mobile — drop the absolute stage, stack the objects */
         @media (max-width: 760px) {

@@ -6,6 +6,8 @@
 
 import { useEffect, useRef, useState } from 'react'
 
+const DEFAULT_NOTE = 'Choose a fun fact about me'
+
 const NOTES = [
   'Currently overthinking small details.',
   'Favorite kind of chaos: organized.',
@@ -16,7 +18,8 @@ const NOTES = [
 ]
 
 export default function Notepad() {
-  const [index, setIndex] = useState(0)
+  // -1 = default prompt shown before any interaction
+  const [index, setIndex] = useState(-1)
   const [shown, setShown] = useState(true)
   const [reducedMotion, setReducedMotion] = useState(false)
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -33,15 +36,17 @@ export default function Notepad() {
   }, [])
 
   const next = () => {
+    // first click (-1) jumps to the first fact, then cycles normally
+    const advance = (i: number) => (i < 0 ? 0 : (i + 1) % NOTES.length)
     if (reducedMotion) {
-      setIndex(i => (i + 1) % NOTES.length)
+      setIndex(advance)
       return
     }
     // fade/slide out, swap, fade back in
     setShown(false)
     if (timer.current) clearTimeout(timer.current)
     timer.current = setTimeout(() => {
-      setIndex(i => (i + 1) % NOTES.length)
+      setIndex(advance)
       setShown(true)
     }, 170)
   }
@@ -57,7 +62,7 @@ export default function Notepad() {
     <button
       type="button"
       className="ab-obj ab-notepad ab-notepad--interactive"
-      aria-label={`Fun fact about me. Click to show the next one. Currently: ${NOTES[index]}`}
+      aria-label={`Fun fact about me. Click to show the next one. Currently: ${index < 0 ? DEFAULT_NOTE : NOTES[index]}`}
       onClick={next}
       onKeyDown={onKeyDown}
     >
@@ -78,7 +83,7 @@ export default function Notepad() {
               : 'opacity 0.17s ease, transform 0.17s ease',
           }}
         >
-          {NOTES[index]}
+          {index < 0 ? DEFAULT_NOTE : NOTES[index]}
         </span>
       </span>
     </button>
