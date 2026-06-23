@@ -30,12 +30,13 @@ interface RoomObject {
   left: string
   top: string
   width: string
+  ratio: string  // width/height from the SVG viewBox — keeps natural proportions
 }
 
 const OBJECTS: RoomObject[] = [
-  { id: 'painting', label: 'Amsterdam painting',        src: '/images/about/painting.svg', left: '19.5%', top: '20.6%', width: '11.2%' },
-  { id: 'mirror',   label: 'Standing mirror',           src: '/images/about/mirror.svg',   left: '70.1%', top: '30%',   width: '14.5%' },
-  { id: 'vinyl',    label: 'Vinyl player on a table',   src: '/images/about/vinyl.svg',    left: '9.6%',  top: '58%',   width: '31.7%' },
+  { id: 'painting', label: 'Amsterdam painting',        src: '/images/about/painting.svg', left: '19.5%', top: '20.6%', width: '11.2%', ratio: '153.814 / 143.155' },
+  { id: 'mirror',   label: 'Standing mirror',           src: '/images/about/mirror.svg',   left: '70.1%', top: '30%',   width: '14.5%', ratio: '197.011 / 435.055' },
+  { id: 'vinyl',    label: 'Vinyl player on a table',   src: '/images/about/vinyl.svg',    left: '9.6%',  top: '58%',   width: '31.7%', ratio: '431 / 256.607' },
 ]
 
 export default function AboutRoom() {
@@ -82,7 +83,7 @@ export default function AboutRoom() {
 
             {/* Notepad — composed of the SVG + the placeholder prompt text */}
             <button type="button" className="ab-obj ab-notepad" aria-label="Choose a fun fact about me">
-              <img src="/images/about/notepad.svg" alt="" />
+              <img src="/images/about/notepad.svg" alt="" style={{ aspectRatio: '126.136 / 159.492' }} />
               <span className="ab-notepad-text">Choose a fun fact about me</span>
             </button>
 
@@ -95,7 +96,7 @@ export default function AboutRoom() {
                 aria-label={o.label}
                 style={{ left: o.left, top: o.top, width: o.width }}
               >
-                <img src={o.src} alt="" />
+                <img src={o.src} alt="" style={{ aspectRatio: o.ratio }} />
               </button>
             ))}
           </div>
@@ -135,7 +136,8 @@ export default function AboutRoom() {
         }
         .ab-obj img {
           width: 100%;
-          height: auto;
+          height: auto;            /* derived from aspect-ratio, never forced */
+          object-fit: contain;     /* belt-and-suspenders against stretch */
           display: block;
           user-select: none;
         }
