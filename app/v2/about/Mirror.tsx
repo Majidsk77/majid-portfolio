@@ -65,7 +65,7 @@ export default function Mirror() {
         ref={mirrorRef}
         type="button"
         className={`ab-obj am-mirror${open ? ' is-open' : ''}${reducedMotion ? ' is-reduced' : ''}`}
-        style={{ left: '70%', top: '20%', width: '20%' }}
+        style={{ left: '57.7%', top: '10.7%', width: '32.3%' }}
         aria-label="Standing mirror — open a little about me"
         aria-haspopup="dialog"
         aria-expanded={open}
@@ -116,8 +116,8 @@ export default function Mirror() {
         /* ── Contextual panel ───────────────────────────────── */
         .am-panel {
           position: absolute;
-          top: 22%;
-          right: 30%;            /* sits just left of the mirror (mirror left edge ~71%) */
+          top: 16%;
+          right: 45%;            /* sits just left of the mirror (mirror left edge ~57.7%) */
           width: clamp(240px, 30%, 360px);
           z-index: 3;
           background: #fffefb;

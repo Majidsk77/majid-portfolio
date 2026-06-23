@@ -23,23 +23,24 @@ export const metadata: Metadata = {
   description: 'A small room of objects — a little about who I am.',
 }
 
-// Each object is positioned as a % of the stage (derived from Figma absolute
-// coords). They are future-interactive, so they render as accessible buttons
-// with aria-labels even though the interactions are placeholders for now.
-interface RoomObject {
+// Decorative (non-interactive) room art. Positions/sizes are % of the
+// container box, mapped directly from the Figma frame (8:3168) — the image
+// boxes there match the PNGs' native ratios, so this reproduces the layout
+// 1:1. Interactive objects (notepad, mirror) are separate client islands.
+// Listed back-to-front so the table sits on the rug, etc.
+interface RoomArt {
   id: string
-  label: string
   src: string
   left: string
   top: string
   width: string
-  ratio: string  // width/height from the SVG viewBox — keeps natural proportions
+  ratio: string
 }
 
-const OBJECTS: RoomObject[] = [
-  // Painting has no PNG replacement yet — keep the existing teal line-art SVG.
-  { id: 'painting', label: 'Amsterdam painting',      src: '/images/about/painting.svg',              left: '19.5%', top: '20.6%', width: '11.2%', ratio: '153.814 / 143.155' },
-  { id: 'vinyl',    label: 'Vinyl player on a table', src: '/images/about/pixel-art-vinyl-table.png', left: '6%',    top: '46%',   width: '42%',   ratio: '1536 / 1024' },
+const ART: RoomArt[] = [
+  { id: 'rug',      src: '/images/about/pixel-art-rug.png',         left: '1.8%',  top: '62.1%', width: '50.7%', ratio: '1536 / 1024' },
+  { id: 'vinyl',    src: '/images/about/pixel-art-vinyl-table.png', left: '1.8%',  top: '40.8%', width: '49%',   ratio: '1536 / 1024' },
+  { id: 'painting', src: '/images/about/pixel-art-painting.png',    left: '12.8%', top: '15.6%', width: '26.8%', ratio: '1536 / 1024' },
 ]
 
 export default function AboutRoom() {
@@ -74,7 +75,8 @@ export default function AboutRoom() {
             alignSelf: 'stretch',
             border: '1px solid rgba(217, 217, 217, 0.7)',
             borderRadius: '30px',
-            padding: 'clamp(20px, 4vh, 48px) clamp(20px, 4vw, 56px)',
+            /* no padding — room art is positioned against the full box, as in Figma */
+            padding: 0,
             display: 'flex',
             flexDirection: 'column',
             overflow: 'hidden',
@@ -84,33 +86,23 @@ export default function AboutRoom() {
             {/* Floor line */}
             <div className="ab-floor" aria-hidden="true" />
 
-            {/* Rug — decorative room surface beneath the table (non-interactive) */}
-            <img
-              src="/images/about/pixel-art-rug.png"
-              alt=""
-              aria-hidden="true"
-              className="ab-rug"
-              style={{ aspectRatio: '1536 / 1024' }}
-            />
+            {/* Decorative room art — non-interactive, grounded (back-to-front) */}
+            {ART.map(a => (
+              <img
+                key={a.id}
+                src={a.src}
+                alt=""
+                aria-hidden="true"
+                className="ab-art"
+                style={{ left: a.left, top: a.top, width: a.width, aspectRatio: a.ratio }}
+              />
+            ))}
 
             {/* Notepad — click/Enter/Space cycles short notes (client island) */}
             <Notepad />
 
-            {/* Mirror — hover reveals reflection, click opens About panel (client island) */}
+            {/* Mirror — click opens About panel (client island) */}
             <Mirror />
-
-            {/* Object buttons */}
-            {OBJECTS.map(o => (
-              <button
-                key={o.id}
-                type="button"
-                className="ab-obj"
-                aria-label={o.label}
-                style={{ left: o.left, top: o.top, width: o.width }}
-              >
-                <img src={o.src} alt="" style={{ aspectRatio: o.ratio }} />
-              </button>
-            ))}
           </div>
         </div>
       </main>
@@ -124,31 +116,27 @@ export default function AboutRoom() {
           flex: 1;
           min-height: 0;
         }
-        /* Teal floor line running across the room */
+        /* Teal floor line running across the room (Figma: top 649 of frame) */
         .ab-floor {
           position: absolute;
-          /* bleed slightly into the container padding so it spans wider */
-          left: -3%;
-          right: -3%;
-          top: 86%;
+          left: 0;
+          right: 0;
+          top: 76.5%;
           height: 0;
           border-top: 1.5px solid rgba(121, 175, 182, 0.85);
         }
 
-        /* Rug — decorative floor surface beneath the table */
-        .ab-rug {
+        /* Decorative room art — positioned, grounded, never interactive */
+        .ab-art {
           position: absolute;
-          left: 0%;
-          top: 60%;
-          width: 52%;
           height: auto;
           object-fit: contain;
           pointer-events: none;
           user-select: none;
-          z-index: 0;
         }
 
-        /* Shared object button — transparent, just the artwork */
+        /* Shared interactive object button — transparent, just the artwork.
+           No hover lift/elevation: objects stay grounded in the room. */
         .ab-obj {
           position: absolute;
           padding: 0;
@@ -157,8 +145,6 @@ export default function AboutRoom() {
           cursor: pointer;
           line-height: 0;
           outline: none;
-          transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-                      filter 0.35s ease;
         }
         .ab-obj img {
           width: 100%;
@@ -167,23 +153,18 @@ export default function AboutRoom() {
           display: block;
           user-select: none;
         }
-        .ab-obj:hover, .ab-obj:focus-visible {
-          transform: translateY(-4px) scale(1.03);
-          filter: drop-shadow(0 6px 12px rgba(121,175,182,0.30));
-        }
         .ab-obj:focus-visible {
           outline: 2px solid rgba(121,175,182,0.9);
           outline-offset: 6px;
           border-radius: 6px;
         }
 
-        /* Notepad placement + prompt text overlay.
-           The PNG is landscape with wide transparent margins; the pad itself
-           sits in the centre, so the box is wide and the text inset is tight. */
+        /* Notepad placement + prompt text overlay (Figma 8:3301).
+           Landscape PNG with margins; pad sits centre, so inset is tight. */
         .ab-notepad {
-          left: 38%;
-          top: 10%;
-          width: 28%;
+          left: 38.2%;
+          top: 16.9%;
+          width: 24.9%;
           z-index: 1;
         }
         .ab-notepad-text {
@@ -211,11 +192,10 @@ export default function AboutRoom() {
             padding: 12px 0;
           }
           .ab-floor { display: none; }
-          .ab-rug {
+          .ab-art {
             position: static !important;
-            left: auto; top: auto;
-            width: 240px !important;
-            order: 99;            /* sit at the bottom of the stack */
+            left: auto !important; top: auto !important;
+            width: 260px !important;
           }
           .ab-obj {
             position: static !important;
