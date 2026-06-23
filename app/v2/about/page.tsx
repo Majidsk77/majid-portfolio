@@ -2,12 +2,14 @@ import type { Metadata } from 'next'
 import { Hanken_Grotesk } from 'next/font/google'
 import NavV2 from '../NavV2'
 import FooterV2 from '../FooterV2'
+import Notepad from './Notepad'
 
 // About Me room — entered from the /v2 lobby's About Me world.
 // Reuses the /v2 nav, footer, and framed container. Inside, a warm teal
 // line-art room with objects to discover. Matches Figma node 6:2897.
-// Basic composition only — object interactions (song hover, note reveal,
-// fun-fact cycling, mirror overlay) are intentionally NOT built yet.
+// Notepad fun-fact cycling is live (see Notepad.tsx). Other object
+// interactions (song hover, painting note reveal, mirror overlay) are
+// intentionally NOT built yet.
 
 const hanken = Hanken_Grotesk({
   subsets: ['latin'],
@@ -81,11 +83,8 @@ export default function AboutRoom() {
             {/* Floor line */}
             <div className="ab-floor" aria-hidden="true" />
 
-            {/* Notepad — composed of the SVG + the placeholder prompt text */}
-            <button type="button" className="ab-obj ab-notepad" aria-label="Choose a fun fact about me">
-              <img src="/images/about/notepad.svg" alt="" style={{ aspectRatio: '126.136 / 159.492' }} />
-              <span className="ab-notepad-text">Choose a fun fact about me</span>
-            </button>
+            {/* Notepad — click/Enter/Space cycles short notes (client island) */}
+            <Notepad />
 
             {/* Object buttons */}
             {OBJECTS.map(o => (
@@ -171,6 +170,16 @@ export default function AboutRoom() {
           color: #111110;
           text-align: center;
           pointer-events: none;
+        }
+        /* Subtle cue that the note is clickable: dotted underline + deepen on hover/focus */
+        .ab-notepad--interactive .ab-notepad-text > span {
+          border-bottom: 1px dotted rgba(121, 175, 182, 0.7);
+          padding-bottom: 2px;
+          transition: border-color 0.25s ease;
+        }
+        .ab-notepad--interactive:hover .ab-notepad-text > span,
+        .ab-notepad--interactive:focus-visible .ab-notepad-text > span {
+          border-bottom-color: rgba(121, 175, 182, 1);
         }
 
         /* Mobile — drop the absolute stage, stack the objects */
