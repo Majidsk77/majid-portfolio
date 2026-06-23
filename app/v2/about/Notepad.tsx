@@ -67,9 +67,9 @@ export default function Notepad() {
       onKeyDown={onKeyDown}
     >
       <img
-        src="/images/about/notepad.svg"
+        src="/images/about/pixel-art-notepad.png"
         alt=""
-        style={{ aspectRatio: '126.136 / 159.492' }}
+        style={{ aspectRatio: '1536 / 1024' }}
       />
       <span className="ab-notepad-text">
         <span

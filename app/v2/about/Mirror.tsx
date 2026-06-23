@@ -1,11 +1,9 @@
 'use client'
 
 // Mirror — the primary interactive object in the About room.
-// • Hover/focus: the line illustration fades up inside the mirror glass,
-//   clipped to the glass area and rendered BEHIND the mirror's frame strokes
-//   so it reads as a reflection living inside the mirror.
-// • Click: opens a contextual About panel beside the mirror (not a modal).
-// Self-contained styles live in the <style> block at the bottom.
+// The reflection (Majid) is baked into the pixel-art PNG, so no overlay is
+// needed. Hover/focus gives a gentle lift; click opens a contextual About
+// panel beside the mirror (not a modal). Styles in the <style> block below.
 
 import { useEffect, useRef, useState } from 'react'
 import { EMAIL, useEmailCopy, EmailCopyToast } from '@/components/EmailCopy'
@@ -67,23 +65,17 @@ export default function Mirror() {
         ref={mirrorRef}
         type="button"
         className={`ab-obj am-mirror${open ? ' is-open' : ''}${reducedMotion ? ' is-reduced' : ''}`}
-        style={{ left: '71%', top: '24%', width: '12.5%' }}
+        style={{ left: '70%', top: '20%', width: '20%' }}
         aria-label="Standing mirror — open a little about me"
         aria-haspopup="dialog"
         aria-expanded={open}
         onClick={() => setOpen(o => !o)}
       >
-        {/* Reflection — clipped to the glass, sits behind the frame strokes */}
-        <span className="am-glass" aria-hidden="true">
-          <img src="/images/majid-line-illustration.png" alt="" className="am-reflect" />
-          <span className="am-sheen" />
-        </span>
-        {/* Mirror line-art on top */}
         <img
-          src="/images/about/mirror.svg"
-          alt=""
+          src="/images/about/pixel-art-mirror-person.png"
+          alt="Pixel-art reflection of Majid in a standing mirror"
           className="am-frame"
-          style={{ aspectRatio: '197.011 / 435.055' }}
+          style={{ aspectRatio: '1024 / 1536' }}
         />
       </button>
 
@@ -121,49 +113,6 @@ export default function Mirror() {
       <EmailCopyToast copied={copied} />
 
       <style>{`
-        /* ── Mirror reflection ──────────────────────────────── */
-        .am-frame { position: relative; z-index: 1; }
-        .am-glass {
-          position: absolute;
-          /* approximate the reflective glass area within the mirror art */
-          top: 3%;
-          bottom: 13%;
-          left: 5%;
-          right: 25%;
-          overflow: hidden;
-          border-radius: 8px / 4px;
-          z-index: 0;
-        }
-        .am-reflect {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          object-position: 50% 12%;
-          opacity: 0;
-          transform: translateY(8px) scale(1.04);
-          transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.22,1,0.36,1);
-        }
-        .am-sheen {
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(125deg, rgba(255,255,255,0.18) 0%, transparent 38%, transparent 70%, rgba(255,255,255,0.10) 100%);
-          opacity: 0;
-          transition: opacity 0.5s ease;
-        }
-        .am-mirror:hover .am-reflect,
-        .am-mirror:focus-visible .am-reflect,
-        .am-mirror.is-open .am-reflect {
-          opacity: 0.92;
-          transform: translateY(0) scale(1);
-        }
-        .am-mirror:hover .am-sheen,
-        .am-mirror:focus-visible .am-sheen,
-        .am-mirror.is-open .am-sheen { opacity: 1; }
-        /* reduced motion: appear without slide/scale */
-        .am-mirror.is-reduced .am-reflect { transition: opacity 0.2s ease; transform: none; }
-
         /* ── Contextual panel ───────────────────────────────── */
         .am-panel {
           position: absolute;

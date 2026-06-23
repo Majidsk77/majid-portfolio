@@ -37,8 +37,9 @@ interface RoomObject {
 }
 
 const OBJECTS: RoomObject[] = [
-  { id: 'painting', label: 'Amsterdam painting',        src: '/images/about/painting.svg', left: '19.5%', top: '20.6%', width: '11.2%', ratio: '153.814 / 143.155' },
-  { id: 'vinyl',    label: 'Vinyl player on a table',   src: '/images/about/vinyl.svg',    left: '9.6%',  top: '58%',   width: '31.7%', ratio: '431 / 256.607' },
+  // Painting has no PNG replacement yet — keep the existing teal line-art SVG.
+  { id: 'painting', label: 'Amsterdam painting',      src: '/images/about/painting.svg',              left: '19.5%', top: '20.6%', width: '11.2%', ratio: '153.814 / 143.155' },
+  { id: 'vinyl',    label: 'Vinyl player on a table', src: '/images/about/pixel-art-vinyl-table.png', left: '6%',    top: '46%',   width: '42%',   ratio: '1536 / 1024' },
 ]
 
 export default function AboutRoom() {
@@ -83,6 +84,15 @@ export default function AboutRoom() {
             {/* Floor line */}
             <div className="ab-floor" aria-hidden="true" />
 
+            {/* Rug — decorative room surface beneath the table (non-interactive) */}
+            <img
+              src="/images/about/pixel-art-rug.png"
+              alt=""
+              aria-hidden="true"
+              className="ab-rug"
+              style={{ aspectRatio: '1536 / 1024' }}
+            />
+
             {/* Notepad — click/Enter/Space cycles short notes (client island) */}
             <Notepad />
 
@@ -125,6 +135,19 @@ export default function AboutRoom() {
           border-top: 1.5px solid rgba(121, 175, 182, 0.85);
         }
 
+        /* Rug — decorative floor surface beneath the table */
+        .ab-rug {
+          position: absolute;
+          left: 0%;
+          top: 60%;
+          width: 52%;
+          height: auto;
+          object-fit: contain;
+          pointer-events: none;
+          user-select: none;
+          z-index: 0;
+        }
+
         /* Shared object button — transparent, just the artwork */
         .ab-obj {
           position: absolute;
@@ -154,16 +177,19 @@ export default function AboutRoom() {
           border-radius: 6px;
         }
 
-        /* Notepad placement + prompt text overlay */
+        /* Notepad placement + prompt text overlay.
+           The PNG is landscape with wide transparent margins; the pad itself
+           sits in the centre, so the box is wide and the text inset is tight. */
         .ab-notepad {
-          left: 52%;
-          top: 17%;
-          width: 10%;
+          left: 38%;
+          top: 10%;
+          width: 28%;
+          z-index: 1;
         }
         .ab-notepad-text {
           position: absolute;
-          /* writable area below the spiral binding; flex-centred both axes */
-          inset: 30% 14% 9% 14%;
+          /* writable area of the pad within the PNG (centre, below the binding) */
+          inset: 34% 38% 22% 38%;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -185,13 +211,19 @@ export default function AboutRoom() {
             padding: 12px 0;
           }
           .ab-floor { display: none; }
+          .ab-rug {
+            position: static !important;
+            left: auto; top: auto;
+            width: 240px !important;
+            order: 99;            /* sit at the bottom of the stack */
+          }
           .ab-obj {
             position: static !important;
             left: auto !important;
             top: auto !important;
-            width: 200px !important;
+            width: 220px !important;
           }
-          .ab-notepad { width: 150px !important; }
+          .ab-notepad { width: 200px !important; }
           .ab-notepad-text { font-size: 13px; }
         }
       `}</style>
