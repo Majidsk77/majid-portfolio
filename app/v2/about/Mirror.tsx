@@ -1,13 +1,14 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { EMAIL, useEmailCopy, EmailCopyToast } from '@/components/EmailCopy'
+
+const RESUME_URL =
+  'https://drive.google.com/file/d/1-40FvUisOKLs-e9uVBAJ3Ftg8TM9EUVK/view?usp=sharing'
 
 export default function Mirror() {
   const [hovered, setHovered] = useState(false)
   const [open, setOpen] = useState(false)
   const [reducedMotion, setReducedMotion] = useState(false)
-  const { copied, copyEmail } = useEmailCopy()
   const mirrorRef = useRef<HTMLButtonElement>(null)
   const panelRef = useRef<HTMLDivElement>(null)
   const closeRef = useRef<HTMLButtonElement>(null)
@@ -117,17 +118,20 @@ export default function Mirror() {
           <span className="am-funfact">Fun fact:</span> I spent seven years
           playing classical guitar in an orchestra.
         </p>
-        <button
-          type="button"
+        <a
           className="am-cta"
-          onClick={copyEmail}
-          aria-label={`Copy email ${EMAIL}`}
+          href={RESUME_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Open resume (opens in a new tab)"
+          onKeyDown={(e) => {
+            // links activate on Enter natively; also honor Space
+            if (e.key === ' ') { e.preventDefault(); (e.currentTarget as HTMLAnchorElement).click() }
+          }}
         >
-          Copy email
-        </button>
+          Open Resume <span className="am-cta-arrow" aria-hidden="true">↗</span>
+        </a>
       </div>
-
-      <EmailCopyToast copied={copied} />
 
       <style>{`
         /* Two-image swap: both images stacked, opacity toggled on hover/focus */
@@ -199,14 +203,34 @@ export default function Mirror() {
         .am-body:last-of-type { margin-bottom: 15px; }
         .am-funfact { font-weight: 500; color: #2f6a72; }
         .am-cta {
+          display: inline-flex;
+          align-items: baseline;
+          gap: 4px;
           font-family: inherit; font-size: 14px;
           padding: 9px 18px; border-radius: 30px;
           border: 1.5px solid rgba(121, 175, 182, 0.7);
           background: rgba(121, 175, 182, 0.12);
           color: #111110; cursor: pointer;
+          text-decoration: none;
           transition: background 0.2s ease, border-color 0.2s ease;
         }
         .am-cta:hover { background: rgba(121, 175, 182, 0.22); border-color: rgba(121, 175, 182, 1); }
+        .am-cta:focus-visible { outline: 2px solid rgba(121, 175, 182, 0.9); outline-offset: 2px; }
+        /* arrow is part of the type: dim at rest, brightens + lifts up-right on hover */
+        .am-cta-arrow {
+          opacity: 0.75;
+          transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+        .am-cta:hover .am-cta-arrow,
+        .am-cta:focus-visible .am-cta-arrow {
+          opacity: 1;
+          transform: translate(1.5px, -1.5px);
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .am-cta-arrow { transition: opacity 0.2s ease; }
+          .am-cta:hover .am-cta-arrow,
+          .am-cta:focus-visible .am-cta-arrow { transform: none; }
+        }
 
         /* Mobile — panel becomes full-width card in the stack */
         @media (max-width: 760px) {
