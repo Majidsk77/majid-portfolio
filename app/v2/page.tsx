@@ -6,16 +6,8 @@
 // Branch: redesign/v2
 
 import Link from 'next/link'
-import { Hanken_Grotesk } from 'next/font/google'
 import { useState, useEffect } from 'react'
-import NavV2 from './NavV2'
-import FooterV2 from './FooterV2'
-
-const hanken = Hanken_Grotesk({
-  subsets: ['latin'],
-  weight: ['400', '500'],
-  display: 'swap',
-})
+import RoomFrame from './RoomFrame'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -409,52 +401,13 @@ export default function HomePageV2() {
   }, [])
 
   return (
-    <div
-      className={hanken.className}
-      style={{
-        // Exact viewport height on desktop so nav+lobby+footer all fit without scroll.
-        // dvh falls back to vh in older browsers; both prevent over-tall pages.
-        height: '100dvh',
-        display: 'flex',
-        flexDirection: 'column',
-        background: 'var(--bg)',
-        // Allow scroll on very small/mobile viewports where content naturally exceeds one screen.
-        overflowY: 'auto',
+    <RoomFrame
+      contentStyle={{
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 'clamp(20px, 3vh, 40px)',
       }}
     >
-      <NavV2 />
-
-      {/* Lobby — fills the space between Nav and Footer, content centered */}
-      <main
-        style={{
-          flex: 1,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          // Top: just enough to clear the fixed nav (~88px).
-          // Use vh for vertical values so padding scales with viewport height, not width.
-          padding: 'clamp(88px, 11vh, 108px) clamp(16px, 2.8vw, 40px) clamp(16px, 2vh, 32px)',
-          minHeight: 0, // lets flex child shrink inside the exact-height parent
-        }}
-      >
-        {/* Outer rounded container — matches Figma panel (1360px, border, radius 30) */}
-        <div
-          style={{
-            width: '100%',
-            maxWidth: '1360px',
-            // Stretch to fill all available height between nav offset and footer.
-            alignSelf: 'stretch',
-            border: '1px solid rgba(217, 217, 217, 0.7)',
-            borderRadius: '30px',
-            padding: 'clamp(28px, 5vh, 64px) clamp(28px, 5vw, 72px)',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            // Center content vertically inside the now-tall panel.
-            justifyContent: 'center',
-            gap: 'clamp(20px, 3vh, 40px)',
-          }}
-        >
           {/* Headline — preserved from Figma, Hanken Grotesk 400 */}
           <p
             style={{
@@ -488,10 +441,6 @@ export default function HomePageV2() {
               <WorldCard key={w.id} {...w} reducedMotion={reducedMotion} />
             ))}
           </div>
-        </div>
-      </main>
-
-      <FooterV2 />
 
       {/* Scoped keyframes and responsive rules — isolated to /v2 */}
       <style>{`
@@ -537,6 +486,6 @@ export default function HomePageV2() {
           .worlds-grid { grid-template-columns: 1fr; }
         }
       `}</style>
-    </div>
+    </RoomFrame>
   )
 }

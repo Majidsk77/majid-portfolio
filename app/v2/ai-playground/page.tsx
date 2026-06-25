@@ -1,19 +1,11 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { Hanken_Grotesk } from 'next/font/google'
-import NavV2 from '../NavV2'
-import FooterV2 from '../FooterV2'
+import RoomFrame from '../RoomFrame'
 
 // AI Playground room — entered from the /v2 lobby's AI Playground world.
-// Reuses the /v2 nav, footer, and outer framed container. Inside, the
+// Reuses the shared RoomFrame (nav, footer, bordered container). Inside, the
 // container becomes the room: a pixel title + four 8-bit objects, each a
 // link to a (to-be-decided) page. Matches Figma node 1:23.
-
-const hanken = Hanken_Grotesk({
-  subsets: ['latin'],
-  weight: ['400', '500'],
-  display: 'swap',
-})
 
 export const metadata: Metadata = {
   title: 'AI Playground',
@@ -61,42 +53,7 @@ const STARS = [
 
 export default function AiPlaygroundRoom() {
   return (
-    <div
-      className={hanken.className}
-      style={{
-        minHeight: '100dvh',
-        display: 'flex',
-        flexDirection: 'column',
-        background: 'var(--bg)',
-      }}
-    >
-      <NavV2 />
-
-      <main
-        style={{
-          flex: 1,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: 'clamp(88px, 11vh, 108px) clamp(16px, 2.8vw, 40px) clamp(16px, 2vh, 32px)',
-          minHeight: 0,
-        }}
-      >
-        {/* The room — same framed container as the lobby */}
-        <div
-          style={{
-            position: 'relative',
-            width: '100%',
-            maxWidth: '1360px',
-            alignSelf: 'stretch',
-            border: '1px solid rgba(217, 217, 217, 0.7)',
-            borderRadius: '30px',
-            padding: 'clamp(20px, 4vh, 48px) clamp(20px, 4vw, 56px)',
-            display: 'flex',
-            flexDirection: 'column',
-            overflow: 'hidden',
-          }}
-        >
+    <RoomFrame>
           {/* Ambient 8-bit atmosphere — pixel-grid floor + twinkling pixels.
               Purely decorative, sits behind the scene. */}
           <div className="pg-ambient" aria-hidden="true">
@@ -140,10 +97,6 @@ export default function AiPlaygroundRoom() {
               </Link>
             ))}
           </div>
-        </div>
-      </main>
-
-      <FooterV2 />
 
       <style>{`
         /* Ambient layer — behind the scene, fills the whole room */
@@ -263,6 +216,6 @@ export default function AiPlaygroundRoom() {
           .pg-toy img { animation: none !important; }
         }
       `}</style>
-    </div>
+    </RoomFrame>
   )
 }

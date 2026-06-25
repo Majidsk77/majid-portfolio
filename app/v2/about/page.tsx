@@ -1,23 +1,15 @@
 import type { Metadata } from 'next'
-import { Hanken_Grotesk } from 'next/font/google'
-import NavV2 from '../NavV2'
-import FooterV2 from '../FooterV2'
+import RoomFrame from '../RoomFrame'
 import Notepad from './Notepad'
 import Mirror from './Mirror'
 import VinylPlayer from './VinylPlayer'
 
 // About Me room — entered from the /v2 lobby's About Me world.
-// Reuses the /v2 nav, footer, and framed container. Inside, a warm teal
-// line-art room with objects to discover. Matches Figma node 6:2897.
-// Notepad fun-fact cycling (Notepad.tsx) and the mirror reflection + About
-// panel (Mirror.tsx) are live. Remaining object interactions (vinyl song
-// hover, painting note reveal) are intentionally NOT built yet.
-
-const hanken = Hanken_Grotesk({
-  subsets: ['latin'],
-  weight: ['400', '500'],
-  display: 'swap',
-})
+// Reuses the shared RoomFrame (nav, footer, bordered container). Inside, an
+// aspect-locked stage holds a warm teal line-art room that scales as one scene
+// so object relationships never drift. Matches Figma node 6:2897.
+// Notepad fun-fact cycling, the mirror reflection + About panel, and the vinyl
+// Now Playing card are live (separate client islands).
 
 export const metadata: Metadata = {
   title: 'About Me',
@@ -45,31 +37,11 @@ const ART: RoomArt[] = [
 
 export default function AboutRoom() {
   return (
-    <div
-      className={hanken.className}
-      style={{
-        minHeight: '100dvh',
-        display: 'flex',
-        flexDirection: 'column',
-        background: 'var(--bg)',
-      }}
-    >
-      <NavV2 />
-
-      <main
-        style={{
-          flex: 1,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: 'clamp(88px, 11vh, 108px) clamp(16px, 2.8vw, 40px) clamp(16px, 2vh, 32px)',
-          minHeight: 0,
-        }}
-      >
-        {/* The room — a fixed-aspect-ratio stage (Figma 1360×681) that scales
-            as one scene so object relationships never drift across screens */}
-        <div className="ab-room">
-          <div className="ab-scene">
+    <RoomFrame contentStyle={{ alignItems: 'center', justifyContent: 'center' }}>
+          {/* The room — a fixed-aspect-ratio stage (Figma 1360×681) centered
+              inside the shared frame, scaling as one scene so object
+              relationships never drift across screens */}
+          <div className="ab-stage">
             {/* Floor line */}
             <div className="ab-floor" aria-hidden="true" />
 
@@ -94,38 +66,23 @@ export default function AboutRoom() {
             {/* Mirror — click opens About panel (client island) */}
             <Mirror />
           </div>
-        </div>
-      </main>
-
-      <FooterV2 />
 
       <style>{`
-        /* Room stage — fixed Figma aspect ratio so the whole scene scales
-           uniformly. Width is bounded by available width AND height, so it
-           never overflows the viewport on short/wide desktops. */
-        .ab-room {
+        /* Aspect-locked room stage — fixed Figma ratio (1360×681) so the whole
+           scene scales uniformly inside the shared RoomFrame. On desktop the
+           width is also bounded by available height so it never overflows the
+           frame on short/wide windows. */
+        .ab-stage {
           position: relative;
-          margin: 0 auto;
           width: 100%;
           max-width: 1360px;
-          border: 1px solid rgba(217, 217, 217, 0.7);
-          border-radius: 30px;
-          overflow: hidden;
+          aspect-ratio: 1360 / 681;
         }
         @media (min-width: 761px) {
-          .ab-room {
-            /* 1360/681 ≈ 1.997; 220px ≈ nav + footer + main padding budget */
-            width: min(100%, 1360px, (100dvh - 220px) * 1.997);
-            aspect-ratio: 1360 / 681;
+          .ab-stage {
+            /* 1360/681 ≈ 1.997; 320px ≈ nav + footer + main padding + frame padding */
+            width: min(100%, (100dvh - 320px) * 1.997);
           }
-          .ab-scene { position: absolute; inset: 0; }
-        }
-        .ab-scene {
-          position: relative;
-          width: 100%;
-          height: 100%;
-          flex: 1;
-          min-height: 0;
         }
         /* Teal floor line running across the room (Figma: top 649 of frame) */
         .ab-floor {
@@ -200,14 +157,13 @@ export default function AboutRoom() {
         }
         .ab-notepad-text > span { max-width: 100%; }
 
-        /* Mobile — drop the fixed-aspect stage, stack the objects (not optimised) */
+        /* Mobile — drop the fixed-aspect stage, stack the objects (not optimised).
+           Let the shared frame grow/scroll instead of clipping the tall stack. */
         @media (max-width: 760px) {
-          .ab-room {
+          .v2-room-frame { overflow: visible; }
+          .ab-stage {
             aspect-ratio: auto;
-            overflow: visible;
-            padding: 24px 0;
-          }
-          .ab-scene {
+            width: 100%;
             position: static;
             display: flex;
             flex-direction: column;
@@ -231,6 +187,6 @@ export default function AboutRoom() {
           .ab-notepad-text { font-size: 13px; }
         }
       `}</style>
-    </div>
+    </RoomFrame>
   )
 }
