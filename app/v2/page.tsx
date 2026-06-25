@@ -228,14 +228,52 @@ function WorkOverlay({ visible }: { visible: boolean }) {
 }
 
 // ── AboutOverlay — About Me card only ─────────────────────────────────────────
-// Warm personal world: on hover the illustration fills the card edge-to-edge
-// (object-fit cover, cropped to the figure) and rises gently into place, so
-// the card becomes a portrait scene rather than holding a floating image.
-// Soft cream scrims top + bottom keep the label and arrow readable.
+// On hover the card becomes a playful digital self-portrait built entirely from
+// the word "me" — a Game Boy / 8-bit terminal field of "me"/"ME"/"Me" at mixed
+// sizes and opacities, streaming across the card from different directions.
+// The composition is a deterministic grid (not random) so it reads as designed
+// generative typography. Pure CSS transforms + opacity; clipped to card bounds.
+// Reduced motion: the same field simply fades in, static.
 
-const ABOUT_ILLUSTRATION = '/images/about-illustration.png'
+const ME_VARIANTS = ['me', 'ME', 'Me'] as const
+const ME_SWEEPS = ['v2MeStreamR', 'v2MeStreamL', 'v2MeStreamU', 'v2MeStreamD'] as const
 
-function AboutOverlay({ visible }: { visible: boolean }) {
+interface MeWord {
+  text: string
+  size: number
+  top: number
+  left: number
+  opacity: number
+  sweep: string
+  dur: number
+  delay: number
+}
+
+// Composed field — a 5×6 grid with layered, deterministic variation so it feels
+// intentionally designed rather than a scatter of floating labels.
+const ME_FIELD: MeWord[] = (() => {
+  const out: MeWord[] = []
+  const rows = 5
+  const cols = 6
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const i = r * cols + c
+      out.push({
+        text: ME_VARIANTS[(r + c) % ME_VARIANTS.length],
+        size: [12, 18, 27][(i * 7) % 3],
+        top: ((r + 0.5) / rows) * 100,
+        left: ((c + 0.5) / cols) * 100,
+        opacity: [0.16, 0.28, 0.46][(i * 5) % 3],
+        sweep: ME_SWEEPS[i % ME_SWEEPS.length],
+        dur: 5.5 + ((i * 3) % 5),
+        delay: -((i * 4) % 9),
+      })
+    }
+  }
+  return out
+})()
+
+function AboutOverlay({ visible, reducedMotion }: { visible: boolean; reducedMotion: boolean }) {
   return (
     <span
       aria-hidden="true"
@@ -246,48 +284,54 @@ function AboutOverlay({ visible }: { visible: boolean }) {
         pointerEvents: 'none',
         borderRadius: 'inherit',
         opacity: visible ? 1 : 0,
-        transform: visible ? 'translateY(0)' : 'translateY(14px)',
-        transition: 'opacity 0.55s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1)',
+        transition: 'opacity 0.4s ease',
       }}
     >
-      {/* Full-bleed illustration — fills the card, cropped to the figure */}
-      <img
-        src={ABOUT_ILLUSTRATION}
-        alt=""
+      {/* Faint pixel grid — evokes a small terminal/Game Boy screen */}
+      <span
         style={{
           position: 'absolute',
           inset: 0,
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          // bias the crop upward so the face sits in frame, not the trousers
-          objectPosition: '50% 22%',
-          // gentle scale float; the >100% scale keeps the fill edge-clean
-          animation: visible ? 'v2AboutFloat 5.5s ease-in-out infinite' : 'none',
+          backgroundImage: [
+            'repeating-linear-gradient(0deg, transparent, transparent 7px, rgba(26,26,24,0.05) 7px, rgba(26,26,24,0.05) 8px)',
+            'repeating-linear-gradient(90deg, transparent, transparent 7px, rgba(26,26,24,0.05) 7px, rgba(26,26,24,0.05) 8px)',
+          ].join(', '),
+          backgroundSize: '8px 8px',
         }}
       />
-      {/* Top scrim — keeps the dark label legible over the sky */}
-      <span
-        style={{
-          position: 'absolute',
-          insetInline: 0,
-          top: 0,
-          height: '46%',
-          background:
-            'linear-gradient(to bottom, rgba(251,243,230,0.85) 0%, rgba(251,243,230,0.35) 55%, transparent 100%)',
-        }}
-      />
-      {/* Bottom scrim — warm anchor + arrow contrast */}
-      <span
-        style={{
-          position: 'absolute',
-          insetInline: 0,
-          bottom: 0,
-          height: '34%',
-          background:
-            'linear-gradient(to top, rgba(160,90,40,0.20) 0%, transparent 100%)',
-        }}
-      />
+      {/* The field of "me" — each word streams in its own direction */}
+      {ME_FIELD.map((w, i) => (
+        <span
+          key={i}
+          style={{
+            position: 'absolute',
+            top: `${w.top}%`,
+            left: `${w.left}%`,
+            transform: 'translate(-50%, -50%)',
+            lineHeight: 1,
+          }}
+        >
+          <span
+            style={{
+              display: 'inline-block',
+              fontFamily: "'Courier New', ui-monospace, 'SFMono-Regular', monospace",
+              fontWeight: 700,
+              fontSize: `${w.size}px`,
+              lineHeight: 1,
+              letterSpacing: '0.06em',
+              color: '#1a1a18',
+              opacity: w.opacity,
+              whiteSpace: 'nowrap',
+              animation:
+                visible && !reducedMotion
+                  ? `${w.sweep} ${w.dur}s linear ${w.delay}s infinite`
+                  : 'none',
+            }}
+          >
+            {w.text}
+          </span>
+        </span>
+      ))}
     </span>
   )
 }
@@ -341,9 +385,10 @@ function WorldCard({ id, label, href, reducedMotion }: World & { reducedMotion: 
       {id === 'work' && !reducedMotion && (
         <WorkOverlay visible={on} />
       )}
-      {/* Illustrated figure reveal — About Me only */}
-      {id === 'about' && !reducedMotion && (
-        <AboutOverlay visible={on} />
+      {/* Typographic "me" field — About Me only. Rendered even under reduced
+          motion so it can fade in statically on hover. */}
+      {id === 'about' && (
+        <AboutOverlay visible={hovered} reducedMotion={reducedMotion} />
       )}
 
       {/* Label — playground glitches; all worlds keep dark readable text */}
@@ -467,10 +512,12 @@ export default function HomePageV2() {
           50%  { background-position: 0% 0%; }
           100% { background-position: 50% 100%; }
         }
-        @keyframes v2AboutFloat {
-          0%, 100% { transform: scale(1.06) translateY(0); }
-          50%       { transform: scale(1.06) translateY(-1.5%); }
-        }
+        /* "me" field streams — each word drifts across the card; the overlay's
+           overflow:hidden keeps everything inside the card bounds */
+        @keyframes v2MeStreamR { from { transform: translateX(-150px); } to { transform: translateX(150px); } }
+        @keyframes v2MeStreamL { from { transform: translateX(150px); } to { transform: translateX(-150px); } }
+        @keyframes v2MeStreamU { from { transform: translateY(110px); } to { transform: translateY(-110px); } }
+        @keyframes v2MeStreamD { from { transform: translateY(-110px); } to { transform: translateY(110px); } }
         @keyframes v2LabelGlitch {
           0%    { transform: translateX(0px); }
           8%    { transform: translateX(2px); }
