@@ -228,86 +228,88 @@ function WorkOverlay({ visible }: { visible: boolean }) {
 }
 
 // ── AboutOverlay — About Me card only ─────────────────────────────────────────
-// On hover the card becomes a playful digital self-portrait built entirely from
-// the word "me" — a Game Boy / 8-bit terminal field of "me"/"ME"/"Me" at mixed
-// sizes and opacities, streaming across the card from different directions.
-// The composition is a deterministic grid (not random) so it reads as designed
-// generative typography. Pure CSS transforms + opacity; clipped to card bounds.
-// Reduced motion: the same field simply fades in, static.
+// On hover, four orderly arcade lanes turn the illustration area into a tiny
+// pixel world made from "me"/"Me"/"ME", short pastel trails, and sparse icons.
+// Pure CSS transforms keep it lightweight. Reduced motion shows the same layout
+// as a static composition.
 
-// Deterministic pseudo-random so server + client render identically (no
-// hydration mismatch) while looking organically scattered — never gridded.
-function meRand(seed: number) {
-  const x = Math.sin(seed * 99.71) * 43758.5453
-  return x - Math.floor(x)
+// Restrained no-neon palette: pink, coral, sky, mint, lavender, soft yellow
+const ME_PASTELS = ['#f6b8c8', '#f6c3b8', '#bcd8f0', '#bfe8d4', '#d9cdf0', '#f3e4b0'] as const
+const ME_VARIANTS = ['me', 'Me', 'ME'] as const
+const DECOS = ['heart', 'spark', 'diamond', 'square'] as const
+const SIZE_STEPS = [-2, 1, 0, 2, -1, 1] as const
+
+interface LaneCfg {
+  top: number   // vertical position (%)
+  size: number  // base sprite size (px)
+  dur: number   // scroll duration (s) — alternating speeds
+  delay: number // negative delay gives each lane its own starting phase
 }
 
-const ME_VARIANTS = ['me', 'ME', 'Me'] as const
-const ME_DRIFTS = ['v2MeDriftA', 'v2MeDriftB', 'v2MeDriftC'] as const
-// No-neon pastels: blue, mint, coral, yellow, lavender
-const ME_PASTELS = ['#bcd8f0', '#bfe8d4', '#f6c3b8', '#f3e4b0', '#d9cdf0'] as const
+// Four horizontal arcade lanes, vertically contained between the title and arrow.
+const LANES: LaneCfg[] = [
+  { top: 8,  size: 13, dur: 22, delay: 7 },
+  { top: 34, size: 17, dur: 29, delay: 18 },
+  { top: 61, size: 14, dur: 25, delay: 11 },
+  { top: 88, size: 18, dur: 32, delay: 23 },
+]
 
-interface MeWord {
-  text: string
-  size: number
-  top: number
-  left: number
-  maxOpacity: number
-  drift: string
-  dur: number
-  delay: number
-}
+interface MeTok { kind: 'me'; variant: string; size: number; trail: number | null }
+interface DecoTok { kind: 'deco'; deco: string; color: string }
+type Tok = MeTok | DecoTok
 
-// A flowing current of "me" — scattered start points, mixed sizes, drifting
-// diagonally (bottom-left → top-right) at staggered speeds. Organic, not a grid.
-const ME_WORDS: MeWord[] = Array.from({ length: 16 }, (_, i) => {
-  const a = meRand(i + 1)
-  const b = meRand(i + 8.3)
-  const c = meRand(i + 17.1)
-  return {
-    text: ME_VARIANTS[i % ME_VARIANTS.length],
-    size: 12 + Math.round(a * 20),     // 12–32px
-    top: 8 + b * 80,                    // scattered vertical band
-    left: -6 + c * 66,                  // biased left so they travel rightward
-    maxOpacity: 0.24 + a * 0.32,        // varied peak (0.24–0.56)
-    drift: ME_DRIFTS[i % ME_DRIFTS.length],
-    dur: 7 + b * 7,                     // 7–14s, different speeds
-    delay: -(c * 13),                   // negative stagger → already mid-flow
+// Composed, deterministic token sequence per lane (intentional spacing, sparse
+// decorations) so it reads as a designed little pixel world, not a swarm.
+function buildLane(li: number): Tok[] {
+  const out: Tok[] = []
+  for (let k = 0; k < 6; k++) {
+    out.push({
+      kind: 'me',
+      variant: ME_VARIANTS[(li + k) % ME_VARIANTS.length],
+      size: LANES[li].size + SIZE_STEPS[(li + k) % SIZE_STEPS.length],
+      // every other word gets a tiny pastel trail behind it
+      trail: k % 2 === 0 ? (li + k) % ME_PASTELS.length : null,
+    })
+    // sparse decoration between some words
+    if (k % 3 === 1) {
+      out.push({ kind: 'deco', deco: DECOS[(li + k) % DECOS.length], color: ME_PASTELS[(li * 2 + k) % ME_PASTELS.length] })
+    }
   }
-})
-
-interface Frag {
-  size: number
-  top: number
-  left: number
-  color: string
-  dur: number
-  delay: number
+  return out
 }
 
-// Pastel pixel fragments riding the same diagonal current — little pieces of
-// digital identity. Kept sparse and low-opacity so they never get noisy.
-const ME_FRAGS: Frag[] = Array.from({ length: 26 }, (_, i) => {
-  const a = meRand(i + 3.7)
-  const b = meRand(i + 11.9)
-  const c = meRand(i + 23.4)
-  return {
-    size: 2 + Math.round(a * 4),        // 2–6px
-    top: 6 + b * 86,
-    left: -4 + c * 70,
-    color: ME_PASTELS[i % ME_PASTELS.length],
-    dur: 5 + a * 6,                     // 5–11s
-    delay: -(b * 11),
+const LANE_TOKENS: Tok[][] = LANES.map((_, li) => buildLane(li))
+
+function Token({ t }: { t: Tok }) {
+  if (t.kind === 'deco') {
+    // colored decorations (heart is fixed pink in CSS); pass color via var
+    return <span className={`v2-pix v2-pix-${t.deco}`} style={{ ['--pc' as string]: t.color }} />
   }
-})
+  return (
+    <span className="v2-me-cell">
+      {t.trail !== null && (
+        <span className="v2-trail" aria-hidden="true">
+          {[0, 1, 2, 3].map(offset => (
+            <i
+              key={offset}
+              style={{ background: ME_PASTELS[(t.trail! + offset) % ME_PASTELS.length] }}
+            />
+          ))}
+        </span>
+      )}
+      <span className="v2-me" style={{ fontSize: `${t.size}px` }}>{t.variant}</span>
+    </span>
+  )
+}
 
 function AboutOverlay({ visible, reducedMotion }: { visible: boolean; reducedMotion: boolean }) {
   return (
     <span
       aria-hidden="true"
+      className="v2-about-field"
       style={{
         position: 'absolute',
-        inset: 0,
+        inset: '48px 0 30px',
         overflow: 'hidden',
         pointerEvents: 'none',
         borderRadius: 'inherit',
@@ -315,54 +317,23 @@ function AboutOverlay({ visible, reducedMotion }: { visible: boolean; reducedMot
         transition: 'opacity 0.45s ease',
       }}
     >
-      {/* Pastel pixel fragments — the trailing "digital fragments" of the stream */}
-      {ME_FRAGS.map((f, i) => (
-        <span
-          key={`f${i}`}
-          style={{
-            position: 'absolute',
-            top: `${f.top}%`,
-            left: `${f.left}%`,
-            width: `${f.size}px`,
-            height: `${f.size}px`,
-            background: f.color,
-            imageRendering: 'pixelated',
-            // reduced motion: a soft, static scatter
-            opacity: reducedMotion ? 0.5 : undefined,
-            animation: !reducedMotion ? `v2FragDrift ${f.dur}s linear ${f.delay}s infinite` : 'none',
-          }}
-        />
-      ))}
-
-      {/* The current of "me" — nested: wrapper sets scattered position + peak
-          opacity, inner span drifts/fades/rotates (opacity multiplies). */}
-      {ME_WORDS.map((w, i) => (
-        <span
-          key={`w${i}`}
-          style={{
-            position: 'absolute',
-            top: `${w.top}%`,
-            left: `${w.left}%`,
-            opacity: w.maxOpacity,
-            lineHeight: 1,
-          }}
-        >
+      {LANES.map((lane, li) => (
+        <span key={li} className="v2-lane" style={{ top: `${lane.top}%` }}>
           <span
+            className="v2-lane-strip"
             style={{
-              display: 'inline-block',
-              fontFamily: "'Courier New', ui-monospace, 'SFMono-Regular', monospace",
-              fontWeight: 700,
-              fontSize: `${w.size}px`,
-              lineHeight: 1,
-              letterSpacing: '0.05em',
-              color: '#1a1a18',
-              whiteSpace: 'nowrap',
-              // reduced motion: composed static pose, fully shown
-              transform: reducedMotion ? 'rotate(-2deg)' : undefined,
-              animation: !reducedMotion ? `${w.drift} ${w.dur}s linear ${w.delay}s infinite` : 'none',
+              animation: !reducedMotion ? `v2LaneScroll ${lane.dur}s linear infinite` : 'none',
+              animationDelay: !reducedMotion ? `-${lane.delay}s` : undefined,
             }}
           >
-            {w.text}
+            {/* two identical sets → seamless left→right loop at translateX(-50%) */}
+            {[0, 1].map(dup => (
+              <span key={dup} className="v2-lane-set">
+                {LANE_TOKENS[li].map((t, ti) => (
+                  <Token key={ti} t={t} />
+                ))}
+              </span>
+            ))}
           </span>
         </span>
       ))}
@@ -546,33 +517,74 @@ export default function HomePageV2() {
           50%  { background-position: 0% 0%; }
           100% { background-position: 50% 100%; }
         }
-        /* "me" current — words drift diagonally bottom-left → top-right, fading
-           in and out with a touch of rotation/scale. Three variants give the
-           stream organic variety; overflow:hidden keeps it inside the card. */
-        @keyframes v2MeDriftA {
-          0%   { transform: translate(-26px, 26px) scale(0.85) rotate(-3deg); opacity: 0; }
-          22%  { opacity: 1; }
-          78%  { opacity: 1; }
-          100% { transform: translate(54px, -54px) scale(1.08) rotate(3deg); opacity: 0; }
+        /* ── About card: arcade "me" lanes ──────────────────────────────
+           Each lane is a strip of two identical token sets; scrolling from
+           translateX(-50%) → 0 advances it left → right and loops seamlessly. */
+        @keyframes v2LaneScroll {
+          from { transform: translateX(-50%); }
+          to   { transform: translateX(0); }
         }
-        @keyframes v2MeDriftB {
-          0%   { transform: translate(-18px, 22px) scale(0.95) rotate(2deg); opacity: 0; }
-          26%  { opacity: 1; }
-          74%  { opacity: 1; }
-          100% { transform: translate(62px, -66px) scale(1.0) rotate(-4deg); opacity: 0; }
+        .v2-lane {
+          position: absolute;
+          left: 0;
+          width: 100%;
+          height: 0;
+          overflow: visible;
         }
-        @keyframes v2MeDriftC {
-          0%   { transform: translate(-34px, 30px) scale(0.8) rotate(4deg); opacity: 0; }
-          30%  { opacity: 1; }
-          70%  { opacity: 1; }
-          100% { transform: translate(46px, -50px) scale(1.12) rotate(-2deg); opacity: 0; }
+        .v2-lane-strip {
+          display: flex;
+          width: 200%;
+          will-change: transform;
         }
-        /* Pastel pixel fragments ride the same diagonal current and fade out */
-        @keyframes v2FragDrift {
-          0%   { transform: translate(-12px, 12px) scale(0.8); opacity: 0; }
-          30%  { opacity: 1; }
-          70%  { opacity: 1; }
-          100% { transform: translate(42px, -44px) scale(1); opacity: 0; }
+        .v2-lane-set {
+          display: flex;
+          align-items: center;
+          justify-content: space-around;
+          gap: clamp(7px, 1.2vw, 18px);
+          width: 50%;
+          padding-right: clamp(7px, 1.2vw, 18px);
+          flex-shrink: 0;
+        }
+        .v2-me-cell { display: inline-flex; align-items: center; gap: 4px; flex-shrink: 0; }
+        .v2-me {
+          font-family: Monaco, 'Lucida Console', 'Courier New', ui-monospace, monospace;
+          font-weight: 900;
+          line-height: 1;
+          letter-spacing: 0;
+          color: rgba(26, 26, 24, 0.62);
+          white-space: nowrap;
+          font-variant-ligatures: none;
+          -webkit-font-smoothing: none;
+          text-rendering: geometricPrecision;
+          transform: scaleY(0.92);
+          transform-origin: center;
+          /* Hard one-pixel offset keeps each word reading as a sprite, not type. */
+          text-shadow: 1px 1px 0 rgba(26, 26, 24, 0.18);
+        }
+        /* Four 2px blocks + three 1px gaps = an 11px pastel pixel trail. */
+        .v2-trail { display: inline-flex; align-items: center; gap: 1px; flex-shrink: 0; }
+        .v2-trail i { display: block; width: 2px; height: 3px; image-rendering: pixelated; }
+        .v2-trail i:nth-child(1) { opacity: 0.42; }
+        .v2-trail i:nth-child(2) { opacity: 0.58; }
+        .v2-trail i:nth-child(3) { opacity: 0.74; }
+        .v2-trail i:nth-child(4) { opacity: 0.9; }
+
+        /* pixel decorations — crisp little box-shadow sprites (unit = 2px) */
+        .v2-pix { display: inline-block; image-rendering: pixelated; flex-shrink: 0; }
+        .v2-pix-square { width: 4px; height: 4px; background: var(--pc); }
+        .v2-pix-diamond { width: 5px; height: 5px; background: var(--pc); transform: rotate(45deg); }
+        .v2-pix-spark {
+          width: 2px; height: 2px; background: var(--pc); margin: 0 6px;
+          box-shadow: 0 -4px 0 var(--pc), 0 4px 0 var(--pc), -4px 0 0 var(--pc), 4px 0 0 var(--pc);
+        }
+        .v2-pix-heart {
+          width: 2px; height: 2px; background: transparent; margin: 0 8px 0 2px;
+          box-shadow:
+            2px 0 0 #f6b8c8, 4px 0 0 #f6b8c8, 8px 0 0 #f6b8c8, 10px 0 0 #f6b8c8,
+            0 2px 0 #f6b8c8, 2px 2px 0 #f6b8c8, 4px 2px 0 #f6b8c8, 6px 2px 0 #f6b8c8, 8px 2px 0 #f6b8c8, 10px 2px 0 #f6b8c8, 12px 2px 0 #f6b8c8,
+            2px 4px 0 #f6b8c8, 4px 4px 0 #f6b8c8, 6px 4px 0 #f6b8c8, 8px 4px 0 #f6b8c8, 10px 4px 0 #f6b8c8,
+            4px 6px 0 #f6b8c8, 6px 6px 0 #f6b8c8, 8px 6px 0 #f6b8c8,
+            6px 8px 0 #f6b8c8;
         }
         @keyframes v2LabelGlitch {
           0%    { transform: translateX(0px); }
