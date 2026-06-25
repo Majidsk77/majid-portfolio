@@ -8,6 +8,10 @@ export default function NavigationLoader() {
   const [visible, setVisible] = useState(false)
   const isFirst = useRef(true)
 
+  // The /v2 redesign opts out of the old route-transition loader — its routes
+  // should feel direct and immediate. Production routes keep the behavior.
+  const isV2 = pathname?.startsWith('/v2') ?? false
+
   useEffect(() => {
     // Skip the very first render (initial page load)
     if (isFirst.current) {
@@ -15,10 +19,17 @@ export default function NavigationLoader() {
       return
     }
 
+    if (isV2) {
+      setVisible(false)
+      return
+    }
+
     setVisible(true)
     const t = setTimeout(() => setVisible(false), 480)
     return () => clearTimeout(t)
-  }, [pathname])
+  }, [pathname, isV2])
+
+  if (isV2) return null
 
   return (
     <div
