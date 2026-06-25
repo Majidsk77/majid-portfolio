@@ -228,115 +228,65 @@ function WorkOverlay({ visible }: { visible: boolean }) {
 }
 
 // ── AboutOverlay — About Me card only ─────────────────────────────────────────
-// On hover, four orderly arcade lanes turn the illustration area into a tiny
-// pixel world made from "me"/"Me"/"ME", short pastel trails, and sparse icons.
-// Pure CSS transforms keep it lightweight. Reduced motion shows the same layout
-// as a static composition.
-
-// Restrained no-neon palette: pink, coral, sky, mint, lavender, soft yellow
-const ME_PASTELS = ['#f6b8c8', '#f6c3b8', '#bcd8f0', '#bfe8d4', '#d9cdf0', '#f3e4b0'] as const
-const ME_VARIANTS = ['me', 'Me', 'ME'] as const
-const DECOS = ['heart', 'spark', 'diamond', 'square'] as const
-const SIZE_STEPS = [-2, 1, 0, 2, -1, 1] as const
-
-interface LaneCfg {
-  top: number   // vertical position (%)
-  size: number  // base sprite size (px)
-  dur: number   // scroll duration (s) — alternating speeds
-  delay: number // negative delay gives each lane its own starting phase
-}
-
-// Four horizontal arcade lanes, vertically contained between the title and arrow.
-const LANES: LaneCfg[] = [
-  { top: 8,  size: 13, dur: 22, delay: 7 },
-  { top: 34, size: 17, dur: 29, delay: 18 },
-  { top: 61, size: 14, dur: 25, delay: 11 },
-  { top: 88, size: 18, dur: 32, delay: 23 },
-]
-
-interface MeTok { kind: 'me'; variant: string; size: number; trail: number | null }
-interface DecoTok { kind: 'deco'; deco: string; color: string }
-type Tok = MeTok | DecoTok
-
-// Composed, deterministic token sequence per lane (intentional spacing, sparse
-// decorations) so it reads as a designed little pixel world, not a swarm.
-function buildLane(li: number): Tok[] {
-  const out: Tok[] = []
-  for (let k = 0; k < 6; k++) {
-    out.push({
-      kind: 'me',
-      variant: ME_VARIANTS[(li + k) % ME_VARIANTS.length],
-      size: LANES[li].size + SIZE_STEPS[(li + k) % SIZE_STEPS.length],
-      // every other word gets a tiny pastel trail behind it
-      trail: k % 2 === 0 ? (li + k) % ME_PASTELS.length : null,
-    })
-    // sparse decoration between some words
-    if (k % 3 === 1) {
-      out.push({ kind: 'deco', deco: DECOS[(li + k) % DECOS.length], color: ME_PASTELS[(li * 2 + k) % ME_PASTELS.length] })
-    }
-  }
-  return out
-}
-
-const LANE_TOKENS: Tok[][] = LANES.map((_, li) => buildLane(li))
-
-function Token({ t }: { t: Tok }) {
-  if (t.kind === 'deco') {
-    // colored decorations (heart is fixed pink in CSS); pass color via var
-    return <span className={`v2-pix v2-pix-${t.deco}`} style={{ ['--pc' as string]: t.color }} />
-  }
-  return (
-    <span className="v2-me-cell">
-      {t.trail !== null && (
-        <span className="v2-trail" aria-hidden="true">
-          {[0, 1, 2, 3].map(offset => (
-            <i
-              key={offset}
-              style={{ background: ME_PASTELS[(t.trail! + offset) % ME_PASTELS.length] }}
-            />
-          ))}
-        </span>
-      )}
-      <span className="v2-me" style={{ fontSize: `${t.size}px` }}>{t.variant}</span>
-    </span>
-  )
-}
+// The portrait enters like a small reveal rather than a decorative effect:
+// quick ease-out, a warm halo, and two restrained pixel sparkles.
 
 function AboutOverlay({ visible, reducedMotion }: { visible: boolean; reducedMotion: boolean }) {
+  const transition = reducedMotion
+    ? 'none'
+    : `opacity 240ms ${EASE}, transform 240ms ${EASE}`
+
   return (
     <span
       aria-hidden="true"
-      className="v2-about-field"
+      className="v2-about-portrait"
       style={{
         position: 'absolute',
-        inset: '48px 0 30px',
+        inset: '39px 0 20px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
         overflow: 'hidden',
         pointerEvents: 'none',
         borderRadius: 'inherit',
-        opacity: visible ? 1 : 0,
-        transition: 'opacity 0.45s ease',
       }}
     >
-      {LANES.map((lane, li) => (
-        <span key={li} className="v2-lane" style={{ top: `${lane.top}%` }}>
-          <span
-            className="v2-lane-strip"
-            style={{
-              animation: !reducedMotion ? `v2LaneScroll ${lane.dur}s linear infinite` : 'none',
-              animationDelay: !reducedMotion ? `-${lane.delay}s` : undefined,
-            }}
-          >
-            {/* two identical sets → seamless left→right loop at translateX(-50%) */}
-            {[0, 1].map(dup => (
-              <span key={dup} className="v2-lane-set">
-                {LANE_TOKENS[li].map((t, ti) => (
-                  <Token key={ti} t={t} />
-                ))}
-              </span>
-            ))}
-          </span>
-        </span>
-      ))}
+      <span
+        className="v2-about-glow"
+        style={{
+          opacity: visible ? 1 : 0,
+          transform: visible ? 'scale(1)' : 'scale(0.9)',
+          transition,
+        }}
+      />
+      <span
+        className="v2-about-frame"
+        style={{
+          opacity: visible ? 1 : 0,
+          transform: visible ? 'translateY(-3px) scale(1)' : 'translateY(0) scale(0.96)',
+          transition,
+        }}
+      >
+        <img
+          src="/images/pixel-art-mirror-person-smiling-thumbnail.png"
+          alt=""
+          className="v2-about-image"
+        />
+      </span>
+      <span
+        className="v2-about-spark v2-about-spark-a"
+        style={{
+          opacity: visible ? 1 : 0,
+          animation: visible && !reducedMotion ? 'v2AboutTwinkle 1.7s steps(2, end) 220ms infinite' : 'none',
+        }}
+      />
+      <span
+        className="v2-about-spark v2-about-spark-b"
+        style={{
+          opacity: visible ? 0.72 : 0,
+          animation: visible && !reducedMotion ? 'v2AboutTwinkle 1.7s steps(2, end) 950ms infinite' : 'none',
+        }}
+      />
     </span>
   )
 }
@@ -390,8 +340,7 @@ function WorldCard({ id, label, href, reducedMotion }: World & { reducedMotion: 
       {id === 'work' && !reducedMotion && (
         <WorkOverlay visible={on} />
       )}
-      {/* Typographic "me" field — About Me only. Rendered even under reduced
-          motion so it can fade in statically on hover. */}
+      {/* Portrait reveal — About Me only. Reduced motion reveals it statically. */}
       {id === 'about' && (
         <AboutOverlay visible={hovered} reducedMotion={reducedMotion} />
       )}
@@ -517,74 +466,53 @@ export default function HomePageV2() {
           50%  { background-position: 0% 0%; }
           100% { background-position: 50% 100%; }
         }
-        /* ── About card: arcade "me" lanes ──────────────────────────────
-           Each lane is a strip of two identical token sets; scrolling from
-           translateX(-50%) → 0 advances it left → right and loops seamlessly. */
-        @keyframes v2LaneScroll {
-          from { transform: translateX(-50%); }
-          to   { transform: translateX(0); }
-        }
-        .v2-lane {
+        /* ── About card: portrait reveal ─────────────────────────────── */
+        .v2-about-glow {
           position: absolute;
-          left: 0;
-          width: 100%;
-          height: 0;
-          overflow: visible;
+          width: 78px;
+          height: 78px;
+          border-radius: 10px;
+          background: rgba(246, 184, 148, 0.22);
+          box-shadow: 0 0 18px rgba(221, 132, 83, 0.18);
         }
-        .v2-lane-strip {
-          display: flex;
-          width: 200%;
-          will-change: transform;
-        }
-        .v2-lane-set {
-          display: flex;
-          align-items: center;
-          justify-content: space-around;
-          gap: clamp(7px, 1.2vw, 18px);
-          width: 50%;
-          padding-right: clamp(7px, 1.2vw, 18px);
-          flex-shrink: 0;
-        }
-        .v2-me-cell { display: inline-flex; align-items: center; gap: 4px; flex-shrink: 0; }
-        .v2-me {
-          font-family: Monaco, 'Lucida Console', 'Courier New', ui-monospace, monospace;
-          font-weight: 900;
-          line-height: 1;
-          letter-spacing: 0;
-          color: rgba(26, 26, 24, 0.62);
-          white-space: nowrap;
-          font-variant-ligatures: none;
-          -webkit-font-smoothing: none;
-          text-rendering: geometricPrecision;
-          transform: scaleY(0.92);
-          transform-origin: center;
-          /* Hard one-pixel offset keeps each word reading as a sprite, not type. */
-          text-shadow: 1px 1px 0 rgba(26, 26, 24, 0.18);
-        }
-        /* Four 2px blocks + three 1px gaps = an 11px pastel pixel trail. */
-        .v2-trail { display: inline-flex; align-items: center; gap: 1px; flex-shrink: 0; }
-        .v2-trail i { display: block; width: 2px; height: 3px; image-rendering: pixelated; }
-        .v2-trail i:nth-child(1) { opacity: 0.42; }
-        .v2-trail i:nth-child(2) { opacity: 0.58; }
-        .v2-trail i:nth-child(3) { opacity: 0.74; }
-        .v2-trail i:nth-child(4) { opacity: 0.9; }
-
-        /* pixel decorations — crisp little box-shadow sprites (unit = 2px) */
-        .v2-pix { display: inline-block; image-rendering: pixelated; flex-shrink: 0; }
-        .v2-pix-square { width: 4px; height: 4px; background: var(--pc); }
-        .v2-pix-diamond { width: 5px; height: 5px; background: var(--pc); transform: rotate(45deg); }
-        .v2-pix-spark {
-          width: 2px; height: 2px; background: var(--pc); margin: 0 6px;
-          box-shadow: 0 -4px 0 var(--pc), 0 4px 0 var(--pc), -4px 0 0 var(--pc), 4px 0 0 var(--pc);
-        }
-        .v2-pix-heart {
-          width: 2px; height: 2px; background: transparent; margin: 0 8px 0 2px;
+        .v2-about-frame {
+          position: relative;
+          width: 58px;
+          height: 86px;
+          overflow: hidden;
+          border: 1px solid rgba(160, 90, 40, 0.24);
+          border-radius: 7px;
+          background: #fffdfa;
           box-shadow:
-            2px 0 0 #f6b8c8, 4px 0 0 #f6b8c8, 8px 0 0 #f6b8c8, 10px 0 0 #f6b8c8,
-            0 2px 0 #f6b8c8, 2px 2px 0 #f6b8c8, 4px 2px 0 #f6b8c8, 6px 2px 0 #f6b8c8, 8px 2px 0 #f6b8c8, 10px 2px 0 #f6b8c8, 12px 2px 0 #f6b8c8,
-            2px 4px 0 #f6b8c8, 4px 4px 0 #f6b8c8, 6px 4px 0 #f6b8c8, 8px 4px 0 #f6b8c8, 10px 4px 0 #f6b8c8,
-            4px 6px 0 #f6b8c8, 6px 6px 0 #f6b8c8, 8px 6px 0 #f6b8c8,
-            6px 8px 0 #f6b8c8;
+            0 5px 12px rgba(112, 66, 39, 0.13),
+            inset 0 0 0 2px rgba(255, 247, 238, 0.8);
+          will-change: transform, opacity;
+        }
+        .v2-about-image {
+          display: block;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center 20%;
+          image-rendering: pixelated;
+        }
+        .v2-about-spark {
+          position: absolute;
+          width: 2px;
+          height: 2px;
+          background: #e2a263;
+          box-shadow:
+            0 -3px 0 #e2a263,
+            0 3px 0 #e2a263,
+            -3px 0 0 #e2a263,
+            3px 0 0 #e2a263;
+          transition: opacity 180ms ease-out;
+        }
+        .v2-about-spark-a { left: calc(50% - 42px); top: 19px; }
+        .v2-about-spark-b { left: calc(50% + 37px); top: 54px; }
+        @keyframes v2AboutTwinkle {
+          0%, 48%, 100% { transform: scale(1); opacity: 0.72; }
+          50%, 72% { transform: scale(1.35); opacity: 0.18; }
         }
         @keyframes v2LabelGlitch {
           0%    { transform: translateX(0px); }
