@@ -157,22 +157,25 @@ export default function Mirror() {
         .am-panel {
           position: absolute;
           top: 14%;
-          /* mirror left edge is at 57.7%; sit just left of it with a small gap
-             so the panel reads as expanding out of the mirror */
-          right: 43.8%;
+          /* mirror button left edge is 57.7%, but the PNG has transparent
+             padding, so sitting near-flush to the box leaves a ~12-18px visual
+             gap to the actual glass — reads as attached to the mirror */
+          right: 39.8%;
           width: clamp(240px, 29%, 360px);
           z-index: 3;
           background: #fffefb;
           border: 1.5px solid rgba(121, 175, 182, 0.55);
           border-radius: 16px;
           padding: 22px 22px 24px;
-          box-shadow: 0 8px 22px rgba(121, 175, 182, 0.16);
+          box-shadow: 0 6px 18px rgba(121, 175, 182, 0.14);
           color: #111110;
           opacity: 0;
-          /* originate from the mirror (right) side */
-          transform: translateX(14px) scale(0.97);
+          /* grows out of the mirror edge: slide in from the right + subtle scale */
+          transform: translateX(18px) scale(0.96);
           transform-origin: right center;
-          transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.22,1,0.36,1);
+          /* easeOutCubic — calm, premium, not springy */
+          transition: opacity 0.28s cubic-bezier(0.215, 0.61, 0.355, 1),
+                      transform 0.32s cubic-bezier(0.215, 0.61, 0.355, 1);
         }
         .am-panel.is-open { opacity: 1; transform: translateX(0) scale(1); }
         @media (prefers-reduced-motion: reduce) {
