@@ -263,7 +263,7 @@ function AboutOverlay({ visible, reducedMotion }: { visible: boolean; reducedMot
         className="v2-about-frame"
         style={{
           opacity: visible ? 1 : 0,
-          transform: visible ? 'translateY(-3px) scale(1)' : 'translateY(0) scale(0.96)',
+          transform: visible ? 'translateY(-3px) scale(1)' : 'translateY(0) scale(0.97)',
           transition,
         }}
       >
@@ -278,13 +278,6 @@ function AboutOverlay({ visible, reducedMotion }: { visible: boolean; reducedMot
         style={{
           opacity: visible ? 1 : 0,
           animation: visible && !reducedMotion ? 'v2AboutTwinkle 1.7s steps(2, end) 220ms infinite' : 'none',
-        }}
-      />
-      <span
-        className="v2-about-spark v2-about-spark-b"
-        style={{
-          opacity: visible ? 0.72 : 0,
-          animation: visible && !reducedMotion ? 'v2AboutTwinkle 1.7s steps(2, end) 950ms infinite' : 'none',
         }}
       />
     </span>
@@ -469,23 +462,24 @@ export default function HomePageV2() {
         /* ── About card: portrait reveal ─────────────────────────────── */
         .v2-about-glow {
           position: absolute;
-          width: 78px;
-          height: 78px;
-          border-radius: 10px;
-          background: rgba(246, 184, 148, 0.22);
-          box-shadow: 0 0 18px rgba(221, 132, 83, 0.18);
+          width: calc(100% - 20px);
+          height: calc(100% - 4px);
+          border-radius: 9px;
+          background: rgba(246, 184, 148, 0.16);
+          box-shadow: 0 0 16px rgba(221, 132, 83, 0.14);
         }
         .v2-about-frame {
           position: relative;
-          width: 58px;
-          height: 86px;
+          width: calc(100% - 24px);
+          height: 100%;
           overflow: hidden;
           border: 1px solid rgba(160, 90, 40, 0.24);
-          border-radius: 7px;
-          background: #fffdfa;
+          border-radius: 8px;
+          background:
+            linear-gradient(180deg, rgba(255, 251, 246, 0.92), rgba(249, 229, 211, 0.72));
           box-shadow:
             0 5px 12px rgba(112, 66, 39, 0.13),
-            inset 0 0 0 2px rgba(255, 247, 238, 0.8);
+            inset 0 0 0 1px rgba(255, 247, 238, 0.8);
           will-change: transform, opacity;
         }
         .v2-about-image {
@@ -493,7 +487,7 @@ export default function HomePageV2() {
           width: 100%;
           height: 100%;
           object-fit: cover;
-          object-position: center 20%;
+          object-position: 50% 24%;
           image-rendering: pixelated;
         }
         .v2-about-spark {
@@ -508,8 +502,7 @@ export default function HomePageV2() {
             3px 0 0 #e2a263;
           transition: opacity 180ms ease-out;
         }
-        .v2-about-spark-a { left: calc(50% - 42px); top: 19px; }
-        .v2-about-spark-b { left: calc(50% + 37px); top: 54px; }
+        .v2-about-spark-a { right: 17px; top: 13px; }
         @keyframes v2AboutTwinkle {
           0%, 48%, 100% { transform: scale(1); opacity: 0.72; }
           50%, 72% { transform: scale(1.35); opacity: 0.18; }
