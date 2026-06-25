@@ -7,10 +7,10 @@
 import { useState } from 'react'
 
 const NOW_PLAYING = {
-  title: 'Song Title',
-  artist: 'Artist Name',
-  note: 'currently on repeat',
-  url: 'https://open.spotify.com/',
+  title: 'Dance...',
+  artist: 'Slayyyter',
+  note: 'currently on repeat for summer',
+  url: 'https://open.spotify.com/track/1qN5HBXkNn8sq54AgM1ZJJ?si=e421bc0003c24768',
 }
 
 export default function VinylPlayer() {
