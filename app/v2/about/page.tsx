@@ -177,15 +177,18 @@ export default function AboutRoom() {
         }
         .ab-notepad-text {
           position: absolute;
-          /* writable area of the pad within the PNG (centre, below the binding) */
-          inset: 34% 38% 22% 38%;
+          /* writable area of the pad within the PNG (centre, below the binding);
+             tightened slightly so text sits comfortably inside the writing area */
+          inset: 36% 41% 24% 41%;
           display: flex;
           align-items: center;
           justify-content: center;
           font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace;
-          font-size: clamp(9px, 0.95vw, 14px);
-          line-height: 1.25;
-          color: #111110;
+          /* intentionally ~12% smaller than "correct" — reads as written on the pad */
+          font-size: clamp(8px, 0.8vw, 12px);
+          line-height: 1.35;
+          letter-spacing: -0.01em;
+          color: #1a1a18;
           text-align: center;
           pointer-events: none;
         }
