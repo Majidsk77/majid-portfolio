@@ -487,7 +487,9 @@ export default function HomePageV2() {
           width: 100%;
           height: 100%;
           object-fit: cover;
-          object-position: 50% 24%;
+          /* crop biased up so the smiling face stays the focal point across
+             breakpoints; shoulders/body crop away as the frame shortens */
+          object-position: 50% 16%;
           image-rendering: pixelated;
         }
         .v2-about-spark {
