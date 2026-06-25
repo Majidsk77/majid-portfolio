@@ -6,8 +6,17 @@
 // Do NOT use this in any other route — this is a /v2 sandbox component.
 
 import Link from 'next/link'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useEmailCopy, EmailCopyToast } from '@/components/EmailCopy'
+
+// ── Selected work — projects shown in the Work dropdown ───────────────────────
+// No dedicated company logos exist in /public, so each item uses a tasteful
+// initials avatar as a fallback (see summary).
+const WORK_PROJECTS: { name: string; href: string; initials: string; color: string }[] = [
+  { name: 'Google Boba',    href: '/work/google-boba',   initials: 'GB',  color: '#eef2f8' },
+  { name: 'Exact.com',      href: '/work/exact',         initials: 'E',   color: '#eaf3ee' },
+  { name: 'IMC Prosperity', href: '/work/imc-prosperity', initials: 'IMC', color: '#f3eef7' },
+]
 
 // ── Chevron-down icon (matches Figma ionicons chevron-down-outline) ───────────
 
@@ -34,25 +43,17 @@ function ChevronDown() {
 
 // ── Pill — shared pill wrapper for all nav items ──────────────────────────────
 
-function Pill({
-  href,
-  onClick,
-  children,
-}: {
-  href?: string
-  onClick?: () => void
-  children: React.ReactNode
-}) {
-  const [hovered, setHovered] = useState(false)
-
-  const style: React.CSSProperties = {
+// Shared pill styling — used by Pill and the Work dropdown trigger so they
+// stay visually identical.
+function pillStyle(active: boolean): React.CSSProperties {
+  return {
     display: 'inline-flex',
     alignItems: 'center',
     gap: '8px',
     padding: '10px 16px',
     borderRadius: '30px',
-    border: `1px solid ${hovered ? 'rgba(217,217,217,1)' : 'rgba(217,217,217,0.7)'}`,
-    background: hovered ? 'rgba(17,17,16,0.03)' : 'transparent',
+    border: `1px solid ${active ? 'rgba(217,217,217,1)' : 'rgba(217,217,217,0.7)'}`,
+    background: active ? 'rgba(17,17,16,0.03)' : 'transparent',
     fontSize: '16px',
     fontWeight: 400,
     color: '#111110',
@@ -64,6 +65,20 @@ function Pill({
     transition: 'border-color 0.2s ease, background 0.2s ease',
     outline: 'none',
   }
+}
+
+function Pill({
+  href,
+  onClick,
+  children,
+}: {
+  href?: string
+  onClick?: () => void
+  children: React.ReactNode
+}) {
+  const [hovered, setHovered] = useState(false)
+
+  const style = pillStyle(hovered)
 
   const handlers = {
     onMouseEnter: () => setHovered(true),
@@ -84,6 +99,156 @@ function Pill({
     <button type="button" onClick={onClick} style={style} {...handlers}>
       {children}
     </button>
+  )
+}
+
+// ── Initials avatar — logo fallback for a project ─────────────────────────────
+
+function ProjectAvatar({ initials, color }: { initials: string; color: string }) {
+  return (
+    <span
+      aria-hidden="true"
+      style={{
+        width: '28px',
+        height: '28px',
+        borderRadius: '8px',
+        background: color,
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: initials.length > 2 ? '9px' : '11px',
+        fontWeight: 600,
+        letterSpacing: '0.02em',
+        color: '#3a3a37',
+        flexShrink: 0,
+      }}
+    >
+      {initials}
+    </span>
+  )
+}
+
+// ── WorkDropdown — click-to-open list of selected work (desktop nav) ───────────
+
+function WorkDropdown() {
+  const [open, setOpen] = useState(false)
+  const [hovered, setHovered] = useState(false)
+  const btnRef = useRef<HTMLButtonElement>(null)
+  const panelRef = useRef<HTMLDivElement>(null)
+
+  // Escape closes (returns focus to trigger); click outside closes
+  useEffect(() => {
+    if (!open) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') { setOpen(false); btnRef.current?.focus() }
+    }
+    const onDown = (e: MouseEvent) => {
+      const t = e.target as Node
+      if (
+        panelRef.current && !panelRef.current.contains(t) &&
+        btnRef.current && !btnRef.current.contains(t)
+      ) setOpen(false)
+    }
+    window.addEventListener('keydown', onKey)
+    window.addEventListener('mousedown', onDown)
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      window.removeEventListener('mousedown', onDown)
+    }
+  }, [open])
+
+  // arrow-key navigation between items
+  const onPanelKey = (e: React.KeyboardEvent) => {
+    const items = Array.from(
+      panelRef.current?.querySelectorAll<HTMLAnchorElement>('[role="menuitem"]') ?? []
+    )
+    const idx = items.indexOf(document.activeElement as HTMLAnchorElement)
+    if (e.key === 'ArrowDown') { e.preventDefault(); items[(idx + 1) % items.length]?.focus() }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); items[(idx - 1 + items.length) % items.length]?.focus() }
+  }
+
+  return (
+    <div style={{ position: 'relative' }}>
+      <button
+        ref={btnRef}
+        type="button"
+        aria-haspopup="menu"
+        aria-expanded={open}
+        onClick={() => setOpen(o => !o)}
+        onKeyDown={(e) => {
+          if (e.key === 'ArrowDown') {
+            e.preventDefault()
+            setOpen(true)
+            requestAnimationFrame(() =>
+              panelRef.current?.querySelector<HTMLAnchorElement>('[role="menuitem"]')?.focus()
+            )
+          }
+        }}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        onFocus={() => setHovered(true)}
+        onBlur={() => setHovered(false)}
+        style={pillStyle(hovered || open)}
+      >
+        Work
+        <span style={{ display: 'inline-flex', transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }}>
+          <ChevronDown />
+        </span>
+      </button>
+
+      <div
+        ref={panelRef}
+        role="menu"
+        aria-label="Selected work"
+        aria-hidden={!open}
+        onKeyDown={onPanelKey}
+        style={{
+          position: 'absolute',
+          top: 'calc(100% + 8px)',
+          right: 0,
+          minWidth: '232px',
+          background: '#fffefb',
+          border: '1px solid rgba(217,217,217,0.7)',
+          borderRadius: '16px',
+          boxShadow: '0 10px 30px rgba(17,17,16,0.10)',
+          padding: '6px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '2px',
+          zIndex: 60,
+          opacity: open ? 1 : 0,
+          transform: open ? 'translateY(0) scale(1)' : 'translateY(-6px) scale(0.98)',
+          transformOrigin: 'top right',
+          pointerEvents: open ? 'auto' : 'none',
+          transition: 'opacity 0.2s ease, transform 0.22s cubic-bezier(0.22, 1, 0.36, 1)',
+        }}
+      >
+        {WORK_PROJECTS.map(p => (
+          <Link
+            key={p.href}
+            href={p.href}
+            role="menuitem"
+            tabIndex={open ? 0 : -1}
+            onClick={() => setOpen(false)}
+            className="v2-work-item"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '11px',
+              padding: '9px 10px',
+              borderRadius: '10px',
+              textDecoration: 'none',
+              color: '#111110',
+              fontSize: '15px',
+              outline: 'none',
+            }}
+          >
+            <ProjectAvatar initials={p.initials} color={p.color} />
+            <span>{p.name}</span>
+          </Link>
+        ))}
+      </div>
+    </div>
   )
 }
 
@@ -137,9 +302,7 @@ export default function NavV2() {
           style={{ gap: '16px', alignItems: 'center' }}
           className="hidden md:flex"
         >
-          <Pill href="/#work">
-            Work <ChevronDown />
-          </Pill>
+          <WorkDropdown />
           <Pill href="/#about">
             About
           </Pill>
@@ -247,6 +410,15 @@ export default function NavV2() {
       </div>
 
       <EmailCopyToast copied={copied} />
+
+      <style>{`
+        .v2-work-item:hover { background: rgba(17, 17, 16, 0.05); }
+        .v2-work-item:focus-visible {
+          background: rgba(17, 17, 16, 0.05);
+          outline: 2px solid rgba(121, 175, 182, 0.6);
+          outline-offset: 1px;
+        }
+      `}</style>
     </>
   )
 }
