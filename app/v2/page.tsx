@@ -476,17 +476,21 @@ export default function HomePageV2() {
           height: 100%;
           overflow: hidden;
           will-change: transform, opacity;
-          -webkit-mask-image: radial-gradient(115% 118% at 50% 38%, #000 60%, transparent 94%);
-          mask-image: radial-gradient(115% 118% at 50% 38%, #000 60%, transparent 94%);
+          /* solid toward the bottom-right (the figure is anchored there and the
+             card edge frames it), fading toward the top-left where the portrait
+             dissolves into the card background */
+          -webkit-mask-image: radial-gradient(150% 150% at 100% 100%, #000 68%, transparent 100%);
+          mask-image: radial-gradient(150% 150% at 100% 100%, #000 68%, transparent 100%);
         }
         .v2-about-image {
           display: block;
           width: 100%;
           height: 100%;
           object-fit: cover;
-          /* crop biased up so the smiling face stays the focal point across
-             breakpoints; shoulders/body crop away as the frame shortens */
-          object-position: 50% 16%;
+          /* anchor the figure toward the bottom-right so it bleeds off the right
+             edge (which acts as the frame); eyes land in the upper third and the
+             face stays fully visible across breakpoints */
+          object-position: 27% 24%;
           image-rendering: pixelated;
         }
         .v2-about-spark {
