@@ -3,14 +3,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { EMAIL, useEmailCopy, EmailCopyToast } from '@/components/EmailCopy'
 
-const BULLETS = [
-  'Based in Amsterdam',
-  'Product & UX Design',
-  'Interaction Design',
-  'AI Experiments',
-  'Always Building',
-]
-
 export default function Mirror() {
   const [hovered, setHovered] = useState(false)
   const [open, setOpen] = useState(false)
@@ -113,12 +105,18 @@ export default function Mirror() {
         </button>
         <h2 className="am-title">Hey, I&apos;m Majid 👋</h2>
         <p className="am-body">
-          Product designer based in Amsterdam, interested in playful systems,
-          interaction design, and thoughtful digital experiences.
+          Hi, I&apos;m a Product Designer who loves solving complex problems and
+          turning them into experiences that feel simple, thoughtful, and
+          enjoyable to use.
         </p>
-        <ul className="am-list">
-          {BULLETS.map(b => <li key={b}>{b}</li>)}
-        </ul>
+        <p className="am-body">
+          When I&apos;m away from my desk, I&apos;m probably exploring a new café,
+          at a concert or festival, mixing music, or watching an arthouse film.
+        </p>
+        <p className="am-body">
+          <span className="am-funfact">Fun fact:</span> I spent seven years
+          playing classical guitar in an orchestra.
+        </p>
         <button
           type="button"
           className="am-cta"
@@ -158,22 +156,25 @@ export default function Mirror() {
         /* ── Contextual panel ───────────────────────────────── */
         .am-panel {
           position: absolute;
-          top: 16%;
-          right: 45%;
-          width: clamp(240px, 30%, 360px);
+          top: 14%;
+          /* mirror left edge is at 57.7%; sit just left of it with a small gap
+             so the panel reads as expanding out of the mirror */
+          right: 43.8%;
+          width: clamp(240px, 29%, 360px);
           z-index: 3;
           background: #fffefb;
           border: 1.5px solid rgba(121, 175, 182, 0.55);
           border-radius: 16px;
           padding: 22px 22px 24px;
-          box-shadow: 0 12px 34px rgba(121, 175, 182, 0.20);
+          box-shadow: 0 8px 22px rgba(121, 175, 182, 0.16);
           color: #111110;
           opacity: 0;
-          transform: translateY(8px) scale(0.98);
+          /* originate from the mirror (right) side */
+          transform: translateX(14px) scale(0.97);
           transform-origin: right center;
           transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.22,1,0.36,1);
         }
-        .am-panel.is-open { opacity: 1; transform: translateY(0) scale(1); }
+        .am-panel.is-open { opacity: 1; transform: translateX(0) scale(1); }
         @media (prefers-reduced-motion: reduce) {
           .am-panel { transition: none; transform: none; }
         }
@@ -186,15 +187,10 @@ export default function Mirror() {
           cursor: pointer; padding: 2px 6px; border-radius: 8px;
         }
         .am-close:hover { color: #111110; background: rgba(121,175,182,0.12); }
-        .am-title { font-size: 20px; font-weight: 500; margin: 0 0 10px; letter-spacing: -0.01em; }
-        .am-body  { font-size: 14px; line-height: 1.5; color: #4a4a47; margin: 0 0 14px; }
-        .am-list  { list-style: none; padding: 0; margin: 0 0 18px; display: flex; flex-direction: column; gap: 7px; }
-        .am-list li { font-size: 13px; color: #111110; padding-left: 18px; position: relative; }
-        .am-list li::before {
-          content: ''; position: absolute; left: 0; top: 6px;
-          width: 7px; height: 7px; border-radius: 2px;
-          background: rgba(121, 175, 182, 0.9);
-        }
+        .am-title { font-size: 20px; font-weight: 500; margin: 0 0 12px; letter-spacing: -0.01em; }
+        .am-body  { font-size: 14px; line-height: 1.6; color: #4a4a47; margin: 0 0 14px; max-width: 34ch; }
+        .am-body:last-of-type { margin-bottom: 18px; }
+        .am-funfact { font-weight: 500; color: #2f6a72; }
         .am-cta {
           font-family: inherit; font-size: 14px;
           padding: 9px 18px; border-radius: 30px;
