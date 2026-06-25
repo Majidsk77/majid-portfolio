@@ -252,6 +252,176 @@ function WorkDropdown() {
   )
 }
 
+// ── Small icons for the Contact items ────────────────────────────────────────
+
+function CopyIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true">
+      <rect x="5" y="5" width="8" height="8" rx="1.6" stroke="#3a3a37" strokeWidth="1.3" />
+      <path d="M10 5V3.2A1.5 1.5 0 0 0 8.5 1.7h-5A1.5 1.5 0 0 0 2 3.2v5A1.5 1.5 0 0 0 3.5 9.7H5" stroke="#3a3a37" strokeWidth="1.3" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+function LinkedInIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true">
+      <path d="M3.2 5.6v6M3.2 3.3v.01M6.2 11.6v-3.4a1.8 1.8 0 0 1 3.6 0v3.4M6.2 5.6v6" stroke="#3a3a37" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+// ── ContactDropdown — click-to-open Email (copy) + LinkedIn (desktop nav) ──────
+
+function ContactDropdown({ onCopyEmail }: { onCopyEmail: () => void }) {
+  const [open, setOpen] = useState(false)
+  const [hovered, setHovered] = useState(false)
+  const btnRef = useRef<HTMLButtonElement>(null)
+  const panelRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!open) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') { setOpen(false); btnRef.current?.focus() }
+    }
+    const onDown = (e: MouseEvent) => {
+      const t = e.target as Node
+      if (
+        panelRef.current && !panelRef.current.contains(t) &&
+        btnRef.current && !btnRef.current.contains(t)
+      ) setOpen(false)
+    }
+    window.addEventListener('keydown', onKey)
+    window.addEventListener('mousedown', onDown)
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      window.removeEventListener('mousedown', onDown)
+    }
+  }, [open])
+
+  const onPanelKey = (e: React.KeyboardEvent) => {
+    const items = Array.from(
+      panelRef.current?.querySelectorAll<HTMLElement>('[role="menuitem"]') ?? []
+    )
+    const idx = items.indexOf(document.activeElement as HTMLElement)
+    if (e.key === 'ArrowDown') { e.preventDefault(); items[(idx + 1) % items.length]?.focus() }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); items[(idx - 1 + items.length) % items.length]?.focus() }
+  }
+
+  const iconHolder: React.CSSProperties = {
+    width: '28px',
+    height: '28px',
+    borderRadius: '8px',
+    background: '#f1f0ec',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
+  }
+
+  const itemStyle: React.CSSProperties = {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '11px',
+    padding: '9px 10px',
+    borderRadius: '10px',
+    textDecoration: 'none',
+    color: '#111110',
+    fontSize: '15px',
+    outline: 'none',
+    width: '100%',
+    background: 'none',
+    border: 'none',
+    fontFamily: 'inherit',
+    cursor: 'pointer',
+    textAlign: 'left',
+  }
+
+  return (
+    <div style={{ position: 'relative' }}>
+      <button
+        ref={btnRef}
+        type="button"
+        aria-haspopup="menu"
+        aria-expanded={open}
+        onClick={() => setOpen(o => !o)}
+        onKeyDown={(e) => {
+          if (e.key === 'ArrowDown') {
+            e.preventDefault()
+            setOpen(true)
+            requestAnimationFrame(() =>
+              panelRef.current?.querySelector<HTMLElement>('[role="menuitem"]')?.focus()
+            )
+          }
+        }}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        onFocus={() => setHovered(true)}
+        onBlur={() => setHovered(false)}
+        style={pillStyle(hovered || open)}
+      >
+        Contact
+        <span style={{ display: 'inline-flex', transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }}>
+          <ChevronDown />
+        </span>
+      </button>
+
+      <div
+        ref={panelRef}
+        role="menu"
+        aria-label="Contact"
+        aria-hidden={!open}
+        onKeyDown={onPanelKey}
+        style={{
+          position: 'absolute',
+          top: 'calc(100% + 8px)',
+          right: 0,
+          minWidth: '220px',
+          background: '#fffefb',
+          border: '1px solid rgba(217,217,217,0.7)',
+          borderRadius: '16px',
+          boxShadow: '0 10px 30px rgba(17,17,16,0.10)',
+          padding: '6px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '2px',
+          zIndex: 60,
+          opacity: open ? 1 : 0,
+          transform: open ? 'translateY(0) scale(1)' : 'translateY(-6px) scale(0.98)',
+          transformOrigin: 'top right',
+          pointerEvents: open ? 'auto' : 'none',
+          transition: 'opacity 0.2s ease, transform 0.22s cubic-bezier(0.22, 1, 0.36, 1)',
+        }}
+      >
+        <button
+          type="button"
+          role="menuitem"
+          tabIndex={open ? 0 : -1}
+          onClick={() => { onCopyEmail(); setOpen(false) }}
+          className="v2-work-item"
+          style={itemStyle}
+        >
+          <span aria-hidden="true" style={iconHolder}><CopyIcon /></span>
+          <span>Email</span>
+        </button>
+        <a
+          href="https://www.linkedin.com/in/majid-kareem/"
+          target="_blank"
+          rel="noopener noreferrer"
+          role="menuitem"
+          tabIndex={open ? 0 : -1}
+          onClick={() => setOpen(false)}
+          className="v2-work-item"
+          style={itemStyle}
+        >
+          <span aria-hidden="true" style={iconHolder}><LinkedInIcon /></span>
+          <span>LinkedIn</span>
+        </a>
+      </div>
+    </div>
+  )
+}
+
 // ── NavV2 ─────────────────────────────────────────────────────────────────────
 
 export default function NavV2() {
@@ -303,12 +473,10 @@ export default function NavV2() {
           className="hidden md:flex"
         >
           <WorkDropdown />
-          <Pill href="/#about">
+          <Pill href="/v2/about">
             About
           </Pill>
-          <Pill onClick={copyEmail}>
-            Contact <ChevronDown />
-          </Pill>
+          <ContactDropdown onCopyEmail={copyEmail} />
         </div>
 
         {/* Mobile hamburger */}
@@ -368,7 +536,7 @@ export default function NavV2() {
       >
         {[
           { label: 'Work',    href: '/#work',  chevron: true,  copy: false },
-          { label: 'About',   href: '/#about', chevron: false, copy: false },
+          { label: 'About',   href: '/v2/about', chevron: false, copy: false },
           { label: 'Contact', href: '',         chevron: true,  copy: true  },
         ].map((item, i) => {
           const itemStyle: React.CSSProperties = {
