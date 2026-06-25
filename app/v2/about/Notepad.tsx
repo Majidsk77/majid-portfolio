@@ -9,12 +9,12 @@ import { useEffect, useRef, useState } from 'react'
 const DEFAULT_NOTE = 'Choose a fun fact about me'
 
 const NOTES = [
-  'Currently overthinking small details.',
-  'Favorite kind of chaos: organized.',
-  'Probably making another prototype.',
+  'Overthinking the small details.',
+  'My chaos is well organized.',
+  'Always building one more prototype.',
   'Amsterdam made me softer.',
-  'Ask me about tiny interactions.',
-  'Still chasing better hover states.',
+  'Ask me about micro-interactions.',
+  'Chasing better hover states.',
 ]
 
 export default function Notepad() {

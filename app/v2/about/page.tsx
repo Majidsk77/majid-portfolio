@@ -84,11 +84,15 @@ export default function AboutRoom() {
             width: min(100%, (100dvh - 320px) * 1.997);
           }
         }
-        /* Teal floor line running across the room (Figma: top 649 of frame) */
+        /* Teal floor line running across the room (Figma: top 649 of frame).
+           The stage is centered and narrower than the room container, so the
+           line is extended far past the stage on both sides; the RoomFrame's
+           overflow:hidden clips it exactly to the container's inner edges,
+           giving a full-width floor line regardless of stage width. */
         .ab-floor {
           position: absolute;
-          left: 0;
-          right: 0;
+          left: -50vw;
+          right: -50vw;
           top: 76.5%;
           height: 0;
           border-top: 1.5px solid rgba(121, 175, 182, 0.85);
@@ -140,14 +144,14 @@ export default function AboutRoom() {
           /* Measured writing area of the pad PNG (1536x1024): cream paper is
              x 33.7-66.1%, y 9.8-74.8%; we sit below the spiral binding with
              padding -> inset top/right/bottom/left. */
-          inset: 31% 39% 30% 39%;
+          inset: 31% 36% 30% 36%;
           display: flex;
           align-items: center;
           justify-content: center;
           font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace;
           /* intentionally undersized so it reads as written on the pad */
-          font-size: clamp(7px, 0.72vw, 11px);
-          line-height: 1.3;
+          font-size: clamp(6px, 0.6vw, 9.5px);
+          line-height: 1.32;
           letter-spacing: -0.01em;
           color: #1a1a18;
           text-align: center;

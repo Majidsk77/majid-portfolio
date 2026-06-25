@@ -156,30 +156,34 @@ export default function Mirror() {
         /* ── Contextual panel ───────────────────────────────── */
         .am-panel {
           position: absolute;
-          top: 14%;
+          /* vertically centered against the tall mirror so it reads as one unit */
+          top: 50%;
           /* mirror button left edge is 57.7%, but the PNG has transparent
              padding, so sitting near-flush to the box leaves a ~12-18px visual
              gap to the actual glass — reads as attached to the mirror */
           right: 39.8%;
-          width: clamp(240px, 29%, 360px);
+          /* wider so the copy wraps into fewer lines and isn't stretched tall */
+          width: clamp(280px, 35%, 408px);
           z-index: 3;
           background: #fffefb;
           border: 1.5px solid rgba(121, 175, 182, 0.55);
           border-radius: 16px;
-          padding: 22px 22px 24px;
+          padding: 20px 22px 22px;
           box-shadow: 0 6px 18px rgba(121, 175, 182, 0.14);
           color: #111110;
           opacity: 0;
-          /* grows out of the mirror edge: slide in from the right + subtle scale */
-          transform: translateX(18px) scale(0.96);
+          /* grows out of the mirror edge: slide in from the right + subtle scale.
+             translateY(-50%) keeps it vertically centered on the mirror. */
+          transform: translateY(-50%) translateX(18px) scale(0.96);
           transform-origin: right center;
           /* easeOutCubic — calm, premium, not springy */
           transition: opacity 0.28s cubic-bezier(0.215, 0.61, 0.355, 1),
                       transform 0.32s cubic-bezier(0.215, 0.61, 0.355, 1);
         }
-        .am-panel.is-open { opacity: 1; transform: translateX(0) scale(1); }
+        .am-panel.is-open { opacity: 1; transform: translateY(-50%) translateX(0) scale(1); }
         @media (prefers-reduced-motion: reduce) {
-          .am-panel { transition: none; transform: none; }
+          .am-panel { transition: none; transform: translateY(-50%); }
+          .am-panel.is-open { transform: translateY(-50%); }
         }
 
         .am-close {
@@ -190,9 +194,9 @@ export default function Mirror() {
           cursor: pointer; padding: 2px 6px; border-radius: 8px;
         }
         .am-close:hover { color: #111110; background: rgba(121,175,182,0.12); }
-        .am-title { font-size: 20px; font-weight: 500; margin: 0 0 12px; letter-spacing: -0.01em; }
-        .am-body  { font-size: 14px; line-height: 1.6; color: #4a4a47; margin: 0 0 14px; max-width: 34ch; }
-        .am-body:last-of-type { margin-bottom: 18px; }
+        .am-title { font-size: 19px; font-weight: 500; margin: 0 0 9px; letter-spacing: -0.01em; }
+        .am-body  { font-size: 13.5px; line-height: 1.5; color: #4a4a47; margin: 0 0 10px; }
+        .am-body:last-of-type { margin-bottom: 15px; }
         .am-funfact { font-weight: 500; color: #2f6a72; }
         .am-cta {
           font-family: inherit; font-size: 14px;
