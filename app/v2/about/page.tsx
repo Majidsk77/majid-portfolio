@@ -4,6 +4,7 @@ import NavV2 from '../NavV2'
 import FooterV2 from '../FooterV2'
 import Notepad from './Notepad'
 import Mirror from './Mirror'
+import VinylPlayer from './VinylPlayer'
 
 // About Me room — entered from the /v2 lobby's About Me world.
 // Reuses the /v2 nav, footer, and framed container. Inside, a warm teal
@@ -39,7 +40,6 @@ interface RoomArt {
 
 const ART: RoomArt[] = [
   { id: 'rug',      src: '/images/about/pixel-art-rug.png',         left: '1.8%',  top: '62.1%', width: '50.7%', ratio: '1536 / 1024' },
-  { id: 'vinyl',    src: '/images/about/pixel-art-vinyl-table.png', left: '1.8%',  top: '40.8%', width: '49%',   ratio: '1536 / 1024' },
   { id: 'painting', src: '/images/about/pixel-art-painting.png',    left: '12.8%', top: '15.6%', width: '26.8%', ratio: '1536 / 1024' },
 ]
 
@@ -84,6 +84,9 @@ export default function AboutRoom() {
                 style={{ left: a.left, top: a.top, width: a.width, aspectRatio: a.ratio }}
               />
             ))}
+
+            {/* Vinyl player — hover/focus reveals a Now Playing card (client island) */}
+            <VinylPlayer />
 
             {/* Notepad — click/Enter/Space cycles short notes (client island) */}
             <Notepad />
