@@ -460,27 +460,24 @@ export default function HomePageV2() {
           100% { background-position: 50% 100%; }
         }
         /* ── About card: portrait reveal ─────────────────────────────── */
+        /* Soft warm ambient wash — no hard edge, just blends into the card bg */
         .v2-about-glow {
           position: absolute;
-          width: calc(100% - 20px);
-          height: calc(100% - 4px);
-          border-radius: 9px;
-          background: rgba(246, 184, 148, 0.16);
-          box-shadow: 0 0 16px rgba(221, 132, 83, 0.14);
+          inset: 0;
+          border-radius: inherit;
+          background: radial-gradient(72% 70% at 50% 42%, rgba(246, 184, 148, 0.18), transparent 78%);
         }
+        /* Chromeless portrait holder — no border/bezel/background so the
+           transparent PNG sits directly on the card. A soft edge mask melts the
+           cropped silhouette into the card background. */
         .v2-about-frame {
           position: relative;
-          width: calc(100% - 24px);
+          width: 100%;
           height: 100%;
           overflow: hidden;
-          border: 1px solid rgba(160, 90, 40, 0.24);
-          border-radius: 8px;
-          background:
-            linear-gradient(180deg, rgba(255, 251, 246, 0.92), rgba(249, 229, 211, 0.72));
-          box-shadow:
-            0 5px 12px rgba(112, 66, 39, 0.13),
-            inset 0 0 0 1px rgba(255, 247, 238, 0.8);
           will-change: transform, opacity;
+          -webkit-mask-image: radial-gradient(115% 118% at 50% 38%, #000 60%, transparent 94%);
+          mask-image: radial-gradient(115% 118% at 50% 38%, #000 60%, transparent 94%);
         }
         .v2-about-image {
           display: block;
