@@ -235,43 +235,71 @@ function WorkOverlay({ visible }: { visible: boolean }) {
 // generative typography. Pure CSS transforms + opacity; clipped to card bounds.
 // Reduced motion: the same field simply fades in, static.
 
+// Deterministic pseudo-random so server + client render identically (no
+// hydration mismatch) while looking organically scattered — never gridded.
+function meRand(seed: number) {
+  const x = Math.sin(seed * 99.71) * 43758.5453
+  return x - Math.floor(x)
+}
+
 const ME_VARIANTS = ['me', 'ME', 'Me'] as const
-const ME_SWEEPS = ['v2MeStreamR', 'v2MeStreamL', 'v2MeStreamU', 'v2MeStreamD'] as const
+const ME_DRIFTS = ['v2MeDriftA', 'v2MeDriftB', 'v2MeDriftC'] as const
+// No-neon pastels: blue, mint, coral, yellow, lavender
+const ME_PASTELS = ['#bcd8f0', '#bfe8d4', '#f6c3b8', '#f3e4b0', '#d9cdf0'] as const
 
 interface MeWord {
   text: string
   size: number
   top: number
   left: number
-  opacity: number
-  sweep: string
+  maxOpacity: number
+  drift: string
   dur: number
   delay: number
 }
 
-// Composed field — a 5×6 grid with layered, deterministic variation so it feels
-// intentionally designed rather than a scatter of floating labels.
-const ME_FIELD: MeWord[] = (() => {
-  const out: MeWord[] = []
-  const rows = 5
-  const cols = 6
-  for (let r = 0; r < rows; r++) {
-    for (let c = 0; c < cols; c++) {
-      const i = r * cols + c
-      out.push({
-        text: ME_VARIANTS[(r + c) % ME_VARIANTS.length],
-        size: [12, 18, 27][(i * 7) % 3],
-        top: ((r + 0.5) / rows) * 100,
-        left: ((c + 0.5) / cols) * 100,
-        opacity: [0.16, 0.28, 0.46][(i * 5) % 3],
-        sweep: ME_SWEEPS[i % ME_SWEEPS.length],
-        dur: 5.5 + ((i * 3) % 5),
-        delay: -((i * 4) % 9),
-      })
-    }
+// A flowing current of "me" — scattered start points, mixed sizes, drifting
+// diagonally (bottom-left → top-right) at staggered speeds. Organic, not a grid.
+const ME_WORDS: MeWord[] = Array.from({ length: 16 }, (_, i) => {
+  const a = meRand(i + 1)
+  const b = meRand(i + 8.3)
+  const c = meRand(i + 17.1)
+  return {
+    text: ME_VARIANTS[i % ME_VARIANTS.length],
+    size: 12 + Math.round(a * 20),     // 12–32px
+    top: 8 + b * 80,                    // scattered vertical band
+    left: -6 + c * 66,                  // biased left so they travel rightward
+    maxOpacity: 0.24 + a * 0.32,        // varied peak (0.24–0.56)
+    drift: ME_DRIFTS[i % ME_DRIFTS.length],
+    dur: 7 + b * 7,                     // 7–14s, different speeds
+    delay: -(c * 13),                   // negative stagger → already mid-flow
   }
-  return out
-})()
+})
+
+interface Frag {
+  size: number
+  top: number
+  left: number
+  color: string
+  dur: number
+  delay: number
+}
+
+// Pastel pixel fragments riding the same diagonal current — little pieces of
+// digital identity. Kept sparse and low-opacity so they never get noisy.
+const ME_FRAGS: Frag[] = Array.from({ length: 26 }, (_, i) => {
+  const a = meRand(i + 3.7)
+  const b = meRand(i + 11.9)
+  const c = meRand(i + 23.4)
+  return {
+    size: 2 + Math.round(a * 4),        // 2–6px
+    top: 6 + b * 86,
+    left: -4 + c * 70,
+    color: ME_PASTELS[i % ME_PASTELS.length],
+    dur: 5 + a * 6,                     // 5–11s
+    delay: -(b * 11),
+  }
+})
 
 function AboutOverlay({ visible, reducedMotion }: { visible: boolean; reducedMotion: boolean }) {
   return (
@@ -284,30 +312,38 @@ function AboutOverlay({ visible, reducedMotion }: { visible: boolean; reducedMot
         pointerEvents: 'none',
         borderRadius: 'inherit',
         opacity: visible ? 1 : 0,
-        transition: 'opacity 0.4s ease',
+        transition: 'opacity 0.45s ease',
       }}
     >
-      {/* Faint pixel grid — evokes a small terminal/Game Boy screen */}
-      <span
-        style={{
-          position: 'absolute',
-          inset: 0,
-          backgroundImage: [
-            'repeating-linear-gradient(0deg, transparent, transparent 7px, rgba(26,26,24,0.05) 7px, rgba(26,26,24,0.05) 8px)',
-            'repeating-linear-gradient(90deg, transparent, transparent 7px, rgba(26,26,24,0.05) 7px, rgba(26,26,24,0.05) 8px)',
-          ].join(', '),
-          backgroundSize: '8px 8px',
-        }}
-      />
-      {/* The field of "me" — each word streams in its own direction */}
-      {ME_FIELD.map((w, i) => (
+      {/* Pastel pixel fragments — the trailing "digital fragments" of the stream */}
+      {ME_FRAGS.map((f, i) => (
         <span
-          key={i}
+          key={`f${i}`}
+          style={{
+            position: 'absolute',
+            top: `${f.top}%`,
+            left: `${f.left}%`,
+            width: `${f.size}px`,
+            height: `${f.size}px`,
+            background: f.color,
+            imageRendering: 'pixelated',
+            // reduced motion: a soft, static scatter
+            opacity: reducedMotion ? 0.5 : undefined,
+            animation: !reducedMotion ? `v2FragDrift ${f.dur}s linear ${f.delay}s infinite` : 'none',
+          }}
+        />
+      ))}
+
+      {/* The current of "me" — nested: wrapper sets scattered position + peak
+          opacity, inner span drifts/fades/rotates (opacity multiplies). */}
+      {ME_WORDS.map((w, i) => (
+        <span
+          key={`w${i}`}
           style={{
             position: 'absolute',
             top: `${w.top}%`,
             left: `${w.left}%`,
-            transform: 'translate(-50%, -50%)',
+            opacity: w.maxOpacity,
             lineHeight: 1,
           }}
         >
@@ -318,14 +354,12 @@ function AboutOverlay({ visible, reducedMotion }: { visible: boolean; reducedMot
               fontWeight: 700,
               fontSize: `${w.size}px`,
               lineHeight: 1,
-              letterSpacing: '0.06em',
+              letterSpacing: '0.05em',
               color: '#1a1a18',
-              opacity: w.opacity,
               whiteSpace: 'nowrap',
-              animation:
-                visible && !reducedMotion
-                  ? `${w.sweep} ${w.dur}s linear ${w.delay}s infinite`
-                  : 'none',
+              // reduced motion: composed static pose, fully shown
+              transform: reducedMotion ? 'rotate(-2deg)' : undefined,
+              animation: !reducedMotion ? `${w.drift} ${w.dur}s linear ${w.delay}s infinite` : 'none',
             }}
           >
             {w.text}
@@ -512,12 +546,34 @@ export default function HomePageV2() {
           50%  { background-position: 0% 0%; }
           100% { background-position: 50% 100%; }
         }
-        /* "me" field streams — each word drifts across the card; the overlay's
-           overflow:hidden keeps everything inside the card bounds */
-        @keyframes v2MeStreamR { from { transform: translateX(-150px); } to { transform: translateX(150px); } }
-        @keyframes v2MeStreamL { from { transform: translateX(150px); } to { transform: translateX(-150px); } }
-        @keyframes v2MeStreamU { from { transform: translateY(110px); } to { transform: translateY(-110px); } }
-        @keyframes v2MeStreamD { from { transform: translateY(-110px); } to { transform: translateY(110px); } }
+        /* "me" current — words drift diagonally bottom-left → top-right, fading
+           in and out with a touch of rotation/scale. Three variants give the
+           stream organic variety; overflow:hidden keeps it inside the card. */
+        @keyframes v2MeDriftA {
+          0%   { transform: translate(-26px, 26px) scale(0.85) rotate(-3deg); opacity: 0; }
+          22%  { opacity: 1; }
+          78%  { opacity: 1; }
+          100% { transform: translate(54px, -54px) scale(1.08) rotate(3deg); opacity: 0; }
+        }
+        @keyframes v2MeDriftB {
+          0%   { transform: translate(-18px, 22px) scale(0.95) rotate(2deg); opacity: 0; }
+          26%  { opacity: 1; }
+          74%  { opacity: 1; }
+          100% { transform: translate(62px, -66px) scale(1.0) rotate(-4deg); opacity: 0; }
+        }
+        @keyframes v2MeDriftC {
+          0%   { transform: translate(-34px, 30px) scale(0.8) rotate(4deg); opacity: 0; }
+          30%  { opacity: 1; }
+          70%  { opacity: 1; }
+          100% { transform: translate(46px, -50px) scale(1.12) rotate(-2deg); opacity: 0; }
+        }
+        /* Pastel pixel fragments ride the same diagonal current and fade out */
+        @keyframes v2FragDrift {
+          0%   { transform: translate(-12px, 12px) scale(0.8); opacity: 0; }
+          30%  { opacity: 1; }
+          70%  { opacity: 1; }
+          100% { transform: translate(42px, -44px) scale(1); opacity: 0; }
+        }
         @keyframes v2LabelGlitch {
           0%    { transform: translateX(0px); }
           8%    { transform: translateX(2px); }
