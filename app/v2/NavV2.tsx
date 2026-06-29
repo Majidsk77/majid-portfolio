@@ -424,7 +424,7 @@ function ContactDropdown({ onCopyEmail }: { onCopyEmail: () => void }) {
 
 // ── NavV2 ─────────────────────────────────────────────────────────────────────
 
-export default function NavV2() {
+export default function NavV2({ flow = false }: { flow?: boolean } = {}) {
   const [menuOpen, setMenuOpen] = useState(false)
   const { copied, copyEmail } = useEmailCopy()
 
@@ -448,7 +448,9 @@ export default function NavV2() {
       {/* ── Navbar ────────────────────────────────────── */}
       <nav
         style={{
-          position: 'fixed',
+          // `flow` makes the nav static (scrolls with the page) — used on V2
+          // case study pages; default stays fixed for the lobby/room pages.
+          position: flow ? 'static' : 'fixed',
           top: 0,
           left: 0,
           right: 0,

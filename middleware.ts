@@ -15,5 +15,7 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/work/:path*'],
+  // Protect both the production case studies and the V2 case study routes so an
+  // unlock started from /v2/work/* returns to the V2 page (via `from`).
+  matcher: ['/work/:path*', '/v2/work/:path*'],
 }

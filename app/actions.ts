@@ -8,7 +8,10 @@ export async function checkPassword(
   formData: FormData
 ): Promise<{ error: boolean }> {
   const password = formData.get('password') as string
-  const from = (formData.get('from') as string) || '/'
+  const rawFrom = (formData.get('from') as string) || '/'
+  // Only allow same-origin relative paths (e.g. /v2/work/google-boba) — guards
+  // against open redirects and preserves whichever route the user started from.
+  const from = rawFrom.startsWith('/') && !rawFrom.startsWith('//') ? rawFrom : '/'
 
   if (password === 'Majid2026//') {
     const store = await cookies()

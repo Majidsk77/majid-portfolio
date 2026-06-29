@@ -101,7 +101,7 @@ const FOUNDATION = [
 export default function GoogleBobaV2() {
   return (
     <div className={hanken.className} style={{ minHeight: '100dvh', display: 'flex', flexDirection: 'column', background: 'var(--bg)' }}>
-      <NavV2 />
+      <NavV2 flow />
 
       <main className="gb-main">
         {/* ── Hero ─────────────────────────────────────── */}
@@ -247,7 +247,8 @@ export default function GoogleBobaV2() {
           width: 100%;
           max-width: 1080px;
           margin: 0 auto;
-          padding: clamp(104px, 13vh, 132px) clamp(20px, 5vw, 48px) clamp(40px, 6vh, 72px);
+          /* nav is static (in flow) here, so only a modest top gap is needed */
+          padding: clamp(24px, 4vh, 44px) clamp(20px, 5vw, 48px) clamp(40px, 6vh, 72px);
         }
         .gb-kicker {
           display: block;
