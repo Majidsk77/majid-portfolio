@@ -23,7 +23,7 @@ interface World {
 
 const WORLDS: World[] = [
   { id: 'playground', label: 'AI Playground', href: '/v2/ai-playground' },
-  { id: 'work',       label: 'Selected Work',  href: '#' },
+  { id: 'work',       label: 'Selected Work',  href: '/v2/selected-work' },
   { id: 'about',      label: 'About Me',        href: '/v2/about' },
 ]
 
