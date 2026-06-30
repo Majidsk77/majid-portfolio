@@ -421,12 +421,10 @@ export default function HomePageV2() {
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(3, 1fr)',
               gap: '16px',
               width: '100%',
               maxWidth: '560px',
             }}
-            // Stack to single column below 480px
             className="worlds-grid"
           >
             {WORLDS.map(w => (
@@ -521,10 +519,16 @@ export default function HomePageV2() {
           94%   { transform: translateX(-1px); }
           100%  { transform: translateX(0px); }
         }
-        @media (max-width: 480px) {
-          .worlds-grid { grid-template-columns: 1fr; }
+        /* 3-col on desktop, 1-col on mobile (CSS class — not overridden by inline) */
+        .worlds-grid { grid-template-columns: repeat(3, 1fr); }
+        @media (max-width: 600px) {
+          .worlds-grid {
+            grid-template-columns: 1fr;
+            max-width: 340px;
+            gap: 14px;
+          }
         }
-        /* Touch devices: About portrait doesn't hover — show it always at rest */
+        /* Touch devices: About portrait visible at rest (no hover event on touch) */
         @media (hover: none) {
           .v2-about-glow { opacity: 0.6 !important; transform: scale(1) !important; }
           .v2-about-frame { opacity: 0.8 !important; transform: translateY(-3px) scale(1) !important; }

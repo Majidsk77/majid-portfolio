@@ -13,9 +13,9 @@ import { useEmailCopy, EmailCopyToast } from '@/components/EmailCopy'
 // No dedicated company logos exist in /public, so each item uses a tasteful
 // initials avatar as a fallback (see summary).
 const WORK_PROJECTS: { name: string; href: string; initials: string; color: string }[] = [
-  { name: 'Google Boba',    href: '/work/google-boba',   initials: 'GB',  color: '#eef2f8' },
-  { name: 'Exact.com',      href: '/work/exact',         initials: 'E',   color: '#eaf3ee' },
-  { name: 'IMC Prosperity', href: '/work/imc-prosperity', initials: 'IMC', color: '#f3eef7' },
+  { name: 'Google Boba',    href: '/v2/work/google-boba',    initials: 'GB',  color: '#eef2f8' },
+  { name: 'Exact.com',      href: '/v2/work/exact',          initials: 'E',   color: '#eaf3ee' },
+  { name: 'IMC Prosperity', href: '/v2/work/imc-prosperity', initials: 'IMC', color: '#f3eef7' },
 ]
 
 // ── Chevron-down icon (matches Figma ionicons chevron-down-outline) ───────────
@@ -558,47 +558,82 @@ export default function NavV2({ flow = false }: { flow?: boolean } = {}) {
           transition: 'opacity 0.3s ease',
         }}
       >
+        {/* Primary links */}
         {[
-          { label: 'Work',    href: '/#work',  chevron: true,  copy: false },
-          { label: 'About',   href: '/v2/about', chevron: false, copy: false },
-          { label: 'Contact', href: '',         chevron: true,  copy: true  },
-        ].map((item, i) => {
-          const itemStyle: React.CSSProperties = {
+          { label: 'Work',    href: '/v2/selected-work' },
+          { label: 'About',   href: '/v2/about' },
+        ].map((item, i) => (
+          <Link
+            key={item.label}
+            href={item.href}
+            onClick={close}
+            style={{
+              fontSize: '36px',
+              fontWeight: 400,
+              color: '#111110',
+              textDecoration: 'none',
+              letterSpacing: '-0.02em',
+              opacity: menuOpen ? 1 : 0,
+              transform: menuOpen ? 'translateY(0)' : 'translateY(10px)',
+              transition: `opacity 0.3s ease ${i * 60}ms, transform 0.3s ease ${i * 60}ms`,
+            }}
+          >
+            {item.label}
+          </Link>
+        ))}
+
+        {/* Case study sub-links */}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '10px',
+            opacity: menuOpen ? 1 : 0,
+            transform: menuOpen ? 'translateY(0)' : 'translateY(10px)',
+            transition: 'opacity 0.3s ease 120ms, transform 0.3s ease 120ms',
+          }}
+        >
+          {WORK_PROJECTS.map(p => (
+            <Link
+              key={p.href}
+              href={p.href}
+              onClick={close}
+              style={{
+                fontSize: '16px',
+                color: '#6b6b67',
+                textDecoration: 'none',
+                letterSpacing: '-0.01em',
+                padding: '6px 14px',
+                borderRadius: '20px',
+                border: '1px solid rgba(17,17,16,0.12)',
+              }}
+            >
+              {p.name}
+            </Link>
+          ))}
+        </div>
+
+        {/* Contact — copies email */}
+        <button
+          type="button"
+          onClick={() => { copyEmail(); close() }}
+          style={{
             fontSize: '36px',
             fontWeight: 400,
             color: '#111110',
-            textDecoration: 'none',
             letterSpacing: '-0.02em',
             opacity: menuOpen ? 1 : 0,
             transform: menuOpen ? 'translateY(0)' : 'translateY(10px)',
-            transition: `opacity 0.3s ease ${i * 60}ms, transform 0.3s ease ${i * 60}ms`,
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '8px',
+            transition: 'opacity 0.3s ease 180ms, transform 0.3s ease 180ms',
             background: 'none',
             border: 'none',
             cursor: 'pointer',
             fontFamily: 'inherit',
-          }
-
-          if (item.copy) {
-            return (
-              <button
-                key={item.label}
-                type="button"
-                onClick={() => { copyEmail(); close() }}
-                style={itemStyle}
-              >
-                {item.label}
-              </button>
-            )
-          }
-          return (
-            <Link key={item.label} href={item.href} onClick={close} style={itemStyle}>
-              {item.label}
-            </Link>
-          )
-        })}
+          }}
+        >
+          Contact
+        </button>
       </div>
 
       <EmailCopyToast copied={copied} />

@@ -86,9 +86,6 @@ export default function Mirror() {
         />
       </button>
 
-      {/* Mobile backdrop — covers screen when panel is open */}
-      {open && <div className="am-backdrop" aria-hidden="true" />}
-
       {/* Contextual About panel beside the mirror */}
       <div
         ref={panelRef}
@@ -235,32 +232,28 @@ export default function Mirror() {
           .am-cta:focus-visible .am-cta-arrow { transform: none; }
         }
 
-        /* Mobile — panel becomes a fixed bottom drawer with a backdrop */
-        .am-backdrop { display: none; }
+        /* Mobile — mirror stays as a relative box; panel flows inline below it */
         @media (max-width: 760px) {
-          .am-backdrop {
-            display: block;
-            position: fixed;
-            inset: 0;
-            background: rgba(17,17,16,0.35);
-            z-index: 98;
+          .am-mirror {
+            position: relative !important;
+            left: auto !important;
+            top: auto !important;
+            width: 180px !important;
           }
           .am-panel {
-            position: fixed !important;
-            bottom: 28px !important;
-            left: 16px !important;
-            right: 16px !important;
-            width: auto !important;
+            position: static !important;
+            width: min(90vw, 340px) !important;
+            margin: 12px auto 0 !important;
+            transform: translateY(6px) scale(0.98) !important;
+            right: auto !important;
             top: auto !important;
-            transform: translateY(12px) scale(0.97) !important;
-            transform-origin: bottom center;
-            z-index: 99;
-            border-radius: 20px;
           }
           .am-panel.is-open {
             transform: translateY(0) scale(1) !important;
             opacity: 1;
           }
+          .am-title { font-size: 17px; }
+          .am-body { font-size: 13px; }
         }
         @media (max-width: 760px) and (prefers-reduced-motion: reduce) {
           .am-panel { transform: none !important; }
