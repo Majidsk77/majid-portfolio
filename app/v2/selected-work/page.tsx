@@ -30,6 +30,16 @@ const PROJECTS: Project[] = [
 export default function SelectedWorkRoom() {
   return (
     <RoomFrame contentStyle={{ alignItems: 'center', justifyContent: 'center' }}>
+      {/* Decorative 8-bit clouds — atmospheric, sit behind the cards */}
+      <div className="sw-clouds" aria-hidden="true">
+        <span className="sw-cloud sw-cloud--1" />
+        <span className="sw-cloud sw-cloud--2" />
+        <span className="sw-cloud sw-cloud--3" />
+        <span className="sw-cloud sw-cloud--4" />
+        <span className="sw-cloud sw-cloud--5" />
+        <span className="sw-cloud sw-cloud--6" />
+      </div>
+
       <div className="sw-grid">
         {PROJECTS.map(p => (
           <Link
@@ -39,6 +49,8 @@ export default function SelectedWorkRoom() {
             aria-label={`${p.name} — open case study`}
             style={{ ['--fill' as string]: p.fill, ['--lip' as string]: p.lip }}
           >
+            {/* Character-select arrow — appears above the active project */}
+            <span className="sw-arrow" aria-hidden="true" />
             <span className="sw-thumb">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={p.thumb} alt="" aria-hidden="true" />
@@ -50,6 +62,8 @@ export default function SelectedWorkRoom() {
 
       <style>{`
         .sw-grid {
+          position: relative;
+          z-index: 1;
           display: grid;
           grid-template-columns: repeat(3, 1fr);
           gap: clamp(20px, 3vw, 44px);
@@ -58,12 +72,83 @@ export default function SelectedWorkRoom() {
           margin: 0 auto;
         }
         .sw-card {
+          position: relative;
           display: flex;
           flex-direction: column;
           align-items: center;
           gap: 22px;
           text-decoration: none;
           outline: none;
+        }
+
+        /* ── 8-bit clouds — pixel silhouettes drawn with box-shadow ────────── */
+        .sw-clouds {
+          position: absolute;
+          inset: 0;
+          z-index: 0;
+          pointer-events: none;
+          overflow: hidden;
+          border-radius: inherit;
+        }
+        .sw-cloud {
+          position: absolute;
+          width: 6px; height: 6px;
+          background: transparent;
+          opacity: 0.6;
+          image-rendering: pixelated;
+          --c: #c4def0;
+          box-shadow:
+            0 18px 0 var(--c), 6px 18px 0 var(--c), 12px 18px 0 var(--c), 18px 18px 0 var(--c), 24px 18px 0 var(--c), 30px 18px 0 var(--c), 36px 18px 0 var(--c), 42px 18px 0 var(--c), 48px 18px 0 var(--c), 54px 18px 0 var(--c),
+            6px 12px 0 var(--c), 12px 12px 0 var(--c), 18px 12px 0 var(--c), 24px 12px 0 var(--c), 30px 12px 0 var(--c), 36px 12px 0 var(--c), 42px 12px 0 var(--c), 48px 12px 0 var(--c),
+            12px 6px 0 var(--c), 18px 6px 0 var(--c), 24px 6px 0 var(--c), 30px 6px 0 var(--c), 36px 6px 0 var(--c), 42px 6px 0 var(--c),
+            18px 0 0 var(--c), 24px 0 0 var(--c), 30px 0 0 var(--c);
+        }
+        .sw-cloud--1 { left: 4%;  top: 15%; transform: scale(1); }
+        .sw-cloud--2 { left: 84%; top: 11%; transform: scale(1.1); }
+        .sw-cloud--3 { left: 1%;  top: 47%; transform: scale(0.8); opacity: 0.5; }
+        .sw-cloud--4 { left: 9%;  top: 80%; transform: scale(1); }
+        .sw-cloud--5 { left: 60%; top: 72%; transform: scale(0.9); opacity: 0.5; }
+        .sw-cloud--6 { left: 82%; top: 82%; transform: scale(1.05); }
+        @media (prefers-reduced-motion: no-preference) {
+          .sw-cloud { animation: swDrift 9s ease-in-out infinite alternate; }
+          .sw-cloud--2 { animation-duration: 11s; }
+          .sw-cloud--3 { animation-duration: 7.5s; }
+          .sw-cloud--4 { animation-duration: 10s; }
+          .sw-cloud--5 { animation-duration: 8.5s; }
+          .sw-cloud--6 { animation-duration: 12s; }
+        }
+        @keyframes swDrift {
+          from { translate: 0 0; }
+          to   { translate: 6px 0; }
+        }
+
+        /* ── Character-select arrow — pixel down-triangle above the card ───── */
+        .sw-arrow {
+          position: absolute;
+          top: -32px;
+          left: 50%;
+          margin-left: -18px;     /* half the ~36px triangle width */
+          width: 6px; height: 6px;
+          background: var(--lip);
+          image-rendering: pixelated;
+          opacity: 0;
+          pointer-events: none;
+          transition: opacity 0.15s steps(2, end);
+          box-shadow:
+            0 0 0 var(--lip), 6px 0 0 var(--lip), 12px 0 0 var(--lip), 18px 0 0 var(--lip), 24px 0 0 var(--lip), 30px 0 0 var(--lip), 36px 0 0 var(--lip),
+            6px 6px 0 var(--lip), 12px 6px 0 var(--lip), 18px 6px 0 var(--lip), 24px 6px 0 var(--lip), 30px 6px 0 var(--lip),
+            12px 12px 0 var(--lip), 18px 12px 0 var(--lip), 24px 12px 0 var(--lip),
+            18px 18px 0 var(--lip);
+        }
+        .sw-card:hover .sw-arrow,
+        .sw-card:focus-visible .sw-arrow { opacity: 1; }
+        @media (prefers-reduced-motion: no-preference) {
+          .sw-card:hover .sw-arrow,
+          .sw-card:focus-visible .sw-arrow { animation: swArrowBounce 0.6s steps(2, end) infinite alternate; }
+        }
+        @keyframes swArrowBounce {
+          from { transform: translateY(0); }
+          to   { transform: translateY(6px); }
         }
         /* Thumbnail */
         .sw-thumb {
