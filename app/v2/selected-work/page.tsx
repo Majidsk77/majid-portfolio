@@ -24,7 +24,7 @@ interface Project {
 const PROJECTS: Project[] = [
   { name: 'Google Boba',    href: '/v2/work/google-boba', thumb: '/images/boba-hero.png',        fill: '#d9c9f6', lip: '#b69fe6' },
   { name: 'Exact.com',      href: '/v2/work/exact',      thumb: '/images/exact-hero.png',       fill: '#f8c4bf', lip: '#e89a92' },
-  { name: 'IMC Prosperity', href: '/work/imc-prosperity', thumb: '/images/prosperity-island.png', fill: '#bdd9f1', lip: '#90bce2' },
+  { name: 'IMC Prosperity', href: '/work/imc-prosperity', thumb: '/images/prosperity-outpost.png', fill: '#bdd9f1', lip: '#90bce2' },
 ]
 
 export default function SelectedWorkRoom() {
@@ -46,7 +46,7 @@ export default function SelectedWorkRoom() {
             key={p.href}
             href={p.href}
             className="sw-card"
-            aria-label={`${p.name} — open case study`}
+            aria-label={`${p.name}, open case study`}
             style={{ ['--fill' as string]: p.fill, ['--lip' as string]: p.lip }}
           >
             {/* Character-select arrow — appears above the active project */}

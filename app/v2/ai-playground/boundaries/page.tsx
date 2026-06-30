@@ -57,7 +57,7 @@ function Phone({ src, alt }: { src: string; alt: string }) {
 }
 
 const FEATURES = [
-  { title: 'Habit boundary tracking', body: 'Track the things you want to stop doing — social media, alcohol, impulse buys, anything.' },
+  { title: 'Habit boundary tracking', body: 'Track the things you want to stop doing: social media, alcohol, impulse buys, anything.' },
   { title: 'Streaks & monthly achievements', body: 'Stay motivated with streaks and monthly milestones.' },
   { title: 'Immediate distraction tools', body: 'A quick redirect the moment temptation strikes.' },
   { title: 'Breathing exercises', body: 'Calm the urge in the moment.' },
@@ -120,13 +120,13 @@ export default function BoundariesPage() {
         <Section kicker="The idea" heading="A friendlier way to quit.">
           <p className="bd-body">
             Boundaries helps people build healthier habits by tracking the things they want to
-            stop doing — reducing social media, quitting alcohol, avoiding impulse purchases, or
+            stop doing: reducing social media, quitting alcohol, avoiding impulse purchases, or
             breaking any other habit. The focus is on making boundary-setting a consistent,
             engaging practice rather than a chore.
           </p>
           <p className="bd-body">
             Alongside streaks and monthly achievements, the app offers immediate distractions when
-            temptation strikes — breathing exercises and physical challenges — and lets users add
+            temptation strikes (breathing exercises and physical challenges) and lets users add
             friends to keep each other accountable and celebrate progress together.
           </p>
         </Section>
@@ -154,7 +154,7 @@ export default function BoundariesPage() {
         {/* ── Build process ────────────────────────────── */}
         <Section kicker="Build process" heading="Designed and built solo, with AI.">
           <p className="bd-body">
-            I designed and built the entire prototype myself — using GPT-4 for ideation and
+            I designed and built the entire prototype myself, using GPT-4 for ideation and
             prompting, Claude Code for implementation, and Supabase for authentication and user
             management. The biggest challenge was balancing a simple, intuitive experience with
             enough personality to make the product stand out.
@@ -165,7 +165,7 @@ export default function BoundariesPage() {
         <Section kicker="Next phase" heading="From prototype to native.">
           <p className="bd-body">
             Boundaries is currently a published prototype. The next phase focuses on developing a
-            stronger visual identity and rebuilding it as a native app — enabling features like
+            stronger visual identity and rebuilding it as a native app, enabling features like
             real-time accountability notifications when users need support most.
           </p>
           <a className="bd-cta bd-cta--inline" href={PROTOTYPE_URL} target="_blank" rel="noopener noreferrer">

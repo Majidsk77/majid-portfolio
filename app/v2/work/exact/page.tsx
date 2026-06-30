@@ -87,15 +87,15 @@ function Section({ kicker, heading, children }: { kicker: string; heading: strin
 }
 
 const PROCESS = [
-  { title: 'Journey mapping', body: 'I mapped journeys across four customer types — accountants, CFOs, small business owners, and large business owners — surfacing how each moved through the site, which pages they hit, and where the experience failed them.' },
+  { title: 'Journey mapping', body: 'I mapped journeys across four customer types: accountants, CFOs, small business owners, and large business owners. For each, I surfaced how they moved through the site, which pages they hit, and where the experience failed them.' },
   { title: 'Page identification', body: 'From the journey maps I identified the core pages within those journeys that needed the most attention, and defined which were in scope.' },
-  { title: 'Template definition', body: 'I defined page templates to structure content and functionality — each establishing a content hierarchy and narrative logic for its page type: the architecture the visual layer would later carry.' },
+  { title: 'Template definition', body: 'I defined page templates to structure content and functionality, each establishing a content hierarchy and narrative logic for its page type: the architecture the visual layer would later carry.' },
   { title: 'Wireframing', body: 'I developed wireframes through iterative client review cycles, translating templates into detailed layouts ready to hand to the visual design team.' },
 ]
 
 const DECISIONS = [
   { title: 'Architecture as the argument', body: 'On a platform this complex, the page structure is the experience. Before wireframing a screen, I mapped what each page type needed to do, in what order, and for whom. Template logic came first; individual page decisions followed from it.' },
-  { title: 'Four audiences, without losing specificity', body: 'Accountants, CFOs, small business owners, and large business owners share one platform but need fundamentally different entry points. Journey mapping made those distinctions explicit in the structure — each audience got a path built for them, without four separate sites.' },
+  { title: 'Four audiences, without losing specificity', body: 'Accountants, CFOs, small business owners, and large business owners share one platform but need fundamentally different entry points. Journey mapping made those distinctions explicit in the structure, so each audience got a path built for them, without four separate sites.' },
   { title: 'Wireframes as alignment tools', body: 'Review ran across stakeholders with different priorities, so I built wireframes to be read by non-designers: decisions explicit, hierarchy visible, rationale embedded. The goal was shared understanding of structure before visual design.' },
 ]
 
@@ -124,7 +124,7 @@ export default function ExactV2() {
         {/* ── Overview ─────────────────────────────────── */}
         <Section kicker="Overview" heading="17 templates. 4 audiences. Launching 2026.">
           <p className="gb-body">
-            I led the UX process end-to-end for Exact&apos;s full website overhaul — from scoping
+            I led the UX process end-to-end for Exact&apos;s full website overhaul: from scoping
             workshops and journey mapping through template definition, wireframing, and client
             handover. The work delivered the complete UX foundation for a major platform redesign,
             now approved by stakeholders and launching in 2026 alongside a new brand direction.
@@ -148,13 +148,13 @@ export default function ExactV2() {
           <p className="gb-body">
             Exact&apos;s existing website was highly information-dense, with heavy cross-linking and
             limited narrative structure. It worked for existing users who already understood the
-            product landscape, but lacked clarity for new visitors — especially those outside
+            product landscape, but lacked clarity for new visitors, especially those outside
             Exact&apos;s traditional accountant audience.
           </p>
           <p className="gb-body">
             The challenge was threefold: restructure the platform to communicate value more
             clearly, support a broader audience including CFOs and entrepreneurs, and align with an
-            upcoming brand direction — all while respecting existing content and avoiding
+            upcoming brand direction, all while respecting existing content and avoiding
             disruption to live product pages.
           </p>
         </Section>
@@ -217,7 +217,7 @@ export default function ExactV2() {
         {/* ── Final solution ───────────────────────────── */}
         <Section kicker="Final solution" heading="Structure first. Story second.">
           <p className="gb-body">
-            I designed the core structure and key pages of the new platform — applying visual design
+            I designed the core structure and key pages of the new platform, applying visual design
             on top of the UX architecture.
           </p>
         </Section>
@@ -232,12 +232,12 @@ export default function ExactV2() {
 
         <Section kicker="" heading="">
           <p className="gb-body">
-            <strong className="gb-strong">Homepage</strong> — introduces Exact, communicates core
-            value, and guides each audience toward the right product area: set the stage, show
+            <strong className="gb-strong">Homepage:</strong> introduces Exact, communicates core
+            value, and guides each audience toward the right product area. Set the stage, show
             what&apos;s on offer, demonstrate who it&apos;s for, prove why Exact is the expert.
           </p>
           <p className="gb-body">
-            <strong className="gb-strong">Capability pages</strong> — show what the software enables,
+            <strong className="gb-strong">Capability pages:</strong> show what the software enables,
             prove its importance, and connect it to specific products, bridging problem-awareness
             and product consideration.
           </p>
@@ -248,7 +248,7 @@ export default function ExactV2() {
             { src: 'exact-knowledge-hub-wireframe.png', alt: 'Knowledge hub wireframe' },
             { src: 'exact-knowledge-hub-design.png', alt: 'Knowledge hub hi-fi design' },
           ]}
-          caption="Knowledge hub, wireframe to hi-fi — a content destination structured around audience needs and formats."
+          caption="Knowledge hub, wireframe to hi-fi: a content destination structured around audience needs and formats."
         />
 
         <Grid2
@@ -256,17 +256,17 @@ export default function ExactV2() {
             { src: 'exact-product-detail-wireframe.png', alt: 'Product detail page wireframe' },
             { src: 'exact-product-detail-design.png', alt: 'Product detail page hi-fi design' },
           ]}
-          caption="Product detail page, wireframe to hi-fi — from product promise to plans and pricing."
+          caption="Product detail page, wireframe to hi-fi: from product promise to plans and pricing."
         />
 
         <Section kicker="" heading="">
           <p className="gb-body">
-            <strong className="gb-strong">Knowledge hub</strong> — a destination for thought
+            <strong className="gb-strong">Knowledge hub:</strong> a destination for thought
             leadership, articles, and videos, structured around audience needs and content formats
             rather than a flat chronological feed.
           </p>
           <p className="gb-body">
-            <strong className="gb-strong">Product detail pages</strong> — connect Exact&apos;s value
+            <strong className="gb-strong">Product detail pages:</strong> connect Exact&apos;s value
             proposition to specific features, show impact through customer stories, and guide users
             toward trial or purchase.
           </p>
@@ -277,14 +277,14 @@ export default function ExactV2() {
           <p className="gb-body">
             Leading this end-to-end made one thing concrete: on a marketing platform of this
             complexity, the information architecture is the product strategy. Getting the template
-            logic right — what each page needed to do, and in what sequence — was more consequential
+            logic right (what each page needed to do, and in what sequence) was more consequential
             than any single design decision. The structure either earns attention or loses it before
             the visual layer ever gets a chance.
           </p>
           <p className="gb-body">
             Working across four distinct audiences also sharpened something less visible: holding
             competing priorities without collapsing them into one compromise. Each audience had
-            legitimate, different needs — the design work was making those distinctions explicit and
+            legitimate, different needs. The design work was making those distinctions explicit and
             buildable, not smoothing them over.
           </p>
         </Section>

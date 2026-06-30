@@ -52,7 +52,7 @@ export default function Mirror() {
         type="button"
         className="ab-obj am-mirror"
         style={{ left: '57.7%', top: '10.7%', width: '32.3%' }}
-        aria-label="Standing mirror — open a little about me"
+        aria-label="Standing mirror: open a little about me"
         aria-haspopup="dialog"
         aria-expanded={open}
         onClick={() => setOpen(o => !o)}

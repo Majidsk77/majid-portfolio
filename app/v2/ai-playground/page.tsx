@@ -27,7 +27,7 @@ interface Toy {
 
 const TOYS: Toy[] = [
   { id: 'bunny',    label: '8-bit bunny',         src: '/images/playground/bunny.png',    href: '#', left: '3.9%',  top: '16.9%', width: '18.3%' },
-  { id: 'coin',     label: 'Boundaries — an AI Playground experiment', src: '/images/playground/coin.png', href: '/v2/ai-playground/boundaries', left: '43.6%', top: '40.5%', width: '12.8%' },
+  { id: 'coin',     label: 'Boundaries: an AI Playground experiment', src: '/images/playground/coin.png', href: '/v2/ai-playground/boundaries', left: '43.6%', top: '40.5%', width: '12.8%' },
   { id: 'building', label: '8-bit building',      src: '/images/playground/building.png', href: '#', left: '67.6%', top: '41.3%', width: '23.5%' },
   { id: 'farewell', label: '8-bit farewell card', src: '/images/playground/farewell.png', href: '#', left: '22.2%', top: '62.4%', width: '14.9%' },
 ]

@@ -79,7 +79,7 @@ function Section({ kicker, heading, children }: { kicker: string; heading: strin
 const DECISIONS = [
   {
     title: 'Extend Material 3 into physical space',
-    body: 'Boba screens are architectural, not web or mobile. Rather than overriding Google’s design language, I extended it — adapting tokens, shapes, and components for spatial scale without breaking the system logic.',
+    body: ‘Boba screens are architectural, not web or mobile. Rather than overriding Google’s design language, I extended it, adapting tokens, shapes, and components for spatial scale without breaking the system logic.’,
   },
   {
     title: 'Tokens as the scaling mechanism',
@@ -92,7 +92,7 @@ const DECISIONS = [
 ]
 
 const FOUNDATION = [
-  'Core system tokens — color, spacing, shape, motion',
+  'Core system tokens: color, spacing, shape, motion',
   'Component foundations and variant structures',
   'A Material 3 extension for spatial, physical-screen contexts',
   'An organic shape language that sets Boba apart from standard Material surfaces',
@@ -124,7 +124,7 @@ export default function GoogleBobaV2() {
         <Section kicker="Overview" heading="Launched in Paris & Munich. Rolling out globally.">
           <p className="gb-body">
             The Google Boba design system launched across event spaces in Paris and Munich in
-            February 2026 — the first release of a scalable foundation that carries Google&apos;s
+            February 2026, the first release of a scalable foundation that carries Google&apos;s
             design principles into physical, interactive environments. I owned the system
             architecture: the tokens, components, and spatial variants behind every Boba screen.
           </p>
@@ -146,7 +146,7 @@ export default function GoogleBobaV2() {
         <Section kicker="Challenge" heading="Standard tools weren't built for this.">
           <p className="gb-body">
             Boba screens are large-format touchscreens that vary widely in scale, layout, and
-            physical context. Material 3 alone couldn&apos;t carry that — its components were
+            physical context. Material 3 alone couldn&apos;t carry that; its components were
             never designed with spatial environments in mind. The system had to stay
             unmistakably Google while adapting to a fundamentally different physical-digital space.
           </p>
@@ -161,7 +161,7 @@ export default function GoogleBobaV2() {
         {/* ── Process ──────────────────────────────────── */}
         <Section kicker="Process" heading="Owning the system foundation.">
           <p className="gb-body">
-            I joined in a later phase and took ownership of the v1.0 design system foundation —
+            I joined in a later phase and took ownership of the v1.0 design system foundation,
             defining the tokens, components, and variants needed to scale across event-space
             screens, working closely with the specialist who led the template layer.
           </p>
@@ -204,7 +204,7 @@ export default function GoogleBobaV2() {
         <Section kicker="Final solution" heading="A system built for space.">
           <p className="gb-body">
             The result: a reusable design system tailored to interactive event environments. An
-            organic shape language — soft blobs and rounded forms — distinguishes Boba from
+            organic shape language (soft blobs and rounded forms) distinguishes Boba from
             standard Material surfaces, while a purple token system flexes across dark and light
             screens. It shipped at v1.0 as the foundation for every future Boba deployment.
           </p>
@@ -219,7 +219,7 @@ export default function GoogleBobaV2() {
         {/* ── Reflection ───────────────────────────────── */}
         <Section kicker="Reflection" heading="Coherence over novelty.">
           <p className="gb-body">
-            The constraint here wasn&apos;t freedom — it was coherence. Extending Material 3 into a
+            The constraint here wasn&apos;t freedom; it was coherence. Extending Material 3 into a
             new physical context meant knowing exactly which decisions were mine and which had to
             stay anchored to Google&apos;s design language. Joining mid-phase also made scope
             clarity concrete as a design skill: a system that tries to do everything ends up
