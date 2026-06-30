@@ -163,10 +163,6 @@ export default function AboutRoom() {
 
         /* Mobile — vertical stack; frame grows to fit content */
         @media (max-width: 760px) {
-          .v2-room-frame {
-            overflow: visible;
-            align-self: auto;
-          }
           .ab-stage {
             aspect-ratio: auto;
             width: 100%;

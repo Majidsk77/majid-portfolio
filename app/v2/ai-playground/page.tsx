@@ -193,10 +193,6 @@ export default function AiPlaygroundRoom() {
 
         /* Mobile — vertical stack, title at top, frame grows to fit */
         @media (max-width: 760px) {
-          .v2-room-frame {
-            overflow: visible;
-            align-self: auto;
-          }
           .pg-scene {
             display: flex;
             flex-direction: column;

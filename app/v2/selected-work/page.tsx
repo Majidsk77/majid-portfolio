@@ -220,10 +220,9 @@ export default function SelectedWorkRoom() {
           .sw-grid { grid-template-columns: repeat(2, 1fr); max-width: 560px; }
         }
         @media (max-width: 560px) {
-          /* Frame must grow to fit stacked cards — not clip them */
-          .v2-room-frame { overflow: visible; align-self: auto; }
           .sw-grid { grid-template-columns: 1fr; max-width: 360px; gap: 32px; }
-          /* Arrow sits above the card; ensure it doesn't overflow the grid */
+          /* Frame must be visible so the pixel arrow above the first card isn't clipped */
+          .v2-room-frame { overflow: visible; }
           .sw-arrow { top: -24px; }
         }
       `}</style>

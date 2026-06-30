@@ -32,13 +32,12 @@ export default function RoomFrame({
     <div
       className={hanken.className}
       style={{
-        // Exact viewport height so nav + room + footer fit without page scroll
-        // on desktop; the container scrolls on short/mobile viewports instead.
-        height: '100dvh',
+        // minHeight: document grows with content on mobile; content fits in 100dvh
+        // on desktop. Native document scroll — no height lock, no scroll jail.
+        minHeight: '100dvh',
         display: 'flex',
         flexDirection: 'column',
         background: 'var(--bg)',
-        overflowY: 'auto',
       }}
     >
       <NavV2 />
