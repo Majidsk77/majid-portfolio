@@ -223,18 +223,19 @@ export default function BoundariesPage() {
         .bd-cta:hover .bd-cta-arrow { transform: translate(2px, -2px); }
         .bd-cta--inline { margin-top: 26px; }
 
-        /* Device showcase + galleries */
+        /* Device showcase + galleries — one shared phone width token so every
+           screen is sized identically across the page */
         .bd-stage {
           display: flex; align-items: center; justify-content: center;
-          gap: clamp(14px, 3vw, 32px);
+          gap: clamp(16px, 2.6vw, 28px);
           margin: clamp(40px, 7vh, 80px) 0;
           flex-wrap: wrap;
         }
-        .bd-stage-phone { width: clamp(180px, 24vw, 248px); }
-        .bd-stage-center { transform: translateY(-14px); }
+        .bd-stage-phone { width: clamp(170px, 22vw, 232px); }
+        .bd-stage-center { transform: translateY(-16px); }
         .bd-phone {
           position: relative; width: 100%; overflow: hidden;
-          border-radius: 28px; background: #ece7df;
+          border-radius: 26px; background: #ece7df;
           border: 1px solid rgba(17,17,16,0.08);
           box-shadow: 0 10px 26px rgba(17,17,16,0.12);
           transition: transform 0.28s cubic-bezier(0.22,1,0.36,1), box-shadow 0.28s ease;
@@ -246,32 +247,35 @@ export default function BoundariesPage() {
           display: grid; grid-template-columns: repeat(3, 1fr);
           gap: clamp(16px, 2.6vw, 28px);
           justify-items: center;
-          max-width: 860px; margin: clamp(40px, 7vh, 80px) auto 0;
+          max-width: 760px; margin: clamp(56px, 8vh, 96px) auto 0;
         }
-        .bd-gallery .bd-phone { width: 100%; max-width: 260px; }
+        .bd-gallery .bd-phone { width: 100%; max-width: 232px; }
 
-        /* Meta */
+        /* Meta — aligned to the section column for a consistent max-width */
         .bd-meta {
           display: flex; flex-wrap: wrap; gap: clamp(24px, 5vw, 56px);
-          margin: clamp(32px, 5vh, 56px) 0 0; padding-top: 28px;
+          max-width: 660px;
+          margin: clamp(48px, 7vh, 80px) auto 0; padding-top: 28px;
           border-top: 1px solid rgba(17,17,16,0.10);
         }
         .bd-meta div { display: flex; flex-direction: column; gap: 4px; }
         .bd-meta dt { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: #a8a8a3; }
         .bd-meta dd { margin: 0; font-size: 15px; color: #111110; }
 
-        /* Sections */
-        .bd-section { max-width: 660px; margin: clamp(64px, 10vh, 120px) auto clamp(24px, 4vh, 40px); }
-        .bd-heading { font-size: clamp(26px, 3.4vw, 38px); font-weight: 500; line-height: 1.15; letter-spacing: -0.02em; color: #111110; margin: 0 0 20px; }
+        /* Sections — same column + vertical rhythm as the Google Boba case study */
+        .bd-section { max-width: 660px; margin: clamp(72px, 11vh, 132px) auto clamp(28px, 4vh, 44px); }
+        .bd-heading { font-size: clamp(26px, 3.4vw, 38px); font-weight: 500; line-height: 1.15; letter-spacing: -0.02em; color: #111110; margin: 0 0 22px; }
         .bd-body { font-size: 17px; line-height: 1.75; color: #56564f; margin: 0 0 18px; }
 
-        /* Feature cards */
+        /* Feature cards — equal height, consistent padding */
         .bd-features {
           display: grid; grid-template-columns: repeat(2, 1fr);
           gap: 14px; margin-top: 6px;
+          align-items: stretch;
         }
         .bd-feature {
-          padding: 20px 20px 22px; border-radius: 16px;
+          display: flex; flex-direction: column; gap: 6px;
+          padding: 22px; border-radius: 16px;
           background: #fffdf8; border: 1px solid rgba(99,102,241,0.18);
           transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
         }
