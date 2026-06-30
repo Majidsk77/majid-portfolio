@@ -86,6 +86,9 @@ export default function Mirror() {
         />
       </button>
 
+      {/* Mobile backdrop — covers screen when panel is open */}
+      {open && <div className="am-backdrop" aria-hidden="true" />}
+
       {/* Contextual About panel beside the mirror */}
       <div
         ref={panelRef}
@@ -232,15 +235,36 @@ export default function Mirror() {
           .am-cta:focus-visible .am-cta-arrow { transform: none; }
         }
 
-        /* Mobile — panel becomes full-width card in the stack */
+        /* Mobile — panel becomes a fixed bottom drawer with a backdrop */
+        .am-backdrop { display: none; }
         @media (max-width: 760px) {
-          .am-panel {
-            position: static !important;
-            width: 100% !important;
-            right: auto; top: auto;
-            margin-top: 8px;
-            transform: none;
+          .am-backdrop {
+            display: block;
+            position: fixed;
+            inset: 0;
+            background: rgba(17,17,16,0.35);
+            z-index: 98;
           }
+          .am-panel {
+            position: fixed !important;
+            bottom: 28px !important;
+            left: 16px !important;
+            right: 16px !important;
+            width: auto !important;
+            top: auto !important;
+            transform: translateY(12px) scale(0.97) !important;
+            transform-origin: bottom center;
+            z-index: 99;
+            border-radius: 20px;
+          }
+          .am-panel.is-open {
+            transform: translateY(0) scale(1) !important;
+            opacity: 1;
+          }
+        }
+        @media (max-width: 760px) and (prefers-reduced-motion: reduce) {
+          .am-panel { transform: none !important; }
+          .am-panel.is-open { transform: none !important; }
         }
       `}</style>
     </>

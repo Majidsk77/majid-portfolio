@@ -141,7 +141,8 @@ export default function SelectedWorkRoom() {
             18px 18px 0 var(--lip);
         }
         .sw-card:hover .sw-arrow,
-        .sw-card:focus-visible .sw-arrow { opacity: 1; }
+        .sw-card:focus-visible .sw-arrow,
+        .sw-card:active .sw-arrow { opacity: 1; }
         @media (prefers-reduced-motion: no-preference) {
           .sw-card:hover .sw-arrow,
           .sw-card:focus-visible .sw-arrow { animation: swArrowBounce 0.6s steps(2, end) infinite alternate; }

@@ -524,6 +524,11 @@ export default function HomePageV2() {
         @media (max-width: 480px) {
           .worlds-grid { grid-template-columns: 1fr; }
         }
+        /* Touch devices: About portrait doesn't hover — show it always at rest */
+        @media (hover: none) {
+          .v2-about-glow { opacity: 0.6 !important; transform: scale(1) !important; }
+          .v2-about-frame { opacity: 0.8 !important; transform: translateY(-3px) scale(1) !important; }
+        }
       `}</style>
     </RoomFrame>
   )

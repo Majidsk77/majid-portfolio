@@ -58,13 +58,22 @@ export default function AboutRoom() {
             ))}
 
             {/* Vinyl player — hover/focus reveals a Now Playing card (client island) */}
-            <VinylPlayer />
+            <div className="ab-slide ab-slide--vinyl">
+              <span className="ab-slide-label" aria-hidden="true">Now Playing</span>
+              <VinylPlayer />
+            </div>
 
             {/* Notepad — click/Enter/Space cycles short notes (client island) */}
-            <Notepad />
+            <div className="ab-slide ab-slide--notes">
+              <span className="ab-slide-label" aria-hidden="true">Fun Facts</span>
+              <Notepad />
+            </div>
 
             {/* Mirror — click opens About panel (client island) */}
-            <Mirror />
+            <div className="ab-slide ab-slide--mirror">
+              <span className="ab-slide-label" aria-hidden="true">About Me</span>
+              <Mirror />
+            </div>
           </div>
 
       <style>{`
@@ -161,33 +170,61 @@ export default function AboutRoom() {
         }
         .ab-notepad-text > span { max-width: 100%; }
 
-        /* Mobile — drop the fixed-aspect stage, stack the objects (not optimised).
-           Let the shared frame grow/scroll instead of clipping the tall stack. */
+        /* Slide wrappers — display:contents on desktop so absolutely-positioned
+           children still anchor to .ab-stage; label hidden. */
+        .ab-slide { display: contents; }
+        .ab-slide-label { display: none; }
+
+        /* Mobile — horizontal scroll-snap carousel */
         @media (max-width: 760px) {
-          .v2-room-frame { overflow: visible; }
           .ab-stage {
             aspect-ratio: auto;
             width: 100%;
             position: static;
             display: flex;
+            flex-direction: row;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            gap: 0;
+            padding: 12px 12px 20px;
+            align-items: flex-start;
+          }
+          .ab-stage::-webkit-scrollbar { display: none; }
+          .ab-floor { display: none; }
+          .ab-art { display: none !important; }
+
+          /* Each slide is a flex-column snap card */
+          .ab-slide {
+            display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 32px;
-            padding: 12px 0;
+            gap: 8px;
+            flex-shrink: 0;
+            scroll-snap-align: center;
+            padding: 0 12px;
           }
-          .ab-floor { display: none; }
-          .ab-art {
-            position: static !important;
-            left: auto !important; top: auto !important;
-            width: 260px !important;
+          .ab-slide-label {
+            display: block;
+            font-size: 11px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #a8a8a3;
           }
+          .ab-slide--vinyl { min-width: 260px; width: 260px; }
+          .ab-slide--notes { min-width: 210px; width: 210px; }
+          .ab-slide--mirror { min-width: 190px; width: 190px; }
+
           .ab-obj {
             position: static !important;
             left: auto !important;
             top: auto !important;
-            width: 220px !important;
+            width: 100% !important;
           }
-          .ab-notepad { width: 200px !important; }
+          .ab-notepad { width: 100% !important; }
           .ab-notepad-text { font-size: 13px; }
         }
       `}</style>

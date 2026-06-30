@@ -385,7 +385,7 @@ function ContactDropdown({ onCopyEmail }: { onCopyEmail: () => void }) {
           position: 'absolute',
           top: 'calc(100% + 8px)',
           right: 0,
-          minWidth: '220px',
+          minWidth: '260px',
           background: '#fffefb',
           border: '1px solid rgba(217,217,217,0.7)',
           borderRadius: '16px',

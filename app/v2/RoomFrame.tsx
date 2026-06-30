@@ -66,7 +66,7 @@ export default function RoomFrame({
             border: '1px solid rgba(217, 217, 217, 0.7)',
             borderRadius: '30px',
             overflow: 'hidden',
-            padding: 'clamp(28px, 5vh, 64px) clamp(28px, 5vw, 72px)',
+            padding: 'clamp(20px, 5vh, 64px) clamp(20px, 5vw, 72px)',
             display: 'flex',
             flexDirection: 'column',
             ...contentStyle,

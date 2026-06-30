@@ -191,27 +191,41 @@ export default function AiPlaygroundRoom() {
           50%       { transform: translateY(-5px); }
         }
 
-        /* Mobile — drop the absolute stage, stack into a clean grid */
+        /* Mobile — horizontal scroll-snap carousel */
         @media (max-width: 760px) {
           .pg-scene {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
+            flex: none;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            gap: 8px;
+            padding: 12px 20px 20px;
             align-items: center;
-            gap: 28px;
-            padding: 8px 0 12px;
           }
+          .pg-scene::-webkit-scrollbar { display: none; }
           .pg-title {
             position: static;
             transform: none;
-            width: 80%;
-            max-width: 320px;
-            margin: 0 auto 4px;
+            width: 150px;
+            min-width: 150px;
+            max-width: 150px;
+            flex-shrink: 0;
+            scroll-snap-align: center;
+            align-self: center;
+            margin: 0;
           }
           .pg-toy {
             position: static !important;
             left: auto !important;
             top: auto !important;
-            width: 130px !important;
+            width: 110px !important;
+            min-width: 110px !important;
+            flex-shrink: 0;
+            scroll-snap-align: center;
           }
           .pg-toy img { animation: none !important; }
         }

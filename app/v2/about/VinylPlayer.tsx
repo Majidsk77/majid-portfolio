@@ -29,6 +29,7 @@ export default function VinylPlayer() {
         className="av-trigger"
         aria-label={`Vinyl player. Now playing: ${NOW_PLAYING.title} by ${NOW_PLAYING.artist}, ${NOW_PLAYING.note}.`}
         aria-expanded={active}
+        onClick={() => setActive(a => !a)}
         onFocus={() => setActive(true)}
         onBlur={() => setActive(false)}
       >
