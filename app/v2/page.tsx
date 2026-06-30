@@ -466,28 +466,25 @@ export default function HomePageV2() {
           background: radial-gradient(72% 70% at 50% 42%, rgba(246, 184, 148, 0.18), transparent 78%);
         }
         /* Chromeless portrait holder — no border/bezel/background so the
-           transparent PNG sits directly on the card. A soft edge mask melts the
-           cropped silhouette into the card background. */
+           transparent PNG sits directly on the card. A soft elliptical mask
+           centered on the face fades all card edges equally — no hard rect crop. */
         .v2-about-frame {
           position: relative;
           width: 100%;
           height: 100%;
-          overflow: hidden;
           will-change: transform, opacity;
-          /* solid toward the bottom-right (the figure is anchored there and the
-             card edge frames it), fading toward the top-left where the portrait
-             dissolves into the card background */
-          -webkit-mask-image: radial-gradient(150% 150% at 100% 100%, #000 68%, transparent 100%);
-          mask-image: radial-gradient(150% 150% at 100% 100%, #000 68%, transparent 100%);
+          /* Ellipse centered on the face (35% 30%), fully opaque in the middle,
+             fading to transparent at all edges — gives a smooth vignette with no
+             visible rectangular clipping boundary. */
+          -webkit-mask-image: radial-gradient(ellipse 88% 82% at 35% 30%, #000 30%, rgba(0,0,0,0.75) 55%, rgba(0,0,0,0.2) 78%, transparent 95%);
+          mask-image: radial-gradient(ellipse 88% 82% at 35% 30%, #000 30%, rgba(0,0,0,0.75) 55%, rgba(0,0,0,0.2) 78%, transparent 95%);
         }
         .v2-about-image {
           display: block;
           width: 100%;
           height: 100%;
           object-fit: cover;
-          /* anchor the figure toward the bottom-right so it bleeds off the right
-             edge (which acts as the frame); eyes land in the upper third and the
-             face stays fully visible across breakpoints */
+          /* keep face in the opaque centre of the mask */
           object-position: 27% 24%;
           image-rendering: pixelated;
         }

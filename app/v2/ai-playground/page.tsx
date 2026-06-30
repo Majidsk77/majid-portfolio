@@ -29,10 +29,10 @@ interface Toy {
 }
 
 const TOYS: Toy[] = [
-  { id: 'bunny',    label: '8-bit bunny',         src: '/images/playground/bunny.png',    href: '#',                              left: '3.9%',  top: '16.9%', width: '18.3%', bubble: "I'm just here for the vibes",                       bubbleDir: 'right' },
-  { id: 'coin',     label: 'Boundaries: an AI Playground experiment', src: '/images/playground/coin.png', href: '/v2/ai-playground/boundaries', left: '43.6%', top: '40.5%', width: '12.8%', bubble: 'Track your boundaries in one place',                 bubbleDir: 'right' },
-  { id: 'building', label: '8-bit building',      src: '/images/playground/building.png', href: '#',                              left: '67.6%', top: '41.3%', width: '23.5%', bubble: 'Faster model editing\nfor prototyping\n(Coming soon)', bubbleDir: 'left'  },
-  { id: 'farewell', label: '8-bit farewell card', src: '/images/playground/farewell.png', href: '#',                              left: '22.2%', top: '62.4%', width: '14.9%', bubble: 'Create a meaningful\nand lifelong present',           bubbleDir: 'right' },
+  { id: 'bunny',    label: '8-bit bunny',         src: '/images/playground/bunny.png',    href: '#',                              left: '3.9%',  top: '16.9%', width: '18.3%', bubble: "I'm just here for the vibes",                                   bubbleDir: 'right' },
+  { id: 'coin',     label: 'Boundaries: an AI Playground experiment', src: '/images/playground/coin.png', href: '/v2/ai-playground/boundaries', left: '43.6%', top: '40.5%', width: '12.8%', bubble: 'Track your boundaries in one place',                           bubbleDir: 'right' },
+  { id: 'building', label: '8-bit building',      src: '/images/playground/building.png', href: '#',                              left: '67.6%', top: '41.3%', width: '23.5%', bubble: 'Faster model editing\nfor prototyping\n(Coming soon)',              bubbleDir: 'left'  },
+  { id: 'farewell', label: '8-bit farewell card', src: '/images/playground/farewell.png', href: '#',                              left: '22.2%', top: '62.4%', width: '14.9%', bubble: 'Create a meaningful and\nlifelong present\n(Coming soon)',          bubbleDir: 'right' },
 ]
 
 // Twinkling pixel "stars" — purely decorative ambient, scattered in the gaps
@@ -232,35 +232,20 @@ export default function AiPlaygroundRoom() {
           transition: opacity 0.18s ease-out, transform 0.18s ease-out;
           z-index: 10;
         }
-        /* Pointer triangle — pixel-style, 6×5px block */
-        .pg-bubble::after {
-          content: '';
-          position: absolute;
-          bottom: -10px;
-          width: 6px;
-          height: 6px;
-          background: #fefcf6;
-          image-rendering: pixelated;
-        }
-        /* Right-side pointer: triangle points left (toward toy on the left) */
+        /* Right-side pointer: bubble anchors left of toy, pointer points down-left */
         .pg-bubble--right {
           left: 0;
           transform-origin: bottom left;
         }
         .pg-bubble--right::after {
+          content: '';
+          position: absolute;
+          bottom: -9px;
           left: 12px;
-          box-shadow:
-            0 0 0 3px #1a1a18,
-            /* extend border down one more row */
-            0 3px 0 3px #1a1a18;
-          /* Inlined pixel triangle facing down-left */
-          background: transparent;
-          /* Use border trick for a proper down pointer */
           width: 0; height: 0;
           border-left: 6px solid transparent;
           border-right: 6px solid transparent;
           border-top: 6px solid #1a1a18;
-          bottom: -9px;
         }
         .pg-bubble--right::before {
           content: '';
@@ -273,21 +258,22 @@ export default function AiPlaygroundRoom() {
           border-top: 5px solid #fefcf6;
           z-index: 1;
         }
-        /* Left-side pointer: bubble sits to the right of toy, pointer points right */
+        /* Left-side pointer: bubble anchors right of toy, pointer points down-right */
         .pg-bubble--left {
           right: 0;
           left: auto;
           transform-origin: bottom right;
         }
         .pg-bubble--left::after {
+          content: '';
+          position: absolute;
+          bottom: -9px;
           right: 14px;
           left: auto;
           width: 0; height: 0;
-          background: transparent;
           border-left: 6px solid transparent;
           border-right: 6px solid transparent;
           border-top: 6px solid #1a1a18;
-          bottom: -9px;
         }
         .pg-bubble--left::before {
           content: '';

@@ -10,15 +10,13 @@ import { useState, useEffect, useRef } from 'react'
 import { useEmailCopy, EmailCopyToast } from '@/components/EmailCopy'
 
 // ── Selected work — projects shown in the Work dropdown ───────────────────────
-// No dedicated company logos exist in /public, so each item uses a tasteful
-// initials avatar as a fallback (see summary).
 const WORK_PROJECTS: { name: string; href: string; initials: string; color: string }[] = [
   { name: 'Google Boba',    href: '/v2/work/google-boba',    initials: 'GB',  color: '#eef2f8' },
   { name: 'Exact.com',      href: '/v2/work/exact',          initials: 'E',   color: '#eaf3ee' },
   { name: 'IMC Prosperity', href: '/v2/work/imc-prosperity', initials: 'IMC', color: '#f3eef7' },
 ]
 
-// ── Chevron-down icon (matches Figma ionicons chevron-down-outline) ───────────
+// ── Chevron-down icon ──────────────────────────────────────────────────────────
 
 function ChevronDown() {
   return (
@@ -41,10 +39,18 @@ function ChevronDown() {
   )
 }
 
-// ── Pill — shared pill wrapper for all nav items ──────────────────────────────
+// ── Back chevron for mobile sub-panels ────────────────────────────────────────
 
-// Shared pill styling — used by Pill and the Work dropdown trigger so they
-// stay visually identical.
+function ChevronLeft() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" style={{ flexShrink: 0 }}>
+      <path d="M8.75 3.5L5.25 7L8.75 10.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+// ── Pill — shared pill wrapper ─────────────────────────────────────────────────
+
 function pillStyle(active: boolean): React.CSSProperties {
   return {
     display: 'inline-flex',
@@ -77,32 +83,20 @@ function Pill({
   children: React.ReactNode
 }) {
   const [hovered, setHovered] = useState(false)
-
   const style = pillStyle(hovered)
-
   const handlers = {
     onMouseEnter: () => setHovered(true),
     onMouseLeave: () => setHovered(false),
     onFocus:      () => setHovered(true),
     onBlur:       () => setHovered(false),
   }
-
   if (href) {
-    return (
-      <Link href={href} style={style} {...handlers}>
-        {children}
-      </Link>
-    )
+    return <Link href={href} style={style} {...handlers}>{children}</Link>
   }
-
-  return (
-    <button type="button" onClick={onClick} style={style} {...handlers}>
-      {children}
-    </button>
-  )
+  return <button type="button" onClick={onClick} style={style} {...handlers}>{children}</button>
 }
 
-// ── Initials avatar — logo fallback for a project ─────────────────────────────
+// ── Initials avatar ────────────────────────────────────────────────────────────
 
 function ProjectAvatar({ initials, color }: { initials: string; color: string }) {
   return (
@@ -128,7 +122,7 @@ function ProjectAvatar({ initials, color }: { initials: string; color: string })
   )
 }
 
-// ── WorkDropdown — click-to-open list of selected work (desktop nav) ───────────
+// ── WorkDropdown (desktop) ─────────────────────────────────────────────────────
 
 function WorkDropdown() {
   const [open, setOpen] = useState(false)
@@ -136,7 +130,6 @@ function WorkDropdown() {
   const btnRef = useRef<HTMLButtonElement>(null)
   const panelRef = useRef<HTMLDivElement>(null)
 
-  // Escape closes (returns focus to trigger); click outside closes
   useEffect(() => {
     if (!open) return
     const onKey = (e: KeyboardEvent) => {
@@ -157,7 +150,6 @@ function WorkDropdown() {
     }
   }, [open])
 
-  // arrow-key navigation between items
   const onPanelKey = (e: React.KeyboardEvent) => {
     const items = Array.from(
       panelRef.current?.querySelectorAll<HTMLAnchorElement>('[role="menuitem"]') ?? []
@@ -252,7 +244,7 @@ function WorkDropdown() {
   )
 }
 
-// ── Small icons for the Contact items ────────────────────────────────────────
+// ── Small icons for the Contact items ─────────────────────────────────────────
 
 function CopyIcon() {
   return (
@@ -280,7 +272,7 @@ function LinkedInIcon() {
   )
 }
 
-// ── ContactDropdown — click-to-open Email (copy) + LinkedIn (desktop nav) ──────
+// ── ContactDropdown (desktop) ──────────────────────────────────────────────────
 
 function ContactDropdown({ onCopyEmail }: { onCopyEmail: () => void }) {
   const [open, setOpen] = useState(false)
@@ -446,8 +438,11 @@ function ContactDropdown({ onCopyEmail }: { onCopyEmail: () => void }) {
 
 // ── NavV2 ─────────────────────────────────────────────────────────────────────
 
+type MobilePanel = 'main' | 'work' | 'contact'
+
 export default function NavV2({ flow = false }: { flow?: boolean } = {}) {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [panel, setPanel] = useState<MobilePanel>('main')
   const { copied, copyEmail } = useEmailCopy()
 
   // Escape closes mobile menu
@@ -457,6 +452,11 @@ export default function NavV2({ flow = false }: { flow?: boolean } = {}) {
     return () => window.removeEventListener('keydown', onKey)
   }, [])
 
+  // Reset sub-panel when menu closes
+  useEffect(() => {
+    if (!menuOpen) setPanel('main')
+  }, [menuOpen])
+
   // Lock body scroll when mobile menu is open
   useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : ''
@@ -464,14 +464,84 @@ export default function NavV2({ flow = false }: { flow?: boolean } = {}) {
   }, [menuOpen])
 
   const close = () => setMenuOpen(false)
+  const back  = () => setPanel('main')
+
+  // Shared large-text button style for mobile menu items
+  const bigItem = (delay: number): React.CSSProperties => ({
+    fontSize: '36px',
+    fontWeight: 400,
+    color: '#111110',
+    letterSpacing: '-0.02em',
+    opacity: menuOpen ? 1 : 0,
+    transform: menuOpen ? 'translateY(0)' : 'translateY(10px)',
+    transition: `opacity 0.3s ease ${delay}ms, transform 0.3s ease ${delay}ms`,
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    fontFamily: 'inherit',
+    textDecoration: 'none',
+    display: 'block',
+    lineHeight: 1.2,
+  })
+
+  // Panel slot: cross-fades between main/work/contact
+  const panelSlot = (which: MobilePanel): React.CSSProperties => ({
+    position: 'absolute',
+    inset: 0,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '24px',
+    opacity: panel === which ? 1 : 0,
+    transform: panel === which ? 'translateX(0)' : panel === 'main' ? 'translateX(40px)' : 'translateX(-40px)',
+    pointerEvents: panel === which ? 'auto' : 'none',
+    transition: 'opacity 0.22s ease, transform 0.22s cubic-bezier(0.22, 1, 0.36, 1)',
+  })
+
+  // Back button for sub-panels
+  const BackBtn = () => (
+    <button
+      type="button"
+      onClick={back}
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '6px',
+        fontSize: '14px',
+        color: '#6b6b67',
+        background: 'none',
+        border: 'none',
+        cursor: 'pointer',
+        fontFamily: 'inherit',
+        padding: '6px 0',
+        letterSpacing: '-0.01em',
+        position: 'absolute',
+        top: '92px',
+        left: '28px',
+      }}
+    >
+      <ChevronLeft />
+      Back
+    </button>
+  )
+
+  const contactIconHolder: React.CSSProperties = {
+    width: '32px',
+    height: '32px',
+    borderRadius: '9px',
+    background: '#f1f0ec',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
+  }
 
   return (
     <>
       {/* ── Navbar ────────────────────────────────────── */}
       <nav
         style={{
-          // `flow` makes the nav static (scrolls with the page) — used on V2
-          // case study pages; default stays fixed for the lobby/room pages.
           position: flow ? 'static' : 'fixed',
           top: 0,
           left: 0,
@@ -480,7 +550,6 @@ export default function NavV2({ flow = false }: { flow?: boolean } = {}) {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          // Figma: pt-32 pb-24 px-40 — scale px with viewport
           paddingTop: '32px',
           paddingBottom: '24px',
           paddingLeft: 'clamp(20px, 2.78vw, 40px)',
@@ -497,9 +566,7 @@ export default function NavV2({ flow = false }: { flow?: boolean } = {}) {
           className="hidden md:flex"
         >
           <WorkDropdown />
-          <Pill href="/v2/about">
-            About
-          </Pill>
+          <Pill href="/v2/about">About</Pill>
           <ContactDropdown onCopyEmail={copyEmail} />
         </div>
 
@@ -545,95 +612,146 @@ export default function NavV2({ flow = false }: { flow?: boolean } = {}) {
           position: 'fixed',
           inset: 0,
           zIndex: 40,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '24px',
           background: 'rgba(247, 245, 240, 0.97)',
           backdropFilter: 'blur(12px)',
           WebkitBackdropFilter: 'blur(12px)',
           opacity: menuOpen ? 1 : 0,
           pointerEvents: menuOpen ? 'auto' : 'none',
           transition: 'opacity 0.3s ease',
-        }}
+          overflow: 'hidden',
+        } as React.CSSProperties}
       >
-        {/* Primary links */}
-        {[
-          { label: 'Work',    href: '/v2/selected-work' },
-          { label: 'About',   href: '/v2/about' },
-        ].map((item, i) => (
-          <Link
-            key={item.label}
-            href={item.href}
-            onClick={close}
-            style={{
-              fontSize: '36px',
-              fontWeight: 400,
-              color: '#111110',
-              textDecoration: 'none',
-              letterSpacing: '-0.02em',
-              opacity: menuOpen ? 1 : 0,
-              transform: menuOpen ? 'translateY(0)' : 'translateY(10px)',
-              transition: `opacity 0.3s ease ${i * 60}ms, transform 0.3s ease ${i * 60}ms`,
-            }}
+        {/* ── Main panel ── */}
+        <div style={panelSlot('main')}>
+          {/* Work → opens sub-panel */}
+          <button
+            type="button"
+            onClick={() => setPanel('work')}
+            style={{ ...bigItem(0), display: 'inline-flex', alignItems: 'center', gap: '10px' }}
           >
-            {item.label}
-          </Link>
-        ))}
+            Work
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true" style={{ opacity: 0.45 }}>
+              <path d="M5.25 10h9.5M10.5 5.25L14.75 10l-4.25 4.75" stroke="#111110" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
 
-        {/* Case study sub-links */}
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '10px',
-            opacity: menuOpen ? 1 : 0,
-            transform: menuOpen ? 'translateY(0)' : 'translateY(10px)',
-            transition: 'opacity 0.3s ease 120ms, transform 0.3s ease 120ms',
-          }}
-        >
+          <Link href="/v2/about" onClick={close} style={bigItem(60)}>
+            About
+          </Link>
+
+          {/* Contact → opens sub-panel */}
+          <button
+            type="button"
+            onClick={() => setPanel('contact')}
+            style={{ ...bigItem(120), display: 'inline-flex', alignItems: 'center', gap: '10px' }}
+          >
+            Contact
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true" style={{ opacity: 0.45 }}>
+              <path d="M5.25 10h9.5M10.5 5.25L14.75 10l-4.25 4.75" stroke="#111110" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+        </div>
+
+        {/* ── Work sub-panel ── */}
+        <div style={panelSlot('work')}>
+          <BackBtn />
+          <p style={{ fontSize: '13px', color: '#6b6b67', letterSpacing: '-0.01em', margin: 0 }}>
+            Selected Work
+          </p>
           {WORK_PROJECTS.map(p => (
             <Link
               key={p.href}
               href={p.href}
               onClick={close}
               style={{
-                fontSize: '16px',
-                color: '#6b6b67',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '14px',
+                fontSize: '22px',
+                fontWeight: 400,
+                color: '#111110',
                 textDecoration: 'none',
-                letterSpacing: '-0.01em',
-                padding: '6px 14px',
-                borderRadius: '20px',
-                border: '1px solid rgba(17,17,16,0.12)',
+                letterSpacing: '-0.02em',
               }}
             >
+              <ProjectAvatar initials={p.initials} color={p.color} />
               {p.name}
             </Link>
           ))}
         </div>
 
-        {/* Contact — copies email */}
-        <button
-          type="button"
-          onClick={() => { copyEmail(); close() }}
-          style={{
-            fontSize: '36px',
-            fontWeight: 400,
-            color: '#111110',
-            letterSpacing: '-0.02em',
-            opacity: menuOpen ? 1 : 0,
-            transform: menuOpen ? 'translateY(0)' : 'translateY(10px)',
-            transition: 'opacity 0.3s ease 180ms, transform 0.3s ease 180ms',
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer',
-            fontFamily: 'inherit',
-          }}
-        >
-          Contact
-        </button>
+        {/* ── Contact sub-panel ── */}
+        <div style={panelSlot('contact')}>
+          <BackBtn />
+          <p style={{ fontSize: '13px', color: '#6b6b67', letterSpacing: '-0.01em', margin: 0 }}>
+            Get in touch
+          </p>
+
+          {/* Email — copies to clipboard */}
+          <button
+            type="button"
+            onClick={() => { copyEmail(); close() }}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '14px',
+              fontSize: '18px',
+              fontWeight: 400,
+              color: '#111110',
+              letterSpacing: '-0.02em',
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              fontFamily: 'inherit',
+              padding: 0,
+            }}
+          >
+            <span style={contactIconHolder}><CopyIcon /></span>
+            majidsajid@outlook.com
+          </button>
+
+          {/* Resume */}
+          <a
+            href="https://drive.google.com/file/d/1-40FvUisOKLs-e9uVBAJ3Ftg8TM9EUVK/view?usp=sharing"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={close}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '14px',
+              fontSize: '18px',
+              fontWeight: 400,
+              color: '#111110',
+              letterSpacing: '-0.02em',
+              textDecoration: 'none',
+            }}
+          >
+            <span style={contactIconHolder}><ResumeIcon /></span>
+            Resume ↗
+          </a>
+
+          {/* LinkedIn */}
+          <a
+            href="https://www.linkedin.com/in/majid-kareem/"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={close}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '14px',
+              fontSize: '18px',
+              fontWeight: 400,
+              color: '#111110',
+              letterSpacing: '-0.02em',
+              textDecoration: 'none',
+            }}
+          >
+            <span style={contactIconHolder}><LinkedInIcon /></span>
+            LinkedIn ↗
+          </a>
+        </div>
       </div>
 
       <EmailCopyToast copied={copied} />
