@@ -23,13 +23,16 @@ interface Toy {
   left: string
   top: string
   width: string
+  bubble: string
+  // which side of the toy the dialogue pointer emerges from
+  bubbleDir: 'left' | 'right'
 }
 
 const TOYS: Toy[] = [
-  { id: 'bunny',    label: '8-bit bunny',         src: '/images/playground/bunny.png',    href: '#', left: '3.9%',  top: '16.9%', width: '18.3%' },
-  { id: 'coin',     label: 'Boundaries: an AI Playground experiment', src: '/images/playground/coin.png', href: '/v2/ai-playground/boundaries', left: '43.6%', top: '40.5%', width: '12.8%' },
-  { id: 'building', label: '8-bit building',      src: '/images/playground/building.png', href: '#', left: '67.6%', top: '41.3%', width: '23.5%' },
-  { id: 'farewell', label: '8-bit farewell card', src: '/images/playground/farewell.png', href: '#', left: '22.2%', top: '62.4%', width: '14.9%' },
+  { id: 'bunny',    label: '8-bit bunny',         src: '/images/playground/bunny.png',    href: '#',                              left: '3.9%',  top: '16.9%', width: '18.3%', bubble: "I'm just here for the vibes",                       bubbleDir: 'right' },
+  { id: 'coin',     label: 'Boundaries: an AI Playground experiment', src: '/images/playground/coin.png', href: '/v2/ai-playground/boundaries', left: '43.6%', top: '40.5%', width: '12.8%', bubble: 'Track your boundaries in one place',                 bubbleDir: 'right' },
+  { id: 'building', label: '8-bit building',      src: '/images/playground/building.png', href: '#',                              left: '67.6%', top: '41.3%', width: '23.5%', bubble: 'Faster model editing\nfor prototyping\n(Coming soon)', bubbleDir: 'left'  },
+  { id: 'farewell', label: '8-bit farewell card', src: '/images/playground/farewell.png', href: '#',                              left: '22.2%', top: '62.4%', width: '14.9%', bubble: 'Create a meaningful\nand lifelong present',           bubbleDir: 'right' },
 ]
 
 // Twinkling pixel "stars" — purely decorative ambient, scattered in the gaps
@@ -90,10 +93,16 @@ export default function AiPlaygroundRoom() {
                 key={t.id}
                 href={t.href}
                 aria-label={t.label}
-                className="pg-toy"
+                className={`pg-toy pg-toy--${t.id}`}
                 style={{ left: t.left, top: t.top, width: t.width }}
               >
                 <img src={t.src} alt={t.label} />
+                <span
+                  className={`pg-bubble pg-bubble--${t.bubbleDir}`}
+                  aria-hidden="true"
+                >
+                  {t.bubble}
+                </span>
               </Link>
             ))}
           </div>
@@ -191,6 +200,121 @@ export default function AiPlaygroundRoom() {
           50%       { transform: translateY(-5px); }
         }
 
+        /* ── Pokémon-style dialogue bubble ───────────────────────────────────
+           Hidden by default; revealed on desktop hover/focus only.
+           Pixel border via box-shadow outline trick for crisp rendering. */
+        .pg-bubble {
+          display: none; /* hidden on mobile — shown only on desktop hover below */
+          position: absolute;
+          bottom: calc(100% + 14px);
+          white-space: pre-line;
+          width: max-content;
+          max-width: 180px;
+          padding: 9px 12px 9px 12px;
+          background: #fefcf6;
+          color: #1a1a18;
+          font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace;
+          font-size: 12px;
+          line-height: 1.45;
+          letter-spacing: 0;
+          text-align: left;
+          pointer-events: none;
+          user-select: none;
+          /* Crisp pixel border: 3px solid #1a1a18, no blur */
+          box-shadow:
+            0 0 0 3px #1a1a18,
+            4px 4px 0 3px #1a1a18;
+          image-rendering: pixelated;
+          /* Hidden state */
+          opacity: 0;
+          transform: translateY(5px) scale(0.95);
+          transform-origin: bottom left;
+          transition: opacity 0.18s ease-out, transform 0.18s ease-out;
+          z-index: 10;
+        }
+        /* Pointer triangle — pixel-style, 6×5px block */
+        .pg-bubble::after {
+          content: '';
+          position: absolute;
+          bottom: -10px;
+          width: 6px;
+          height: 6px;
+          background: #fefcf6;
+          image-rendering: pixelated;
+        }
+        /* Right-side pointer: triangle points left (toward toy on the left) */
+        .pg-bubble--right {
+          left: 0;
+          transform-origin: bottom left;
+        }
+        .pg-bubble--right::after {
+          left: 12px;
+          box-shadow:
+            0 0 0 3px #1a1a18,
+            /* extend border down one more row */
+            0 3px 0 3px #1a1a18;
+          /* Inlined pixel triangle facing down-left */
+          background: transparent;
+          /* Use border trick for a proper down pointer */
+          width: 0; height: 0;
+          border-left: 6px solid transparent;
+          border-right: 6px solid transparent;
+          border-top: 6px solid #1a1a18;
+          bottom: -9px;
+        }
+        .pg-bubble--right::before {
+          content: '';
+          position: absolute;
+          bottom: -6px;
+          left: 13px;
+          width: 0; height: 0;
+          border-left: 5px solid transparent;
+          border-right: 5px solid transparent;
+          border-top: 5px solid #fefcf6;
+          z-index: 1;
+        }
+        /* Left-side pointer: bubble sits to the right of toy, pointer points right */
+        .pg-bubble--left {
+          right: 0;
+          left: auto;
+          transform-origin: bottom right;
+        }
+        .pg-bubble--left::after {
+          right: 14px;
+          left: auto;
+          width: 0; height: 0;
+          background: transparent;
+          border-left: 6px solid transparent;
+          border-right: 6px solid transparent;
+          border-top: 6px solid #1a1a18;
+          bottom: -9px;
+        }
+        .pg-bubble--left::before {
+          content: '';
+          position: absolute;
+          bottom: -6px;
+          right: 15px;
+          left: auto;
+          width: 0; height: 0;
+          border-left: 5px solid transparent;
+          border-right: 5px solid transparent;
+          border-top: 5px solid #fefcf6;
+          z-index: 1;
+        }
+
+        /* Show bubble on desktop hover/focus */
+        @media (min-width: 761px) {
+          .pg-bubble { display: block; }
+          .pg-toy:hover .pg-bubble,
+          .pg-toy:focus-visible .pg-bubble {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+        @media (min-width: 761px) and (prefers-reduced-motion: reduce) {
+          .pg-bubble { transition: none; }
+        }
+
         /* Mobile — vertical stack, title at top, frame grows to fit */
         @media (max-width: 760px) {
           .pg-scene {
@@ -216,6 +340,7 @@ export default function AiPlaygroundRoom() {
             min-height: 44px; /* tap target */
           }
           .pg-toy img { animation: none !important; }
+          .pg-bubble { display: none !important; }
         }
       `}</style>
     </RoomFrame>
