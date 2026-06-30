@@ -12,8 +12,8 @@ import VinylPlayer from '@/app/v2/about/VinylPlayer'
 // Now Playing card are live (separate client islands).
 
 export const metadata: Metadata = {
-  title: 'About Me',
-  description: 'A small room of objects — a little about who I am.',
+  title: 'About',
+  description: 'Majid Kareem is a Product Designer based in Amsterdam — a small room of objects that tells you a little about who I am.',
 }
 
 // Decorative (non-interactive) room art. Positions/sizes are % of the

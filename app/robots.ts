@@ -5,8 +5,8 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: "*",
-        allow: "/",
-        disallow: ["/work/", "/enter"],
+        allow: ["/", "/about", "/selected-work", "/ai-playground"],
+        disallow: ["/work/", "/v2/work/", "/enter", "/archive"],
       },
     ],
     sitemap: "https://www.majidkareem.com/sitemap.xml",

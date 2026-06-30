@@ -9,7 +9,7 @@ import RoomFrame from '@/app/v2/RoomFrame'
 
 export const metadata: Metadata = {
   title: 'AI Playground',
-  description: 'Experiments, side projects, and AI explorations.',
+  description: 'Experiments, AI-assisted prototypes, and side projects by Majid Kareem.',
 }
 
 // Each object's position is expressed as a % of the scene (aspect 1360×797),

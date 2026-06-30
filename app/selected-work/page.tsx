@@ -9,7 +9,7 @@ import RoomFrame from '@/app/v2/RoomFrame'
 
 export const metadata: Metadata = {
   title: 'Selected Work',
-  description: 'Selected product & UX case studies.',
+  description: 'Case studies in product design, UX, and interaction design — Google, IMC, Exact.',
 }
 
 interface Project {

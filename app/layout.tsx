@@ -21,23 +21,25 @@ const dmSans = DM_Sans({
 
 const BASE_URL = "https://www.majidkareem.com";
 
+const DESCRIPTION =
+  "Product Designer based in Amsterdam, designing playful, thoughtful digital experiences across product, interaction design, AI experiments, and immersive systems.";
+
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: "Majid Kareem | Product Designer",
-    template: "%s | Majid Kareem",
+    default: "Majid Kareem — Product Designer",
+    template: "%s — Majid Kareem",
   },
-  description:
-    "Product designer based in Amsterdam creating strategic, spatial, and interactive digital experiences. Curious about emerging technology and the future of human-computer interaction.",
+  description: DESCRIPTION,
   keywords: [
-    "product designer",
-    "UX designer",
-    "UI designer",
-    "interaction design",
+    "Product Designer",
+    "UX Designer",
+    "Interaction Designer",
     "Amsterdam",
-    "digital experiences",
+    "Portfolio",
+    "AI Experiments",
+    "Digital Products",
     "Majid Kareem",
-    "portfolio",
   ],
   authors: [{ name: "Majid Kareem", url: BASE_URL }],
   creator: "Majid Kareem",
@@ -46,23 +48,21 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: BASE_URL,
     siteName: "Majid Kareem",
-    title: "Majid Kareem | Product Designer",
-    description:
-      "Product designer based in Amsterdam creating strategic, spatial, and interactive digital experiences.",
+    title: "Majid Kareem — Product Designer",
+    description: DESCRIPTION,
     images: [
       {
         url: "/images/exact-hero.png",
         width: 2919,
         height: 824,
-        alt: "Majid Kareem: Product Designer Portfolio",
+        alt: "Majid Kareem — Product Designer Portfolio",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Majid Kareem | Product Designer",
-    description:
-      "Product designer based in Amsterdam creating strategic, spatial, and interactive digital experiences.",
+    title: "Majid Kareem — Product Designer",
+    description: DESCRIPTION,
     images: ["/images/exact-hero.png"],
   },
   robots: {
@@ -87,14 +87,13 @@ const jsonLd = {
   name: "Majid Kareem",
   url: BASE_URL,
   jobTitle: "Product Designer",
-  description:
-    "Product designer based in Amsterdam creating strategic, spatial, and interactive digital experiences.",
+  description: DESCRIPTION,
   address: {
     "@type": "PostalAddress",
     addressLocality: "Amsterdam",
     addressCountry: "NL",
   },
-  sameAs: ["https://www.linkedin.com/in/majidkareem/"],
+  sameAs: ["https://www.linkedin.com/in/majid-kareem/"],
 };
 
 export default function RootLayout({
