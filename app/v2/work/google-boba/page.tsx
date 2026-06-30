@@ -79,7 +79,7 @@ function Section({ kicker, heading, children }: { kicker: string; heading: strin
 const DECISIONS = [
   {
     title: 'Extend Material 3 into physical space',
-    body: ‘Boba screens are architectural, not web or mobile. Rather than overriding Google’s design language, I extended it, adapting tokens, shapes, and components for spatial scale without breaking the system logic.’,
+    body: "Boba screens are architectural, not web or mobile. Rather than overriding Google’s design language, I extended it, adapting tokens, shapes, and components for spatial scale without breaking the system logic.",
   },
   {
     title: 'Tokens as the scaling mechanism',
