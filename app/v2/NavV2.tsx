@@ -11,9 +11,9 @@ import { useEmailCopy, EmailCopyToast } from '@/components/EmailCopy'
 
 // ── Selected work — projects shown in the Work dropdown ───────────────────────
 const WORK_PROJECTS: { name: string; href: string; initials: string; color: string }[] = [
-  { name: 'Google Boba',    href: '/v2/work/google-boba',    initials: 'GB',  color: '#eef2f8' },
-  { name: 'Exact.com',      href: '/v2/work/exact',          initials: 'E',   color: '#eaf3ee' },
-  { name: 'IMC Prosperity', href: '/v2/work/imc-prosperity', initials: 'IMC', color: '#f3eef7' },
+  { name: 'Google Boba',    href: '/work/google-boba',    initials: 'GB',  color: '#eef2f8' },
+  { name: 'Exact.com',      href: '/work/exact',          initials: 'E',   color: '#eaf3ee' },
+  { name: 'IMC Prosperity', href: '/work/imc-prosperity', initials: 'IMC', color: '#f3eef7' },
 ]
 
 // ── Chevron-down icon ──────────────────────────────────────────────────────────
@@ -558,7 +558,7 @@ export default function NavV2({ flow = false }: { flow?: boolean } = {}) {
         }}
       >
         {/* Logo pill */}
-        <Pill href="/v2">Majid Kareem</Pill>
+        <Pill href="/">Majid Kareem</Pill>
 
         {/* Desktop nav — Work / About / Contact */}
         <div
@@ -566,7 +566,7 @@ export default function NavV2({ flow = false }: { flow?: boolean } = {}) {
           className="hidden md:flex"
         >
           <WorkDropdown />
-          <Pill href="/v2/about">About</Pill>
+          <Pill href="/about">About</Pill>
           <ContactDropdown onCopyEmail={copyEmail} />
         </div>
 
@@ -635,7 +635,7 @@ export default function NavV2({ flow = false }: { flow?: boolean } = {}) {
             </svg>
           </button>
 
-          <Link href="/v2/about" onClick={close} style={bigItem(60)}>
+          <Link href="/about" onClick={close} style={bigItem(60)}>
             About
           </Link>
 

@@ -1,349 +1,536 @@
 'use client'
 
-import Image from 'next/image'
+// /v2 — Homepage redesign sandbox: three-worlds lobby concept.
+// Implements the Figma "AI Playground" frame (node 1:32).
+// Reuses shared Nav + Footer. Does NOT affect the production homepage.
+// Branch: redesign/v2
+
 import Link from 'next/link'
-import { motion, useInView, AnimatePresence } from 'framer-motion'
-import { useRef, useState, useEffect } from 'react'
-import Nav from '@/components/Nav'
-import Footer from '@/components/Footer'
+import { useState, useEffect } from 'react'
+import RoomFrame from '@/app/v2/RoomFrame'
 
-const ABOUT_WORDS = ['product', 'strategic', 'spatial', 'happy', 'creative']
+// ── Types ─────────────────────────────────────────────────────────────────────
 
-function AnimatedWord() {
-  const [index, setIndex] = useState(0)
+type WorldId = 'playground' | 'work' | 'about'
 
-  useEffect(() => {
-    const id = setInterval(() => setIndex(i => (i + 1) % ABOUT_WORDS.length), 2600)
-    return () => clearInterval(id)
-  }, [])
+interface World {
+  id: WorldId
+  label: string
+  href: string
+}
 
+// ── World definitions ─────────────────────────────────────────────────────────
+
+const WORLDS: World[] = [
+  { id: 'playground', label: 'AI Playground', href: '/v2/ai-playground' },
+  { id: 'work',       label: 'Selected Work',  href: '/v2/selected-work' },
+  { id: 'about',      label: 'About Me',        href: '/v2/about' },
+]
+
+// ── Per-world color tokens ────────────────────────────────────────────────────
+// Kept subtle and premium against the cream #f7f5f0 background.
+// AI Playground: muted indigo (experimental, digital)
+// Selected Work: near-black (editorial, resolved)
+// About Me: warm terracotta (personal, human)
+
+const TOKENS: Record<WorldId, {
+  borderRest: string
+  borderHover: string
+  bgRest: string
+  bgHover: string
+  arrowRest: string
+  arrowHover: string
+  pixelGrid: boolean   // AI Playground only: faint dot-grid on hover
+}> = {
+  playground: {
+    borderRest:  'rgba(99, 102, 241, 0.25)',
+    borderHover: 'rgba(99, 102, 241, 0.55)',
+    bgRest:      'rgba(99, 102, 241, 0.025)',
+    bgHover:     'rgba(99, 102, 241, 0.06)',
+    arrowRest:   'rgba(99, 102, 241, 0.50)',
+    arrowHover:  'rgba(99, 102, 241, 0.90)',
+    pixelGrid:   true,
+  },
+  work: {
+    borderRest:  'rgba(17, 17, 16, 0.20)',
+    borderHover: 'rgba(120, 170, 200, 0.45)',   // soft oceanic border
+    bgRest:      'transparent',
+    bgHover:     'rgba(236, 244, 248, 0.85)',    // light tinted base for blobs
+    arrowRest:   'rgba(17, 17, 16, 0.32)',
+    arrowHover:  'rgba(17, 17, 16, 0.80)',
+    pixelGrid:   false,
+  },
+  about: {
+    borderRest:  'rgba(160, 90, 40, 0.25)',
+    borderHover: 'rgba(160, 90, 40, 0.52)',
+    bgRest:      'rgba(251, 235, 215, 0.30)',
+    bgHover:     'rgba(251, 235, 215, 0.75)',
+    arrowRest:   'rgba(160, 90, 40, 0.50)',
+    arrowHover:  'rgba(160, 90, 40, 0.90)',
+    pixelGrid:   false,
+  },
+}
+
+const EASE = 'cubic-bezier(0.22, 1, 0.36, 1)'
+
+// ── PixelOverlay — AI Playground card only ────────────────────────────────────
+// Layers: scrolling scanlines + pixel grid floor + 10 pixel blocks spread
+// across the card in a staggered "boot sequence" pattern.
+// steps(1) easing on all blinking produces hard frame-cuts (8-bit feel).
+
+const PIXEL_BLOCKS = [
+  // bottom strip — first to light up
+  { w: 4, h: 4, bottom: 20, left:  22, right: undefined, delay: '0.00s', dur: '0.55s' },
+  { w: 3, h: 3, bottom: 20, left:  36, right: undefined, delay: '0.08s', dur: '0.70s' },
+  { w: 4, h: 4, bottom: 22, left: undefined, right: 22,  delay: '0.16s', dur: '0.60s' },
+  { w: 3, h: 3, bottom: 20, left: undefined, right: 36,  delay: '0.12s', dur: '0.80s' },
+  // mid band
+  { w: 3, h: 3, bottom: 60, left:  26, right: undefined, delay: '0.30s', dur: '0.65s' },
+  { w: 4, h: 4, bottom: 56, left: undefined, right: 28,  delay: '0.40s', dur: '0.75s' },
+  { w: 3, h: 3, bottom: 64, left:  50, right: undefined, delay: '0.35s', dur: '0.90s' },
+  // upper strip — last to light up, giving boot-sequence feel
+  { w: 3, h: 3, bottom: 96, left:  22, right: undefined, delay: '0.55s', dur: '0.85s' },
+  { w: 4, h: 4, bottom: 90, left: undefined, right: 22,  delay: '0.62s', dur: '0.60s' },
+  { w: 3, h: 3, bottom: 100,left:  46, right: undefined, delay: '0.70s', dur: '0.70s' },
+]
+
+function PixelOverlay({ visible }: { visible: boolean }) {
   return (
-    <span className="relative inline-block">
-      <span className="invisible select-none" aria-hidden="true">
-        strategic
-      </span>
-      <AnimatePresence mode="wait">
-        <motion.span
-          key={ABOUT_WORDS[index]}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          className="absolute left-0 top-0"
-        >
-          {ABOUT_WORDS[index]}
-        </motion.span>
-      </AnimatePresence>
+    <span
+      aria-hidden="true"
+      style={{
+        position: 'absolute',
+        inset: 0,
+        overflow: 'hidden',
+        pointerEvents: 'none',
+        borderRadius: 'inherit',
+        opacity: visible ? 1 : 0,
+        transition: 'opacity 0.25s ease',
+      }}
+    >
+      {/* Pixel-grid floor — 8×8 tile scrolls diagonally, gives sense of digital space */}
+      <span
+        style={{
+          position: 'absolute',
+          inset: 0,
+          backgroundImage: [
+            'repeating-linear-gradient(0deg, transparent, transparent 7px, rgba(99,102,241,0.045) 7px, rgba(99,102,241,0.045) 8px)',
+            'repeating-linear-gradient(90deg, transparent, transparent 7px, rgba(99,102,241,0.045) 7px, rgba(99,102,241,0.045) 8px)',
+          ].join(', '),
+          backgroundSize: '8px 8px',
+          animation: visible ? 'v2GridDrift 3s linear infinite' : 'none',
+        }}
+      />
+      {/* Scanlines — denser and faster than before */}
+      <span
+        style={{
+          position: 'absolute',
+          inset: 0,
+          backgroundImage:
+            'repeating-linear-gradient(transparent, transparent 2px, rgba(99,102,241,0.09) 2px, rgba(99,102,241,0.09) 3px)',
+          backgroundSize: '100% 3px',
+          animation: visible ? 'v2ScanScroll 0.9s linear infinite' : 'none',
+        }}
+      />
+      {/* Pixel blocks — spread top-to-bottom, boot-sequence stagger */}
+      {PIXEL_BLOCKS.map((p, i) => (
+        <span
+          key={i}
+          style={{
+            position: 'absolute',
+            bottom: p.bottom,
+            ...(p.left  !== undefined ? { left:  p.left  } : {}),
+            ...(p.right !== undefined ? { right: p.right } : {}),
+            width:  p.w,
+            height: p.h,
+            background: 'rgba(99,102,241,0.7)',
+            animation: visible
+              ? `v2PixelBlink ${p.dur} steps(1) ${p.delay} infinite`
+              : 'none',
+          }}
+        />
+      ))}
     </span>
   )
 }
 
-const projects = [
-  {
-    index: '01',
-    tag: 'Design Systems · Spatial Design',
-    name: 'Google Boba',
-    desc: "A scalable design system and template library for Boba screens across Google's global event spaces, bridging Material 3 with the demands of physical-digital environments.",
-    client: 'Google',
-    year: '2026',
-    image: 'boba-hero.png',
-    href: '/work/google-boba',
-  },
-  {
-    index: '02',
-    tag: 'UX Design · Product Design',
-    name: 'IMC Prosperity',
-    desc: "A space-themed trading game for IMC's annual global student competition. 30,703 players across 117 countries.",
-    client: 'IMC',
-    year: '2025–26',
-    image: 'prosperity-outpost.png',
-    href: '/work/imc-prosperity',
-  },
-  {
-    index: '03',
-    tag: 'UX Design · Discovery',
-    name: 'Exact .com',
-    desc: "UX strategy and design for Exact's full website overhaul: 17 templates across 4 audience types, from discovery through handover.",
-    client: 'Exact',
-    year: '2025',
-    image: 'exact-hero.png',
-    href: '/work/exact',
-  },
-]
+// ── WorkOverlay — Selected Work card only ─────────────────────────────────────
+// Soft editorial liquid: pastel blobs (cyan, lavender, mint, coral) drift and
+// breathe over a light tinted base — oceanic, fluid, polished. Two layers
+// move at different speeds/directions for depth; a whisper of grain only.
+// Light mood throughout — text stays dark and readable (no inversion).
 
-function ProjectCard({
-  project,
-  index,
-}: {
-  project: (typeof projects)[0]
-  index: number
-}) {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, amount: 0.15 })
-  const isEven = index % 2 === 1
+const WORK_GRAIN = encodeURIComponent(
+  "<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'>" +
+  "<filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/></filter>" +
+  "<rect width='200' height='200' filter='url(#g)' opacity='0.4'/>" +
+  "</svg>"
+)
 
+function WorkOverlay({ visible }: { visible: boolean }) {
   return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 28 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{
-        duration: 0.8,
-        ease: [0.22, 1, 0.36, 1],
-        delay: index * 0.12,
+    <span
+      aria-hidden="true"
+      style={{
+        position: 'absolute',
+        inset: 0,
+        overflow: 'hidden',
+        pointerEvents: 'none',
+        borderRadius: 'inherit',
+        opacity: visible ? 1 : 0,
+        transition: 'opacity 0.6s ease',
       }}
     >
-      <Link href={project.href} className="block group">
-        <div className="grid grid-cols-1 md:grid-cols-2 border-t border-[var(--border)] hover:bg-black/[0.02] transition-colors duration-500 md:min-h-[420px]">
-
-          {/* Image column — soft drift on hover instead of aggressive scale */}
-          <div
-            className={`relative overflow-hidden h-64 md:h-auto order-first ${
-              isEven ? 'md:order-first' : 'md:order-last'
-            }`}
-          >
-            <Image
-              src={`/images/${project.image}`}
-              alt={project.name}
-              fill
-              className="object-cover transition-transform duration-700 group-hover:scale-[1.012] group-hover:-translate-y-1"
-              style={{ transitionTimingFunction: 'var(--ease-expo)' }}
-            />
-          </div>
-
-          {/* Info column — lifts 2px on hover */}
-          <div
-            className={`p-8 md:p-14 flex flex-col justify-center order-last transition-transform duration-500 group-hover:-translate-y-0.5 ${
-              isEven ? 'md:order-last' : 'md:order-first'
-            }`}
-            style={{ transitionTimingFunction: 'var(--ease-expo)' }}
-          >
-            <span className="text-[11px] text-[var(--muted)] tracking-[0.06em] mb-2 block">
-              {project.index}
-            </span>
-            <span className="text-[11px] uppercase tracking-[0.09em] text-[var(--muted)] mb-5 block">
-              {project.tag}
-            </span>
-            <h2 className="font-serif text-[clamp(28px,4vw,50px)] leading-[1.05] tracking-[-0.01em] mb-5">
-              {project.name}
-            </h2>
-            <p className="text-[14px] text-[var(--muted)] leading-[1.7] font-light mb-8 max-w-[360px]">
-              {project.desc}
-            </p>
-
-            {/* Metadata row with hover-reveal arrow */}
-            <div className="flex items-center gap-3">
-              <span className="text-[11px] uppercase tracking-[0.1em] text-[var(--muted)]">
-                {project.client}
-              </span>
-              <span className="text-[var(--faint)] text-[11px]">·</span>
-              <span className="text-[11px] text-[var(--muted)]">{project.year}</span>
-              <span
-                className="ml-2 text-[11px] text-[var(--text)] opacity-0 -translate-x-2 transition duration-500 group-hover:opacity-100 group-hover:translate-x-0"
-                style={{ transitionTimingFunction: 'var(--ease-expo)' }}
-                aria-hidden="true"
-              >
-                →
-              </span>
-            </div>
-          </div>
-
-        </div>
-      </Link>
-    </motion.div>
+      {/* Layer 1 — pastel blobs drifting one way */}
+      <span
+        style={{
+          position: 'absolute',
+          inset: '-25%',
+          background: [
+            'radial-gradient(ellipse 55% 55% at 25% 30%, rgba(120,200,225,0.55) 0%, transparent 62%)',
+            'radial-gradient(ellipse 50% 60% at 78% 35%, rgba(190,170,235,0.50) 0%, transparent 62%)',
+            'radial-gradient(ellipse 60% 55% at 60% 80%, rgba(150,220,190,0.48) 0%, transparent 62%)',
+          ].join(', '),
+          backgroundSize: '200% 200%',
+          filter: 'blur(14px)',
+          animation: visible ? 'v2WorkDrift 12s ease-in-out infinite alternate' : 'none',
+        }}
+      />
+      {/* Layer 2 — coral + sky accents drifting the other way, offset phase */}
+      <span
+        style={{
+          position: 'absolute',
+          inset: '-25%',
+          mixBlendMode: 'multiply',
+          background: [
+            'radial-gradient(ellipse 50% 55% at 80% 75%, rgba(245,165,150,0.42) 0%, transparent 60%)',
+            'radial-gradient(ellipse 55% 50% at 18% 78%, rgba(140,180,235,0.42) 0%, transparent 60%)',
+            'radial-gradient(ellipse 45% 45% at 50% 18%, rgba(235,200,160,0.36) 0%, transparent 62%)',
+          ].join(', '),
+          backgroundSize: '210% 210%',
+          filter: 'blur(16px)',
+          animation: visible ? 'v2WorkDrift2 16s ease-in-out infinite alternate-reverse' : 'none',
+        }}
+      />
+      {/* Whisper of grain — very subtle texture, soft-light on the light field */}
+      <span
+        style={{
+          position: 'absolute',
+          inset: '-8px',
+          backgroundImage: `url("data:image/svg+xml,${WORK_GRAIN}")`,
+          backgroundSize: '200px 200px',
+          mixBlendMode: 'soft-light',
+          opacity: 0.12,
+        }}
+      />
+    </span>
   )
 }
 
-export default function HomePage() {
-  // ── Scroll indicator: fades once the hero is past ──────────────
-  const [heroScrolled, setHeroScrolled] = useState(false)
-  useEffect(() => {
-    const onScroll = () => setHeroScrolled(window.scrollY > 80)
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
+// ── AboutOverlay — About Me card only ─────────────────────────────────────────
+// The portrait enters like a small reveal rather than a decorative effect:
+// quick ease-out, a warm halo, and two restrained pixel sparkles.
 
-  // ── About section: in-view reveal ─────────────────────────────
-  const aboutRef = useRef(null)
-  const aboutInView = useInView(aboutRef, { once: true, amount: 0.2 })
+function AboutOverlay({ visible, reducedMotion }: { visible: boolean; reducedMotion: boolean }) {
+  const transition = reducedMotion
+    ? 'none'
+    : `opacity 240ms ${EASE}, transform 240ms ${EASE}`
 
   return (
-    <>
-      <Nav />
-
-      {/* ── Hero ──────────────────────────────────────── */}
-      <section className="relative flex items-center justify-center overflow-hidden bg-[var(--bg)]" style={{ height: '100vh' }}>
-        {/* Animated orb */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div
-            className="orb"
-            style={{
-              width: '600px',
-              height: '500px',
-              background:
-                'radial-gradient(ellipse at 40% 40%, #c4b5f4 0%, #f0b897 50%, #e8a0b0 100%)',
-              filter: 'blur(80px)',
-              opacity: 0.55,
-              borderRadius: '50%',
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -60%)',
-            }}
-          />
-        </div>
-
-        {/* Hero text */}
-        <div className="relative z-10 text-center px-6">
-
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="flex justify-center mb-7"
-          >
-            <span
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] tracking-[0.05em] text-[var(--muted)] whitespace-nowrap"
-              style={{
-                border: '1px solid rgba(17,17,16,0.13)',
-                background: 'rgba(17,17,16,0.03)',
-              }}
-            >
-              <span
-                className="w-1.5 h-1.5 rounded-full flex-shrink-0"
-                style={{ backgroundColor: '#5a9e6f', opacity: 0.85 }}
-                aria-hidden="true"
-              />
-              Available for contract and freelance roles
-            </span>
-          </motion.div>
-
-          <motion.h1
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.25 }}
-            className="font-serif text-center tracking-[-0.025em] leading-[0.92]"
-            style={{ fontSize: 'clamp(72px, 10vw, 110px)' }}
-          >
-            Majid Kareem
-          </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.42 }}
-            className="font-serif italic text-[var(--muted)] mt-6"
-            style={{ fontSize: 'clamp(18px, 2.5vw, 26px)' }}
-          >
-            Creating strategic interactive experiences.
-          </motion.p>
-
-        </div>
-
-        {/* Bottom fade */}
-        <div
-          className="absolute bottom-0 left-0 right-0 pointer-events-none"
-          style={{
-            height: '220px',
-            background: 'linear-gradient(to bottom, transparent, var(--bg))',
-          }}
-        />
-
-        {/* Scroll indicator — fades once hero is scrolled past */}
-        <motion.div
-          animate={{ opacity: heroScrolled ? 0 : 1 }}
-          transition={{ duration: 0.5, ease: 'easeOut' }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 bounce-indicator z-10 pointer-events-none"
-        >
-          <span className="text-[var(--faint)] text-[12px] uppercase tracking-[0.12em]">
-            ↓
-          </span>
-        </motion.div>
-      </section>
-
-      {/* ── Selected Work ─────────────────────────────── */}
-      <section id="work" className="pt-20">
-        <div className="px-6 md:px-12 pb-10 flex items-center gap-8">
-          <span className="text-[11px] uppercase tracking-[0.14em] text-[var(--muted)] whitespace-nowrap shrink-0">
-            Selected Work
-          </span>
-          <div className="flex-grow border-t border-[var(--border)]" />
-        </div>
-
-        {projects.map((project, i) => (
-          <ProjectCard key={project.href} project={project} index={i} />
-        ))}
-      </section>
-
-      {/* ── About — fades in on scroll ─────────────────── */}
-      <motion.section
-        ref={aboutRef}
-        id="about"
-        initial={{ opacity: 0, y: 20 }}
-        animate={aboutInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-        className="px-6 md:px-12 py-16 md:py-20 border-t border-[var(--border)]"
+    <span
+      aria-hidden="true"
+      className="v2-about-portrait"
+      style={{
+        position: 'absolute',
+        inset: '39px 0 20px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        overflow: 'hidden',
+        pointerEvents: 'none',
+        borderRadius: 'inherit',
+      }}
+    >
+      <span
+        className="v2-about-glow"
+        style={{
+          opacity: visible ? 1 : 0,
+          transform: visible ? 'scale(1)' : 'scale(0.9)',
+          transition,
+        }}
+      />
+      <span
+        className="v2-about-frame"
+        style={{
+          opacity: visible ? 1 : 0,
+          transform: visible ? 'translateY(-3px) scale(1)' : 'translateY(0) scale(0.97)',
+          transition,
+        }}
       >
-        <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] gap-10 md:gap-16 items-start">
+        <img
+          src="/images/pixel-art-mirror-person-smiling-thumbnail.png"
+          alt=""
+          className="v2-about-image"
+        />
+      </span>
+      <span
+        className="v2-about-spark v2-about-spark-a"
+        style={{
+          opacity: visible ? 1 : 0,
+          animation: visible && !reducedMotion ? 'v2AboutTwinkle 1.7s steps(2, end) 220ms infinite' : 'none',
+        }}
+      />
+    </span>
+  )
+}
 
-          {/* Photo */}
-          <div
-            className="relative overflow-hidden rounded-[2px] max-w-[240px] md:max-w-none"
-            style={{ aspectRatio: '3/4' }}
+// ── WorldCard ─────────────────────────────────────────────────────────────────
+
+function WorldCard({ id, label, href, reducedMotion }: World & { reducedMotion: boolean }) {
+  const [hovered, setHovered] = useState(false)
+  const on = hovered && !reducedMotion
+  const tk = TOKENS[id]
+
+  return (
+    <Link
+      href={href}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onFocus={() => setHovered(true)}
+      onBlur={() => setHovered(false)}
+      aria-label={label}
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        minHeight: '148px',
+        borderRadius: '14px',
+        border: `1.5px solid ${on ? tk.borderHover : tk.borderRest}`,
+        background: on ? tk.bgHover : tk.bgRest,
+        padding: '26px 22px 20px',
+        textDecoration: 'none',
+        outline: 'none',
+        position: 'relative',
+        overflow: 'hidden',
+        boxShadow:
+          id === 'playground' && on
+            ? 'inset 0 0 32px rgba(99,102,241,0.10), inset 0 0 8px rgba(99,102,241,0.08)'
+            : id === 'work' && on
+            ? '0 8px 28px rgba(90,130,160,0.18)'
+            : id === 'about' && on
+            ? '0 10px 32px rgba(160,90,40,0.16)'
+            : '0 0 0 rgba(0,0,0,0)',
+        transition: reducedMotion
+          ? 'none'
+          : `border-color 0.4s ${EASE}, background 0.4s ${EASE}, box-shadow 0.4s ${EASE}`,
+      }}
+    >
+      {/* 8-bit overlay — AI Playground only */}
+      {id === 'playground' && !reducedMotion && (
+        <PixelOverlay visible={on} />
+      )}
+      {/* Grain + gradient overlay — Selected Work only */}
+      {id === 'work' && !reducedMotion && (
+        <WorkOverlay visible={on} />
+      )}
+      {/* Portrait reveal — About Me only. Reduced motion reveals it statically. */}
+      {id === 'about' && (
+        <AboutOverlay visible={hovered} reducedMotion={reducedMotion} />
+      )}
+
+      {/* Label — playground glitches; all worlds keep dark readable text */}
+      <span
+        style={{
+          fontSize: '18px',
+          fontWeight: 400,
+          color: '#111110',
+          lineHeight: 1.3,
+          letterSpacing: '-0.01em',
+          display: 'inline-block',
+          position: 'relative', // sits above overlay z-stack
+          zIndex: 1,
+          transition: reducedMotion ? 'none' : `color 0.4s ${EASE}`,
+          animation: id === 'playground' && on && !reducedMotion
+            ? 'v2LabelGlitch 2.4s steps(1) infinite'
+            : 'none',
+        }}
+      >
+        {label}
+      </span>
+
+      {/* Arrow — slides right and intensifies on hover */}
+      <span
+        aria-hidden="true"
+        style={{
+          fontSize: '14px',
+          color: on ? tk.arrowHover : tk.arrowRest,
+          display: 'inline-block',
+          position: 'relative',
+          zIndex: 1,
+          transform: on ? 'translateX(4px)' : 'translateX(0)',
+          transition: reducedMotion
+            ? 'none'
+            : `transform 0.4s ${EASE}, color 0.4s ${EASE}`,
+        }}
+      >
+        →
+      </span>
+    </Link>
+  )
+}
+
+// ── Page ──────────────────────────────────────────────────────────────────────
+
+export default function HomePageV2() {
+  const [reducedMotion, setReducedMotion] = useState(false)
+
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
+    setReducedMotion(mq.matches)
+    const handler = (e: MediaQueryListEvent) => setReducedMotion(e.matches)
+    mq.addEventListener('change', handler)
+    return () => mq.removeEventListener('change', handler)
+  }, [])
+
+  return (
+    <RoomFrame
+      contentStyle={{
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 'clamp(20px, 3vh, 40px)',
+      }}
+    >
+          {/* Headline — preserved from Figma, Hanken Grotesk 400 */}
+          <p
+            style={{
+              fontSize: 'clamp(22px, 2.8vw, 40px)',
+              fontWeight: 400,
+              lineHeight: 1.3,
+              color: '#111110',
+              textAlign: 'center',
+              maxWidth: '580px',
+              margin: 0,
+              letterSpacing: '-0.02em',
+            }}
           >
-            <Image
-              src="/images/headshot.jpg"
-              alt="Majid Kareem"
-              fill
-              className="object-cover"
-              style={{ filter: 'grayscale(10%)' }}
-            />
+            Currently designing products, exploring AI, and occasionally building
+            things that shouldn&apos;t exist.
+          </p>
+
+          {/* Three worlds — CSS grid, equal columns, stacks on mobile */}
+          <div
+            style={{
+              display: 'grid',
+              gap: '16px',
+              width: '100%',
+              maxWidth: '560px',
+            }}
+            className="worlds-grid"
+          >
+            {WORLDS.map(w => (
+              <WorldCard key={w.id} {...w} reducedMotion={reducedMotion} />
+            ))}
           </div>
 
-          {/* Text */}
-          <div className="flex flex-col justify-center gap-5 py-4">
-            <span className="text-[11px] uppercase tracking-[0.12em] text-[var(--muted)]">
-              Amsterdam, Netherlands
-            </span>
-
-            <h2 className="font-serif text-[34px] leading-[1.15] tracking-[-0.01em]">
-              Majid Kareem,
-              <br />
-              <em><AnimatedWord /> designer.</em>
-            </h2>
-
-            <span className="text-[11px] uppercase tracking-[0.1em] text-[var(--faint)]">
-              Product Design · Interaction Design · Design Systems
-            </span>
-
-            <p className="text-[16px] text-[var(--muted)] leading-[1.75] font-light max-w-[420px]">
-              I care about what digital experiences could be, not just what
-              they are. Making complex things feel clear, intentional, and
-              satisfying to use. Especially curious about how emerging
-              technology opens up entirely new kinds of interaction.
-            </p>
-
-            <div className="flex items-center gap-6">
-              <a
-                href="mailto:majidsajid@outlook.com"
-                className="text-[12px] uppercase tracking-[0.08em] underline underline-offset-4 text-[var(--text)] hover:text-[var(--muted)] transition-colors duration-200"
-              >
-                Email
-              </a>
-              <a
-                href="https://www.linkedin.com/in/majid-kareem/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[12px] uppercase tracking-[0.08em] underline underline-offset-4 text-[var(--text)] hover:text-[var(--muted)] transition-colors duration-200"
-              >
-                LinkedIn
-              </a>
-            </div>
-          </div>
-        </div>
-      </motion.section>
-
-      <Footer />
-    </>
+      {/* Scoped keyframes and responsive rules — isolated to /v2 */}
+      <style>{`
+        @keyframes v2ScanScroll {
+          from { background-position: 0 0; }
+          to   { background-position: 0 -3px; }
+        }
+        @keyframes v2GridDrift {
+          from { background-position: 0 0; }
+          to   { background-position: 8px 8px; }
+        }
+        @keyframes v2PixelBlink {
+          0%   { opacity: 0; }
+          50%  { opacity: 1; }
+          100% { opacity: 0; }
+        }
+        @keyframes v2WorkDrift {
+          0%   { background-position: 0% 50%; }
+          50%  { background-position: 100% 50%; }
+          100% { background-position: 50% 100%; }
+        }
+        @keyframes v2WorkDrift2 {
+          0%   { background-position: 100% 50%; }
+          50%  { background-position: 0% 0%; }
+          100% { background-position: 50% 100%; }
+        }
+        /* ── About card: portrait reveal ─────────────────────────────── */
+        /* Soft warm ambient wash — no hard edge, just blends into the card bg */
+        .v2-about-glow {
+          position: absolute;
+          inset: 0;
+          border-radius: inherit;
+          background: radial-gradient(72% 70% at 50% 42%, rgba(246, 184, 148, 0.18), transparent 78%);
+        }
+        /* Chromeless portrait holder — no border/bezel/background so the
+           transparent PNG sits directly on the card. A soft elliptical mask
+           centered on the face fades all card edges equally — no hard rect crop. */
+        .v2-about-frame {
+          position: relative;
+          width: 100%;
+          height: 100%;
+          will-change: transform, opacity;
+          /* Ellipse centered on the face (35% 30%), fully opaque in the middle,
+             fading to transparent at all edges — gives a smooth vignette with no
+             visible rectangular clipping boundary. */
+          -webkit-mask-image: radial-gradient(ellipse 88% 82% at 35% 30%, #000 30%, rgba(0,0,0,0.75) 55%, rgba(0,0,0,0.2) 78%, transparent 95%);
+          mask-image: radial-gradient(ellipse 88% 82% at 35% 30%, #000 30%, rgba(0,0,0,0.75) 55%, rgba(0,0,0,0.2) 78%, transparent 95%);
+        }
+        .v2-about-image {
+          display: block;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          /* keep face in the opaque centre of the mask */
+          object-position: 27% 24%;
+          image-rendering: pixelated;
+        }
+        .v2-about-spark {
+          position: absolute;
+          width: 2px;
+          height: 2px;
+          background: #e2a263;
+          box-shadow:
+            0 -3px 0 #e2a263,
+            0 3px 0 #e2a263,
+            -3px 0 0 #e2a263,
+            3px 0 0 #e2a263;
+          transition: opacity 180ms ease-out;
+        }
+        .v2-about-spark-a { right: 17px; top: 13px; }
+        @keyframes v2AboutTwinkle {
+          0%, 48%, 100% { transform: scale(1); opacity: 0.72; }
+          50%, 72% { transform: scale(1.35); opacity: 0.18; }
+        }
+        @keyframes v2LabelGlitch {
+          0%    { transform: translateX(0px); }
+          8%    { transform: translateX(2px); }
+          12%   { transform: translateX(-1px); }
+          16%   { transform: translateX(0px); }
+          80%   { transform: translateX(0px); }
+          86%   { transform: translateX(-2px); }
+          90%   { transform: translateX(1px); }
+          94%   { transform: translateX(-1px); }
+          100%  { transform: translateX(0px); }
+        }
+        /* 3-col on desktop, 1-col on mobile (CSS class — not overridden by inline) */
+        .worlds-grid { grid-template-columns: repeat(3, 1fr); }
+        @media (max-width: 600px) {
+          .worlds-grid {
+            grid-template-columns: 1fr;
+            max-width: 340px;
+            gap: 14px;
+          }
+        }
+        /* Touch devices: About portrait visible at rest (no hover event on touch) */
+        @media (hover: none) {
+          .v2-about-glow { opacity: 0.6 !important; transform: scale(1) !important; }
+          .v2-about-frame { opacity: 0.8 !important; transform: translateY(-3px) scale(1) !important; }
+        }
+      `}</style>
+    </RoomFrame>
   )
 }
