@@ -263,6 +263,15 @@ function CopyIcon() {
   )
 }
 
+function ResumeIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true">
+      <rect x="2.5" y="1.5" width="10" height="12" rx="1.5" stroke="#3a3a37" strokeWidth="1.3" />
+      <path d="M5 5h5M5 7.5h5M5 10h3" stroke="#3a3a37" strokeWidth="1.3" strokeLinecap="round" />
+    </svg>
+  )
+}
+
 function LinkedInIcon() {
   return (
     <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true">
@@ -402,8 +411,21 @@ function ContactDropdown({ onCopyEmail }: { onCopyEmail: () => void }) {
           style={itemStyle}
         >
           <span aria-hidden="true" style={iconHolder}><CopyIcon /></span>
-          <span>Email</span>
+          <span>majidsajid@outlook.com</span>
         </button>
+        <a
+          href="https://drive.google.com/file/d/1-40FvUisOKLs-e9uVBAJ3Ftg8TM9EUVK/view?usp=sharing"
+          target="_blank"
+          rel="noopener noreferrer"
+          role="menuitem"
+          tabIndex={open ? 0 : -1}
+          onClick={() => setOpen(false)}
+          className="v2-work-item"
+          style={itemStyle}
+        >
+          <span aria-hidden="true" style={iconHolder}><ResumeIcon /></span>
+          <span>Resume ↗</span>
+        </a>
         <a
           href="https://www.linkedin.com/in/majid-kareem/"
           target="_blank"

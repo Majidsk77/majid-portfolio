@@ -133,7 +133,7 @@ export default function IMCProsperityV2() {
         <WideImage src="prosperity-outpost.png" alt="Prosperity 04 Mars outpost: team score card view" />
 
         {/* ── Overview ─────────────────────────────────── */}
-        <Section kicker="Overview" heading="30,703 players. 117 countries. Launched 2026.">
+        <Section kicker="Overview" heading="Balancing immersive gameplay with clear, scalable UX for a live trading competition.">
           <p className="gb-body">
             Prosperity 04 launched in March 2026, the fourth edition of IMC&apos;s annual
             student trading competition, fully redesigned around a space exploration theme.
