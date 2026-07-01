@@ -160,14 +160,16 @@ export default function Mirror() {
         /* ── Contextual panel ───────────────────────────────── */
         .am-panel {
           position: absolute;
-          /* vertically centered against the tall mirror so it reads as one unit */
-          top: 50%;
-          /* mirror button left edge is 57.7%, but the PNG has transparent
-             padding, so sitting near-flush to the box leaves a ~12-18px visual
-             gap to the actual glass — reads as attached to the mirror */
-          right: 39.8%;
-          /* wider so the copy wraps into fewer lines and isn't stretched tall */
-          width: clamp(280px, 35%, 408px);
+          /* align with top of mirror (mirror top: 10.7%) with a small offset
+             so the panel sits slightly below the mirror's top edge */
+          top: 9%;
+          /* right: 0 pins the panel to the right edge of the stage.
+             The mirror PNG (left:57.7%, width:32.3%) has ~10% transparent
+             padding on its right side, so the panel overlaps only transparent
+             pixels and reads as sitting beside the mirror glass with an
+             intentional gap. */
+          right: 0;
+          width: clamp(240px, 27%, 320px);
           z-index: 3;
           background: #fffefb;
           border: 1.5px solid rgba(121, 175, 182, 0.55);
@@ -176,18 +178,20 @@ export default function Mirror() {
           box-shadow: 0 6px 18px rgba(121, 175, 182, 0.14);
           color: #111110;
           opacity: 0;
-          /* grows out of the mirror edge: slide in from the right + subtle scale.
-             translateY(-50%) keeps it vertically centered on the mirror. */
-          transform: translateY(-50%) translateX(18px) scale(0.96);
-          transform-origin: right center;
+          /* grows out from the mirror glass toward the right:
+             starts translated left (near glass edge) + slightly scaled down,
+             expands rightward on open. transform-origin at left keeps the
+             left edge anchored to the mirror glass while the right side expands. */
+          transform: translateX(-12px) scale(0.96);
+          transform-origin: left center;
           /* easeOutCubic — calm, premium, not springy */
           transition: opacity 0.28s cubic-bezier(0.215, 0.61, 0.355, 1),
                       transform 0.32s cubic-bezier(0.215, 0.61, 0.355, 1);
         }
-        .am-panel.is-open { opacity: 1; transform: translateY(-50%) translateX(0) scale(1); }
+        .am-panel.is-open { opacity: 1; transform: translateX(0) scale(1); }
         @media (prefers-reduced-motion: reduce) {
-          .am-panel { transition: none; transform: translateY(-50%); }
-          .am-panel.is-open { transform: translateY(-50%); }
+          .am-panel { transition: none; transform: none; }
+          .am-panel.is-open { transform: none; }
         }
 
         .am-close {
