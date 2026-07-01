@@ -22,9 +22,9 @@ interface World {
 // ── World definitions ─────────────────────────────────────────────────────────
 
 const WORLDS: World[] = [
-  { id: 'playground', label: 'AI Playground', href: '/v2/ai-playground' },
-  { id: 'work',       label: 'Selected Work',  href: '/v2/selected-work' },
-  { id: 'about',      label: 'About Me',        href: '/v2/about' },
+  { id: 'playground', label: 'AI Playground', href: '/ai-playground' },
+  { id: 'work',       label: 'Selected Work',  href: '/selected-work' },
+  { id: 'about',      label: 'About Me',        href: '/about' },
 ]
 
 // ── Per-world color tokens ────────────────────────────────────────────────────
@@ -298,6 +298,8 @@ function WorldCard({ id, label, href, reducedMotion }: World & { reducedMotion: 
       onMouseLeave={() => setHovered(false)}
       onFocus={() => setHovered(true)}
       onBlur={() => setHovered(false)}
+      onPointerDown={() => setHovered(true)}
+      onPointerCancel={() => setHovered(false)}
       aria-label={label}
       style={{
         display: 'flex',
@@ -529,6 +531,10 @@ export default function HomePageV2() {
         @media (hover: none) {
           .v2-about-glow { opacity: 0.6 !important; transform: scale(1) !important; }
           .v2-about-frame { opacity: 0.8 !important; transform: translateY(-3px) scale(1) !important; }
+        }
+        /* Mobile: comfortable tap targets */
+        @media (max-width: 600px) {
+          .worlds-grid a { min-height: 80px !important; }
         }
       `}</style>
     </RoomFrame>
