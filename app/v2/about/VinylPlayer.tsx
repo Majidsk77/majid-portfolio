@@ -33,11 +33,24 @@ export default function VinylPlayer() {
         className={`av-nowplaying${hovered ? ' is-visible' : ''}`}
         aria-hidden="true"
       >
-        <span className="av-np-dot" />
-        <div className="av-np-text">
-          <span className="av-np-label">Now Playing</span>
-          <span className="av-np-track">Blue in Green — Miles Davis</span>
+        {/* Top row: dot + track info */}
+        <div className="av-np-row">
+          <span className="av-np-dot" />
+          <div className="av-np-text">
+            <span className="av-np-label">Now Playing</span>
+            <span className="av-np-track">Paradise — Sade</span>
+          </div>
         </div>
+        {/* Spotify CTA */}
+        <a
+          className="av-np-spotify"
+          href="https://open.spotify.com/track/4tReFKumS5bcFahdXDiM1b?si=4221855a1d55404f"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Listen on Spotify (opens in a new tab)"
+        >
+          Spotify <span className="av-np-arrow" aria-hidden="true">↗</span>
+        </a>
       </div>
 
       <style>{`
@@ -65,18 +78,16 @@ export default function VinylPlayer() {
         .av-nowplaying {
           display: none; /* hidden on mobile and non-hover devices */
           position: absolute;
-          /* sits ~10% above the top edge of the vinyl PNG */
           bottom: 62%;
           left: 14%;
-          align-items: center;
-          gap: 8px;
-          padding: 8px 14px 8px 10px;
+          flex-direction: column;
+          gap: 10px;
+          padding: 10px 14px 10px 10px;
           background: #fffefb;
           border: 1.5px solid rgba(121, 175, 182, 0.55);
           border-radius: 10px;
           white-space: nowrap;
           z-index: 2;
-          pointer-events: none;
           /* Hidden state */
           opacity: 0;
           transform: translateY(4px) scale(0.96);
@@ -90,6 +101,13 @@ export default function VinylPlayer() {
         @media (prefers-reduced-motion: reduce) {
           .av-nowplaying { transition: opacity 0.12s ease; transform: none; }
           .av-nowplaying.is-visible { transform: none; }
+        }
+
+        /* Top row: dot + track text side by side */
+        .av-np-row {
+          display: flex;
+          align-items: center;
+          gap: 8px;
         }
 
         /* Pulsing green dot — "record is spinning" indicator */
@@ -131,6 +149,39 @@ export default function VinylPlayer() {
           color: #1a1a18;
           line-height: 1;
           letter-spacing: -0.01em;
+        }
+
+        /* Spotify CTA — sits below the track row, flush left */
+        .av-np-spotify {
+          display: inline-flex;
+          align-items: baseline;
+          gap: 3px;
+          font-family: var(--font-dm-sans, ui-sans-serif, sans-serif);
+          font-size: 11px;
+          font-weight: 400;
+          color: rgba(17, 17, 16, 0.50);
+          text-decoration: none;
+          letter-spacing: -0.01em;
+          line-height: 1;
+          transition: color 0.15s ease, text-decoration-color 0.15s ease;
+          text-underline-offset: 2px;
+        }
+        .av-np-spotify:hover {
+          color: rgba(17, 17, 16, 0.88);
+          text-decoration: underline;
+          text-decoration-color: rgba(17, 17, 16, 0.30);
+        }
+        .av-np-arrow {
+          display: inline-block;
+          transition: transform 0.15s ease;
+        }
+        .av-np-spotify:hover .av-np-arrow {
+          transform: translate(1.5px, -1.5px);
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .av-np-spotify { transition: none; }
+          .av-np-arrow   { transition: none; }
+          .av-np-spotify:hover .av-np-arrow { transform: none; }
         }
 
         /* Show only on pointer-capable desktop — never on touch */
