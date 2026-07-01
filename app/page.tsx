@@ -298,9 +298,8 @@ function WorldCard({ id, label, href, reducedMotion }: World & { reducedMotion: 
       onMouseLeave={() => setHovered(false)}
       onFocus={() => setHovered(true)}
       onBlur={() => setHovered(false)}
-      onPointerDown={() => setHovered(true)}
-      onPointerCancel={() => setHovered(false)}
       aria-label={label}
+      className="world-card"
       style={{
         display: 'flex',
         flexDirection: 'column',
@@ -314,6 +313,7 @@ function WorldCard({ id, label, href, reducedMotion }: World & { reducedMotion: 
         outline: 'none',
         position: 'relative',
         overflow: 'hidden',
+        touchAction: 'manipulation',
         boxShadow:
           id === 'playground' && on
             ? 'inset 0 0 32px rgba(99,102,241,0.10), inset 0 0 8px rgba(99,102,241,0.08)'
@@ -527,14 +527,14 @@ export default function HomePageV2() {
             gap: 14px;
           }
         }
-        /* Touch devices: About portrait visible at rest (no hover event on touch) */
-        @media (hover: none) {
-          .v2-about-glow { opacity: 0.6 !important; transform: scale(1) !important; }
-          .v2-about-frame { opacity: 0.8 !important; transform: translateY(-3px) scale(1) !important; }
-        }
-        /* Mobile: comfortable tap targets */
-        @media (max-width: 600px) {
-          .worlds-grid a { min-height: 80px !important; }
+        /* Touch/mobile tap feedback — CSS :active only, no JS state needed.
+           touch-action: manipulation is set inline to remove 300ms tap delay. */
+        @media (hover: none) and (pointer: coarse) {
+          .world-card:active {
+            opacity: 0.72;
+            transform: scale(0.975);
+            transition: opacity 0.08s ease, transform 0.08s ease !important;
+          }
         }
       `}</style>
     </RoomFrame>
