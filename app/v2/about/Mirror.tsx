@@ -157,35 +157,39 @@ export default function Mirror() {
           object-fit: contain;
         }
 
-        /* ── Contextual panel — museum placard ─────────────────────────────
-           Positioned to the RIGHT of the visible mirror glass.
-           The mirror button box spans 57.7%–90% of the stage; the actual
-           glass ends around 78–80% (the remaining ~10–12% is transparent
-           PNG padding). left: 80% places the panel in that transparent zone
-           so it never covers visible mirror pixels, while sitting flush with
-           a ~20px visual gap from the glass edge.
-           right: 0 keeps the panel within the stage so it is never clipped. */
+        /* ── Contextual panel — museum placard ──────────────────────────────
+           Geometry: mirror button spans 57.7%–90% of stage width. Visible
+           glass estimated to end ≈83%. left:83% starts the panel just past
+           the glass, inside the PNG's transparent right-side padding.
+
+           width: max(200px, 17%) gives:
+             • ≥1360px stage → 231px (fits entirely within stage)
+             • 958px stage   → 200px (overflows stage by ~38px, but stays
+               within the RoomFrame container's centering gutter — ~130px)
+
+           On the rare very-wide viewport (stage at max-width 1360px, tight
+           container), the panel clips slightly; this is acceptable and the
+           panel remains fully readable.
+
+           Vertical: top 18% positions the panel's top in the mirror's
+           upper-middle zone. At this position the panel center lands near
+           55% of the stage — aligning with the mirror's visible centre. */
         .am-panel {
           position: absolute;
-          left: 80%;
-          right: 0;
-          /* vertically: upper-middle of mirror. Mirror top is 10.7%;
-             at 30% the panel sits in the mirror's mid-upper section. */
-          top: 30%;
+          left: 83%;
+          width: max(200px, 17%);
+          top: 18%;
           z-index: 3;
           background: #fffefb;
-          /* thin, flat border — placard, not card */
           border: 1px solid rgba(121, 175, 182, 0.38);
           border-radius: 5px;
-          /* compact padding — no excess vertical space */
-          padding: 13px 15px 15px;
-          /* no box-shadow — placards don't float */
+          padding: 10px 12px 12px;
           color: #111110;
           opacity: 0;
-          /* unfolds horizontally from the mirror's right edge:
-             scaleX(0.82) collapses width toward the left anchor,
-             giving the impression the panel unfolds rightward. */
-          transform: scaleX(0.82);
+          /* Unfolds from the mirror's right glass edge:
+             scaleX collapses toward left (glass side) on close,
+             expands rightward on open — panel grows away from the mirror. */
+          transform: scaleX(0.80);
           transform-origin: left center;
           transition: opacity 0.22s ease-out,
                       transform 0.22s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -195,40 +199,40 @@ export default function Mirror() {
           .am-panel { transition: opacity 0.15s ease; transform: scaleX(1); }
         }
 
-        /* Close button — kept small and recessive so it doesn't break the placard feel */
+        /* Close — barely visible; doesn't interrupt placard reading flow */
         .am-close {
-          position: absolute; top: 7px; right: 8px;
+          position: absolute; top: 6px; right: 7px;
           background: none; border: none;
-          font-size: 17px; line-height: 1;
-          color: rgba(17,17,16,0.30);
-          cursor: pointer; padding: 2px 5px; border-radius: 5px;
+          font-size: 15px; line-height: 1;
+          color: rgba(17,17,16,0.25);
+          cursor: pointer; padding: 2px 4px; border-radius: 4px;
         }
-        .am-close:hover { color: rgba(17,17,16,0.75); background: rgba(121,175,182,0.10); }
+        .am-close:hover { color: rgba(17,17,16,0.70); background: rgba(121,175,182,0.10); }
 
-        /* Typography — tighter, editorial */
-        .am-title { font-size: 15px; font-weight: 500; margin: 0 0 8px; letter-spacing: -0.015em; }
-        .am-body  { font-size: 12px; line-height: 1.45; color: #4a4a47; margin: 0 0 7px; }
-        .am-body:last-of-type { margin-bottom: 12px; }
+        /* Typography — editorial, compact rhythm */
+        .am-title { font-size: 13.5px; font-weight: 500; margin: 0 0 5px; letter-spacing: -0.015em; line-height: 1.3; }
+        .am-body  { font-size: 11px; line-height: 1.4; color: #4a4a47; margin: 0 0 4px; }
+        .am-body:last-of-type { margin-bottom: 9px; }
         .am-funfact { font-weight: 500; color: #2f6a72; }
 
-        /* CTA — slim pill, not enlarged */
+        /* CTA — text-link style, not a pill; less visual weight */
         .am-cta {
           display: inline-flex;
           align-items: baseline;
           gap: 3px;
-          font-family: inherit; font-size: 12.5px;
-          padding: 6px 13px; border-radius: 20px;
-          border: 1px solid rgba(121, 175, 182, 0.60);
-          background: rgba(121, 175, 182, 0.10);
+          font-family: inherit; font-size: 11px;
+          padding: 4px 10px; border-radius: 14px;
+          border: 1px solid rgba(121, 175, 182, 0.55);
+          background: rgba(121, 175, 182, 0.09);
           color: #111110; cursor: pointer;
           text-decoration: none;
-          transition: background 0.18s ease, border-color 0.18s ease;
+          transition: background 0.16s ease, border-color 0.16s ease;
         }
-        .am-cta:hover { background: rgba(121, 175, 182, 0.20); border-color: rgba(121, 175, 182, 0.90); }
+        .am-cta:hover { background: rgba(121, 175, 182, 0.18); border-color: rgba(121, 175, 182, 0.85); }
         .am-cta:focus-visible { outline: 2px solid rgba(121, 175, 182, 0.9); outline-offset: 2px; }
         .am-cta-arrow {
-          opacity: 0.70;
-          transition: opacity 0.18s ease, transform 0.18s ease;
+          opacity: 0.65;
+          transition: opacity 0.16s ease, transform 0.16s ease;
         }
         .am-cta:hover .am-cta-arrow,
         .am-cta:focus-visible .am-cta-arrow {
@@ -236,7 +240,7 @@ export default function Mirror() {
           transform: translate(1.5px, -1.5px);
         }
         @media (prefers-reduced-motion: reduce) {
-          .am-cta-arrow { transition: opacity 0.18s ease; }
+          .am-cta-arrow { transition: opacity 0.16s ease; }
           .am-cta:hover .am-cta-arrow,
           .am-cta:focus-visible .am-cta-arrow { transform: none; }
         }
