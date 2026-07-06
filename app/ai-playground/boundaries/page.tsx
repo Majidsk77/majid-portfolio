@@ -100,9 +100,8 @@ export default function BoundariesPage() {
         {/* Device showcase */}
         <Reveal>
           <div className="bd-stage">
-            <div className="bd-stage-phone bd-stage-side"><Phone src="Chip-onboarding-1.PNG" alt="Boundaries onboarding screen" /></div>
-            <div className="bd-stage-phone bd-stage-center"><Phone src="Chip-homepage.PNG" alt="Boundaries home screen with active boundaries" /></div>
-            <div className="bd-stage-phone bd-stage-side"><Phone src="Chip-existingchip-overview.PNG" alt="Boundaries habit overview screen" /></div>
+            <div className="bd-stage-phone"><Phone src="Chip-onboarding-1.PNG" alt="Boundaries onboarding screen" /></div>
+            <div className="bd-stage-phone"><Phone src="Chip-existingchip-overview.PNG" alt="Boundaries habit overview screen" /></div>
           </div>
         </Reveal>
 
@@ -231,8 +230,7 @@ export default function BoundariesPage() {
           margin: clamp(40px, 7vh, 80px) 0;
           flex-wrap: wrap;
         }
-        .bd-stage-phone { width: clamp(170px, 22vw, 232px); }
-        .bd-stage-center { transform: translateY(-16px); }
+        .bd-stage-phone { width: clamp(200px, 26vw, 280px); }
         .bd-phone {
           position: relative; width: 100%; overflow: hidden;
           border-radius: 26px; background: #ece7df;
@@ -297,7 +295,6 @@ export default function BoundariesPage() {
         @media (max-width: 640px) {
           .bd-features { grid-template-columns: 1fr; }
           .bd-gallery { grid-template-columns: 1fr; }
-          .bd-stage-center { transform: none; }
         }
       `}</style>
     </div>
