@@ -60,10 +60,10 @@ export const metadata: Metadata = {
     description: DESCRIPTION,
     images: [
       {
-        url: "/images/exact-hero.png",
-        width: 2919,
-        height: 824,
-        alt: "Majid Kareem — Product Designer Portfolio",
+        url: `${BASE_URL}/images/about-page-preview.png`,
+        width: 1200,
+        height: 630,
+        alt: "Majid Kareem's interactive About Me portfolio room",
       },
     ],
   },
@@ -71,7 +71,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Majid Kareem — Product Designer",
     description: DESCRIPTION,
-    images: ["/images/exact-hero.png"],
+    images: [`${BASE_URL}/images/about-page-preview.png`],
   },
   robots: {
     index: true,
