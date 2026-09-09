@@ -485,6 +485,11 @@ export default function NavV2({ flow = false }: { flow?: boolean } = {}) {
   })
 
   // Panel slot: cross-fades between main/work/contact
+  // pointerEvents must also gate on menuOpen — the outer fullscreen wrapper
+  // already sets pointer-events: none when closed, but a descendant setting
+  // 'auto' re-enables events for its own subtree regardless of the ancestor.
+  // Without the menuOpen check, this invisible fixed inset:0 panel silently
+  // intercepts every tap on the page underneath while the menu is closed.
   const panelSlot = (which: MobilePanel): React.CSSProperties => ({
     position: 'absolute',
     inset: 0,
@@ -495,7 +500,7 @@ export default function NavV2({ flow = false }: { flow?: boolean } = {}) {
     gap: '24px',
     opacity: panel === which ? 1 : 0,
     transform: panel === which ? 'translateX(0)' : panel === 'main' ? 'translateX(40px)' : 'translateX(-40px)',
-    pointerEvents: panel === which ? 'auto' : 'none',
+    pointerEvents: menuOpen && panel === which ? 'auto' : 'none',
     transition: 'opacity 0.22s ease, transform 0.22s cubic-bezier(0.22, 1, 0.36, 1)',
   })
 
