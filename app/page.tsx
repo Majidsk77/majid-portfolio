@@ -286,16 +286,23 @@ function AboutOverlay({ visible, reducedMotion }: { visible: boolean; reducedMot
 
 // ── WorldCard ─────────────────────────────────────────────────────────────────
 
-function WorldCard({ id, label, href, reducedMotion }: World & { reducedMotion: boolean }) {
+function WorldCard({ id, label, href, reducedMotion, supportsHover }: World & { reducedMotion: boolean; supportsHover: boolean }) {
   const [hovered, setHovered] = useState(false)
   const on = hovered && !reducedMotion
   const tk = TOKENS[id]
 
+  // Mouse-hover handlers are only attached on devices that actually support
+  // hover. Attaching them unconditionally causes iOS Safari's "first tap
+  // reveals :hover, second tap navigates" quirk — the first tap gets
+  // consumed simulating the hover state instead of following the link.
+  const hoverHandlers = supportsHover
+    ? { onMouseEnter: () => setHovered(true), onMouseLeave: () => setHovered(false) }
+    : {}
+
   return (
     <Link
       href={href}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      {...hoverHandlers}
       onFocus={() => setHovered(true)}
       onBlur={() => setHovered(false)}
       aria-label={label}
@@ -385,11 +392,20 @@ function WorldCard({ id, label, href, reducedMotion }: World & { reducedMotion: 
 
 export default function HomePageV2() {
   const [reducedMotion, setReducedMotion] = useState(false)
+  const [supportsHover, setSupportsHover] = useState(false)
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
     setReducedMotion(mq.matches)
     const handler = (e: MediaQueryListEvent) => setReducedMotion(e.matches)
+    mq.addEventListener('change', handler)
+    return () => mq.removeEventListener('change', handler)
+  }, [])
+
+  useEffect(() => {
+    const mq = window.matchMedia('(hover: hover) and (pointer: fine)')
+    setSupportsHover(mq.matches)
+    const handler = (e: MediaQueryListEvent) => setSupportsHover(e.matches)
     mq.addEventListener('change', handler)
     return () => mq.removeEventListener('change', handler)
   }, [])
@@ -430,7 +446,7 @@ export default function HomePageV2() {
             className="worlds-grid"
           >
             {WORLDS.map(w => (
-              <WorldCard key={w.id} {...w} reducedMotion={reducedMotion} />
+              <WorldCard key={w.id} {...w} reducedMotion={reducedMotion} supportsHover={supportsHover} />
             ))}
           </div>
 
