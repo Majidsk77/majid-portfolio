@@ -301,14 +301,17 @@ export default function AiPlaygroundRoom() {
           .pg-bubble { transition: none; }
         }
 
-        /* Mobile — vertical stack, title at top, frame grows to fit */
+        /* Mobile — vertical stack, title at top, frame grows to fit.
+           Bubbles are always-visible captions here (not hover-revealed) —
+           touch has no hover, and tap-to-reveal-then-tap-to-navigate is the
+           double-tap anti-pattern already fixed on the homepage cards. */
         @media (max-width: 760px) {
           .pg-scene {
             display: flex;
             flex-direction: column;
             flex: none;
             align-items: center;
-            gap: 24px;
+            gap: 32px;
             padding: 8px 0 24px;
           }
           .pg-title {
@@ -324,9 +327,22 @@ export default function AiPlaygroundRoom() {
             top: auto !important;
             width: 120px !important;
             min-height: 44px; /* tap target */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
           }
           .pg-toy img { animation: none !important; }
-          .pg-bubble { display: none !important; }
+          .pg-bubble {
+            display: block !important;
+            position: static;
+            opacity: 1;
+            transform: none;
+            max-width: 220px;
+            text-align: center;
+            box-shadow: 0 0 0 3px #1a1a18;
+          }
+          .pg-bubble::after, .pg-bubble::before { display: none; }
         }
       `}</style>
     </RoomFrame>
