@@ -16,7 +16,7 @@ interface Project {
   name: string
   href: string
   thumb: string
-  thumbPosition?: string  // object-position override for the cover-cropped thumbnail
+  thumbContain?: boolean  // show the full image (contain) on white instead of cover-cropping
   // 3D pill palette per project (matches the Figma reference)
   fill: string
   lip: string   // darker "key cap" lip that gives the button depth
@@ -24,7 +24,7 @@ interface Project {
 
 const PROJECTS: Project[] = [
   { name: 'Google Boba',    href: '/work/google-boba', thumb: '/images/boba-hero.png',        fill: '#d9c9f6', lip: '#b69fe6' },
-  { name: 'Exact.com',      href: '/work/exact',      thumb: '/images/exact-hero-3.png', thumbPosition: 'left top', fill: '#f8c4bf', lip: '#e89a92' },
+  { name: 'Exact.com',      href: '/work/exact',      thumb: '/images/exact-hero-3.png', thumbContain: true, fill: '#f8c4bf', lip: '#e89a92' },
   { name: 'IMC Prosperity', href: '/work/imc-prosperity', thumb: '/images/prosperity-outpost.png', fill: '#bdd9f1', lip: '#90bce2' },
 ]
 
@@ -52,9 +52,9 @@ export default function SelectedWorkRoom() {
           >
             {/* Character-select arrow — appears above the active project */}
             <span className="sw-arrow" aria-hidden="true" />
-            <span className="sw-thumb">
+            <span className="sw-thumb" style={p.thumbContain ? { background: '#FFFFFF' } : undefined}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={p.thumb} alt="" aria-hidden="true" style={p.thumbPosition ? { objectPosition: p.thumbPosition } : undefined} />
+              <img src={p.thumb} alt="" aria-hidden="true" style={p.thumbContain ? { objectFit: 'contain', objectPosition: 'center' } : undefined} />
             </span>
             <span className="sw-btn">{p.name}</span>
           </Link>
