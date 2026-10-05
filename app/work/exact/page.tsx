@@ -116,6 +116,15 @@ export default function ExactV2() {
               <div><dt>Client</dt><dd>Exact</dd></div>
               <div><dt>Year</dt><dd>2025</dd></div>
             </dl>
+            <a
+              className="gb-live"
+              href="https://www.exact.com/nl"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="View live site (opens in a new tab)"
+            >
+              View Live Site <span className="gb-live-arrow" aria-hidden="true">↗</span>
+            </a>
           </header>
         </Reveal>
 
@@ -340,6 +349,31 @@ export default function ExactV2() {
         .gb-meta div { display: flex; flex-direction: column; gap: 3px; }
         .gb-meta dt { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: #a8a8a3; }
         .gb-meta dd { margin: 0; font-size: 15px; color: #111110; }
+        .gb-live {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          min-height: 44px;
+          margin-top: 18px;
+          font-size: 15px;
+          font-weight: 500;
+          color: #111110;
+          text-decoration: underline;
+          text-decoration-color: rgba(17,17,16,0.25);
+          text-decoration-thickness: 1px;
+          text-underline-offset: 5px;
+          transition: text-decoration-color 0.16s ease;
+        }
+        .gb-live:hover, .gb-live:focus-visible { text-decoration-color: #111110; }
+        .gb-live:focus-visible { outline: 2px solid #111110; outline-offset: 3px; border-radius: 2px; }
+        .gb-live-arrow { opacity: 0.65; transition: opacity 0.16s ease, transform 0.16s ease; }
+        .gb-live:hover .gb-live-arrow,
+        .gb-live:focus-visible .gb-live-arrow { opacity: 1; transform: translate(1.5px, -1.5px); }
+        @media (prefers-reduced-motion: reduce) {
+          .gb-live, .gb-live-arrow { transition: none; }
+          .gb-live:hover .gb-live-arrow,
+          .gb-live:focus-visible .gb-live-arrow { transform: none; }
+        }
 
         .gb-section { max-width: 660px; margin: clamp(72px, 11vh, 132px) auto clamp(28px, 4vh, 44px); }
         .gb-heading {
