@@ -119,7 +119,7 @@ export default function ExactV2() {
           </header>
         </Reveal>
 
-        <WideImage src="exact-hero.png" alt="Exact.com hi-fi capability page design" />
+        <WideImage src="exact-hero-2.png" alt="Exact.com hi-fi capability page design" ratio="2868 / 1406" />
 
         {/* ── Overview ─────────────────────────────────── */}
         <Section kicker="Overview" heading="17 templates. 4 audiences. Launching 2026.">
