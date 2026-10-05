@@ -107,24 +107,26 @@ export default function ExactV2() {
       <main className="gb-main">
         {/* ── Hero ─────────────────────────────────────── */}
         <Reveal>
-          <header className="gb-hero">
+          <header className="gb-hero gb-hero--wide">
             <span className="gb-kicker">Case study</span>
             <h1 className="gb-title">Exact.com</h1>
             <p className="gb-subtitle">Redesigning a marketing platform to tell a clearer, more human story.</p>
-            <dl className="gb-meta">
-              <div><dt>Role</dt><dd>UX Designer &amp; UX Strategist</dd></div>
-              <div><dt>Client</dt><dd>Exact</dd></div>
-              <div><dt>Year</dt><dd>2025</dd></div>
-            </dl>
-            <a
-              className="gb-live"
-              href="https://www.exact.com/nl"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="View live site (opens in a new tab)"
-            >
-              View Live Site <span className="gb-live-arrow" aria-hidden="true">↗</span>
-            </a>
+            <div className="gb-meta-row">
+              <dl className="gb-meta">
+                <div><dt>Role</dt><dd>UX Designer &amp; UX Strategist</dd></div>
+                <div><dt>Client</dt><dd>Exact</dd></div>
+                <div><dt>Year</dt><dd>2025</dd></div>
+              </dl>
+              <a
+                className="gb-live"
+                href="https://www.exact.com/nl"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="View live site (opens in a new tab)"
+              >
+                View Live Site
+              </a>
+            </div>
           </header>
         </Reveal>
 
@@ -349,12 +351,19 @@ export default function ExactV2() {
         .gb-meta div { display: flex; flex-direction: column; gap: 3px; }
         .gb-meta dt { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: #a8a8a3; }
         .gb-meta dd { margin: 0; font-size: 15px; color: #111110; }
+        /* Hero spans the content width so the live-site CTA aligns with the hero image's right edge */
+        .gb-hero--wide { max-width: none; }
+        .gb-meta-row {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 24px 48px;
+        }
         .gb-live {
+          flex-shrink: 0;
           display: inline-flex;
           align-items: center;
-          gap: 4px;
           min-height: 44px;
-          margin-top: 18px;
           font-size: 15px;
           font-weight: 500;
           color: #111110;
@@ -366,13 +375,11 @@ export default function ExactV2() {
         }
         .gb-live:hover, .gb-live:focus-visible { text-decoration-color: #111110; }
         .gb-live:focus-visible { outline: 2px solid #111110; outline-offset: 3px; border-radius: 2px; }
-        .gb-live-arrow { opacity: 0.65; transition: opacity 0.16s ease, transform 0.16s ease; }
-        .gb-live:hover .gb-live-arrow,
-        .gb-live:focus-visible .gb-live-arrow { opacity: 1; transform: translate(1.5px, -1.5px); }
         @media (prefers-reduced-motion: reduce) {
-          .gb-live, .gb-live-arrow { transition: none; }
-          .gb-live:hover .gb-live-arrow,
-          .gb-live:focus-visible .gb-live-arrow { transform: none; }
+          .gb-live { transition: none; }
+        }
+        @media (max-width: 720px) {
+          .gb-meta-row { flex-direction: column; align-items: flex-start; gap: 16px; }
         }
 
         .gb-section { max-width: 660px; margin: clamp(72px, 11vh, 132px) auto clamp(28px, 4vh, 44px); }
