@@ -406,7 +406,7 @@ function ContactDropdown({ onCopyEmail }: { onCopyEmail: () => void }) {
           <span>majidsajid@outlook.com</span>
         </button>
         <a
-          href="https://drive.google.com/file/d/1-40FvUisOKLs-e9uVBAJ3Ftg8TM9EUVK/view?usp=sharing"
+          href="https://drive.google.com/file/d/1VcfGkodjvhagUC7mx0JsQIho8JlKryaS/view?usp=sharing"
           target="_blank"
           rel="noopener noreferrer"
           role="menuitem"
@@ -717,7 +717,7 @@ export default function NavV2({ flow = false }: { flow?: boolean } = {}) {
 
           {/* Resume */}
           <a
-            href="https://drive.google.com/file/d/1-40FvUisOKLs-e9uVBAJ3Ftg8TM9EUVK/view?usp=sharing"
+            href="https://drive.google.com/file/d/1VcfGkodjvhagUC7mx0JsQIho8JlKryaS/view?usp=sharing"
             target="_blank"
             rel="noopener noreferrer"
             onClick={close}

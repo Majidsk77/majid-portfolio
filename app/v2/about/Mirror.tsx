@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 
 const RESUME_URL =
-  'https://drive.google.com/file/d/1-40FvUisOKLs-e9uVBAJ3Ftg8TM9EUVK/view?usp=sharing'
+  'https://drive.google.com/file/d/1VcfGkodjvhagUC7mx0JsQIho8JlKryaS/view?usp=sharing'
 
 export default function Mirror() {
   const [hovered, setHovered] = useState(false)

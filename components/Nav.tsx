@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { useEmailCopy, EmailCopyToast } from './EmailCopy'
 
 const RESUME_URL =
-  'https://drive.google.com/file/d/1-40FvUisOKLs-e9uVBAJ3Ftg8TM9EUVK/view?usp=sharing'
+  'https://drive.google.com/file/d/1VcfGkodjvhagUC7mx0JsQIho8JlKryaS/view?usp=sharing'
 
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false)
@@ -65,7 +65,7 @@ export default function Nav() {
             About
           </Link>
           <a
-            href="https://drive.google.com/file/d/1-40FvUisOKLs-e9uVBAJ3Ftg8TM9EUVK/view?usp=sharing"
+            href="https://drive.google.com/file/d/1VcfGkodjvhagUC7mx0JsQIho8JlKryaS/view?usp=sharing"
             target="_blank"
             rel="noopener noreferrer"
             className="text-[11px] uppercase tracking-[0.1em] font-normal text-[var(--muted)] hover:text-[var(--text)] transition-colors duration-200"
