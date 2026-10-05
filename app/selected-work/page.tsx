@@ -24,7 +24,7 @@ interface Project {
 
 const PROJECTS: Project[] = [
   { name: 'Google Boba',    href: '/work/google-boba', thumb: '/images/boba-hero.png',        fill: '#d9c9f6', lip: '#b69fe6' },
-  { name: 'Exact.com',      href: '/work/exact',      thumb: '/images/exact-hero-2.png', thumbPosition: 'left top', fill: '#f8c4bf', lip: '#e89a92' },
+  { name: 'Exact.com',      href: '/work/exact',      thumb: '/images/exact-hero-3.png', thumbPosition: 'left top', fill: '#f8c4bf', lip: '#e89a92' },
   { name: 'IMC Prosperity', href: '/work/imc-prosperity', thumb: '/images/prosperity-outpost.png', fill: '#bdd9f1', lip: '#90bce2' },
 ]
 
