@@ -15,7 +15,11 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  // Protect both the production case studies and the V2 case study routes so an
-  // unlock started from /v2/work/* returns to the V2 page (via `from`).
-  matcher: ['/work/:path*', '/v2/work/:path*'],
+  // Only Google Boba is password-protected; Exact and IMC Prosperity are public.
+  // Covers the legacy /v2 and archived copies so Boba isn't exposed through them.
+  matcher: [
+    '/work/google-boba/:path*',
+    '/v2/work/google-boba/:path*',
+    '/archive/work/google-boba/:path*',
+  ],
 }
